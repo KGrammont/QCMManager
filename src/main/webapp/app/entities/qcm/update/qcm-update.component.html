@@ -1,0 +1,59 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-qcm-heading" data-cy="QcmCreateUpdateHeading">Create or edit a Qcm</h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="form-group" [hidden]="editForm.get('id')!.value == null">
+          <label class="form-control-label" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_subject">Subject</label>
+          <div>
+            <div *ngIf="editForm.get('subject')!.value" class="form-text text-danger clearfix">
+              <a class="pull-left" (click)="openFile(editForm.get('subject')!.value, editForm.get('subjectContentType')!.value)">open</a
+              ><br />
+              <span class="pull-left">{{ editForm.get('subjectContentType')!.value }}, {{ byteSize(editForm.get('subject')!.value) }}</span>
+              <button
+                type="button"
+                (click)="editForm.patchValue({ subject: null }); editForm.patchValue({ subjectContentType: null })"
+                class="btn btn-secondary btn-xs pull-right"
+              >
+                <fa-icon icon="times"></fa-icon>
+              </button>
+            </div>
+            <input type="file" id="file_subject" data-cy="subject" (change)="setFileData($event, 'subject', false)" />
+          </div>
+          <input type="hidden" class="form-control" name="subject" id="field_subject" data-cy="subject" formControlName="subject" />
+          <input
+            type="hidden"
+            class="form-control"
+            name="subjectContentType"
+            id="field_subjectContentType"
+            formControlName="subjectContentType"
+          />
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

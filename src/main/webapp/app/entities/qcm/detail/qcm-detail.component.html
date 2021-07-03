@@ -1,0 +1,37 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="qcm">
+      <h2 data-cy="qcmDetailsHeading"><span>Qcm</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ qcm.id }}</span>
+        </dd>
+        <dt><span>Subject</span></dt>
+        <dd>
+          <div *ngIf="qcm.subject">
+            <a (click)="openFile(qcm.subject, qcm.subjectContentType)">open</a>
+            {{ qcm.subjectContentType }}, {{ byteSize(qcm.subject) }}
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/qcm', qcm.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<ngx-extended-pdf-viewer *ngIf="pdfblob" [base64Src]="pdfblob" height="80vh"> </ngx-extended-pdf-viewer>

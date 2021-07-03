@@ -41,6 +41,8 @@
     "jwtSecretKey": "NjRmYTYwMzZhYzgyNDI5NDk2MTQwNmI2ZTVmM2YxZGFjYTFlNWExNTdmNzNhOTA2NjYyYWRlZTRhYzA5ZGJhYTAyOWE0ZmE2OTZmYzhiMTU5ODkzODJjMTZhY2ZlNTZlMzAxNDI5NGQ2MzAyZDM1ZTdhNzE4ZDZiYWU0YzgwNDA=",
     "clientPackageManager": "npm",
     "clientThemeVariant": "",
-    "languages": ["en", "fr"]
+    "languages": ["en", "fr"],
+    "lastLiquibaseTimestamp": 1625345571000,
+    "entities": ["Qcm"]
   }
 }

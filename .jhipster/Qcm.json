@@ -1,0 +1,17 @@
+{
+  "fields": [
+    {
+      "fieldName": "subject",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "any"
+    }
+  ],
+  "relationships": [],
+  "service": "serviceClass",
+  "dto": "mapstruct",
+  "jpaMetamodelFiltering": false,
+  "readOnly": false,
+  "pagination": "no",
+  "name": "Qcm",
+  "changelogDate": "20210703205251"
+}
