@@ -83,6 +83,7 @@ module.exports = (config, options, targetOptions) => {
 
   const patterns = [
     // jhipster-needle-add-assets-to-webpack - JHipster will add/remove third-party resources in this array
+    { from: './node_modules/ngx-extended-pdf-viewer/assets/', to: 'assets' },
   ];
 
   if (patterns.length > 0) {
