@@ -1,0 +1,35 @@
+{
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipName": "prof",
+      "otherEntityName": "user",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": ["required"],
+      "otherEntityField": "login",
+      "ownerSide": true,
+      "otherEntityRelationshipName": "classe"
+    },
+    {
+      "relationshipName": "student",
+      "otherEntityName": "user",
+      "relationshipType": "many-to-many",
+      "otherEntityField": "login",
+      "ownerSide": true,
+      "otherEntityRelationshipName": "classe"
+    }
+  ],
+  "service": "serviceClass",
+  "dto": "no",
+  "jpaMetamodelFiltering": false,
+  "readOnly": false,
+  "pagination": "no",
+  "name": "Classe",
+  "changelogDate": "20210710224211"
+}
