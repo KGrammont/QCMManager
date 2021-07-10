@@ -9,6 +9,11 @@ import { RouterModule } from '@angular/router';
         data: { pageTitle: 'Classes' },
         loadChildren: () => import('./classe/classe.module').then(m => m.ClasseModule),
       },
+      {
+        path: 'qcm-group',
+        data: { pageTitle: 'QcmGroups' },
+        loadChildren: () => import('./qcm-group/qcm-group.module').then(m => m.QcmGroupModule),
+      },
       /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
     ]),
   ],
