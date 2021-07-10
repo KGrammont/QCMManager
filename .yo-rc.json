@@ -42,7 +42,7 @@
     "clientPackageManager": "npm",
     "clientThemeVariant": "",
     "languages": ["en", "fr"],
-    "lastLiquibaseTimestamp": 1625956931000,
-    "entities": ["Classe"]
+    "lastLiquibaseTimestamp": 1625957576000,
+    "entities": ["Classe", "QcmGroup"]
   }
 }
