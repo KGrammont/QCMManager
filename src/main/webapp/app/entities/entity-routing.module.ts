@@ -14,6 +14,11 @@ import { RouterModule } from '@angular/router';
         data: { pageTitle: 'QcmGroups' },
         loadChildren: () => import('./qcm-group/qcm-group.module').then(m => m.QcmGroupModule),
       },
+      {
+        path: 'qcm',
+        data: { pageTitle: 'Qcms' },
+        loadChildren: () => import('./qcm/qcm.module').then(m => m.QcmModule),
+      },
       /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
     ]),
   ],

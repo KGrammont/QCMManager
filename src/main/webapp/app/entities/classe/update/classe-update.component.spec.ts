@@ -43,12 +43,12 @@ describe('Component Tests', () => {
     describe('ngOnInit', () => {
       it('Should call User query and add missing value', () => {
         const classe: IClasse = { id: 456 };
-        const prof: IUser = { id: 27699 };
+        const prof: IUser = { id: 13820 };
         classe.prof = prof;
-        const students: IUser[] = [{ id: 87926 }];
+        const students: IUser[] = [{ id: 8136 }];
         classe.students = students;
 
-        const userCollection: IUser[] = [{ id: 47918 }];
+        const userCollection: IUser[] = [{ id: 62330 }];
         spyOn(userService, 'query').and.returnValue(of(new HttpResponse({ body: userCollection })));
         const additionalUsers = [prof, ...students];
         const expectedCollection: IUser[] = [...additionalUsers, ...userCollection];
@@ -64,9 +64,9 @@ describe('Component Tests', () => {
 
       it('Should update editForm', () => {
         const classe: IClasse = { id: 456 };
-        const prof: IUser = { id: 13820 };
+        const prof: IUser = { id: 48385 };
         classe.prof = prof;
-        const students: IUser = { id: 8136 };
+        const students: IUser = { id: 2487 };
         classe.students = [students];
 
         activatedRoute.data = of({ classe });
