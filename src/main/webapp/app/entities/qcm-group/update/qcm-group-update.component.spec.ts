@@ -42,10 +42,10 @@ describe('Component Tests', () => {
     describe('ngOnInit', () => {
       it('Should call Classe query and add missing value', () => {
         const qcmGroup: IQcmGroup = { id: 456 };
-        const classe: IClasse = { id: 70256 };
+        const classe: IClasse = { id: 56412 };
         qcmGroup.classe = classe;
 
-        const classeCollection: IClasse[] = [{ id: 64988 }];
+        const classeCollection: IClasse[] = [{ id: 50642 }];
         spyOn(classeService, 'query').and.returnValue(of(new HttpResponse({ body: classeCollection })));
         const additionalClasses = [classe];
         const expectedCollection: IClasse[] = [...additionalClasses, ...classeCollection];
@@ -61,7 +61,7 @@ describe('Component Tests', () => {
 
       it('Should update editForm', () => {
         const qcmGroup: IQcmGroup = { id: 456 };
-        const classe: IClasse = { id: 62292 };
+        const classe: IClasse = { id: 4110 };
         qcmGroup.classe = classe;
 
         activatedRoute.data = of({ qcmGroup });

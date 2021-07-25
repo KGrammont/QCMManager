@@ -1,0 +1,199 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-qcm-heading" data-cy="QcmCreateUpdateHeading">Create or edit a Qcm</h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="form-group" [hidden]="editForm.get('id')!.value == null">
+          <label class="form-control-label" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_question">Question</label>
+          <div>
+            <div *ngIf="editForm.get('question')!.value" class="form-text text-danger clearfix">
+              <a class="pull-left" (click)="openFile(editForm.get('question')!.value, editForm.get('questionContentType')!.value)">open</a
+              ><br />
+              <span class="pull-left"
+                >{{ editForm.get('questionContentType')!.value }}, {{ byteSize(editForm.get('question')!.value) }}</span
+              >
+              <button
+                type="button"
+                (click)="editForm.patchValue({ question: null }); editForm.patchValue({ questionContentType: null })"
+                class="btn btn-secondary btn-xs pull-right"
+              >
+                <fa-icon icon="times"></fa-icon>
+              </button>
+            </div>
+            <input type="file" id="file_question" data-cy="question" (change)="setFileData($event, 'question', false)" />
+          </div>
+          <input type="hidden" class="form-control" name="question" id="field_question" data-cy="question" formControlName="question" />
+          <input
+            type="hidden"
+            class="form-control"
+            name="questionContentType"
+            id="field_questionContentType"
+            formControlName="questionContentType"
+          />
+          <div *ngIf="editForm.get('question')!.invalid && (editForm.get('question')!.dirty || editForm.get('question')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('question')?.errors?.required"> This field is required. </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_answer">Answer</label>
+          <div>
+            <div *ngIf="editForm.get('answer')!.value" class="form-text text-danger clearfix">
+              <a class="pull-left" (click)="openFile(editForm.get('answer')!.value, editForm.get('answerContentType')!.value)">open</a
+              ><br />
+              <span class="pull-left">{{ editForm.get('answerContentType')!.value }}, {{ byteSize(editForm.get('answer')!.value) }}</span>
+              <button
+                type="button"
+                (click)="editForm.patchValue({ answer: null }); editForm.patchValue({ answerContentType: null })"
+                class="btn btn-secondary btn-xs pull-right"
+              >
+                <fa-icon icon="times"></fa-icon>
+              </button>
+            </div>
+            <input type="file" id="file_answer" data-cy="answer" (change)="setFileData($event, 'answer', false)" />
+          </div>
+          <input type="hidden" class="form-control" name="answer" id="field_answer" data-cy="answer" formControlName="answer" />
+          <input
+            type="hidden"
+            class="form-control"
+            name="answerContentType"
+            id="field_answerContentType"
+            formControlName="answerContentType"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_completeAnswer">Complete Answer</label>
+          <div>
+            <div *ngIf="editForm.get('completeAnswer')!.value" class="form-text text-danger clearfix">
+              <a
+                class="pull-left"
+                (click)="openFile(editForm.get('completeAnswer')!.value, editForm.get('completeAnswerContentType')!.value)"
+                >open</a
+              ><br />
+              <span class="pull-left"
+                >{{ editForm.get('completeAnswerContentType')!.value }}, {{ byteSize(editForm.get('completeAnswer')!.value) }}</span
+              >
+              <button
+                type="button"
+                (click)="editForm.patchValue({ completeAnswer: null }); editForm.patchValue({ completeAnswerContentType: null })"
+                class="btn btn-secondary btn-xs pull-right"
+              >
+                <fa-icon icon="times"></fa-icon>
+              </button>
+            </div>
+            <input type="file" id="file_completeAnswer" data-cy="completeAnswer" (change)="setFileData($event, 'completeAnswer', false)" />
+          </div>
+          <input
+            type="hidden"
+            class="form-control"
+            name="completeAnswer"
+            id="field_completeAnswer"
+            data-cy="completeAnswer"
+            formControlName="completeAnswer"
+          />
+          <input
+            type="hidden"
+            class="form-control"
+            name="completeAnswerContentType"
+            id="field_completeAnswerContentType"
+            formControlName="completeAnswerContentType"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_correction">Correction</label>
+          <div>
+            <div *ngIf="editForm.get('correction')!.value" class="form-text text-danger clearfix">
+              <a class="pull-left" (click)="openFile(editForm.get('correction')!.value, editForm.get('correctionContentType')!.value)"
+                >open</a
+              ><br />
+              <span class="pull-left"
+                >{{ editForm.get('correctionContentType')!.value }}, {{ byteSize(editForm.get('correction')!.value) }}</span
+              >
+              <button
+                type="button"
+                (click)="editForm.patchValue({ correction: null }); editForm.patchValue({ correctionContentType: null })"
+                class="btn btn-secondary btn-xs pull-right"
+              >
+                <fa-icon icon="times"></fa-icon>
+              </button>
+            </div>
+            <input type="file" id="file_correction" data-cy="correction" (change)="setFileData($event, 'correction', false)" />
+          </div>
+          <input
+            type="hidden"
+            class="form-control"
+            name="correction"
+            id="field_correction"
+            data-cy="correction"
+            formControlName="correction"
+          />
+          <input
+            type="hidden"
+            class="form-control"
+            name="correctionContentType"
+            id="field_correctionContentType"
+            formControlName="correctionContentType"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_qcmGroup">Qcm Group</label>
+          <select class="form-control" id="field_qcmGroup" data-cy="qcmGroup" name="qcmGroup" formControlName="qcmGroup">
+            <option *ngIf="!editForm.get('qcmGroup')!.value" [ngValue]="null" selected></option>
+            <option
+              [ngValue]="qcmGroupOption.id === editForm.get('qcmGroup')!.value?.id ? editForm.get('qcmGroup')!.value : qcmGroupOption"
+              *ngFor="let qcmGroupOption of qcmGroupsSharedCollection; trackBy: trackQcmGroupById"
+            >
+              {{ qcmGroupOption.name }}
+            </option>
+          </select>
+        </div>
+        <div *ngIf="editForm.get(['qcmGroup'])!.invalid && (editForm.get(['qcmGroup'])!.dirty || editForm.get(['qcmGroup'])!.touched)">
+          <small class="form-text text-danger" *ngIf="editForm.get(['qcmGroup'])?.errors?.required"> This field is required. </small>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_student">Student</label>
+          <select class="form-control" id="field_student" data-cy="student" name="student" formControlName="student">
+            <option *ngIf="!editForm.get('student')!.value" [ngValue]="null" selected></option>
+            <option
+              [ngValue]="userOption.id === editForm.get('student')!.value?.id ? editForm.get('student')!.value : userOption"
+              *ngFor="let userOption of usersSharedCollection; trackBy: trackUserById"
+            >
+              {{ userOption.login }}
+            </option>
+          </select>
+        </div>
+        <div *ngIf="editForm.get(['student'])!.invalid && (editForm.get(['student'])!.dirty || editForm.get(['student'])!.touched)">
+          <small class="form-text text-danger" *ngIf="editForm.get(['student'])?.errors?.required"> This field is required. </small>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

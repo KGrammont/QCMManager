@@ -56,6 +56,13 @@
             <column name="id" type="numeric"/>
             <column name="name" type="string"/>
             <column name="prof_id" type="numeric"/>
+        </loadData>
+        <loadData
+                  file="config/liquibase/fake-data/relClasseStudent.csv"
+                  separator=";"
+                  tableName="rel_classe__student">
+            <column name="student_id" type="numeric"/>
+            <column name="classe_id" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>

@@ -1,0 +1,66 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="qcm">
+      <h2 data-cy="qcmDetailsHeading"><span>Qcm</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ qcm.id }}</span>
+        </dd>
+        <dt><span>Question</span></dt>
+        <dd>
+          <div *ngIf="qcm.question">
+            <a (click)="openFile(qcm.question, qcm.questionContentType)">open</a>
+            {{ qcm.questionContentType }}, {{ byteSize(qcm.question) }}
+          </div>
+        </dd>
+        <dt><span>Answer</span></dt>
+        <dd>
+          <div *ngIf="qcm.answer">
+            <a (click)="openFile(qcm.answer, qcm.answerContentType)">open</a>
+            {{ qcm.answerContentType }}, {{ byteSize(qcm.answer) }}
+          </div>
+        </dd>
+        <dt><span>Complete Answer</span></dt>
+        <dd>
+          <div *ngIf="qcm.completeAnswer">
+            <a (click)="openFile(qcm.completeAnswer, qcm.completeAnswerContentType)">open</a>
+            {{ qcm.completeAnswerContentType }}, {{ byteSize(qcm.completeAnswer) }}
+          </div>
+        </dd>
+        <dt><span>Correction</span></dt>
+        <dd>
+          <div *ngIf="qcm.correction">
+            <a (click)="openFile(qcm.correction, qcm.correctionContentType)">open</a>
+            {{ qcm.correctionContentType }}, {{ byteSize(qcm.correction) }}
+          </div>
+        </dd>
+        <dt><span>Qcm Group</span></dt>
+        <dd>
+          <div *ngIf="qcm.qcmGroup">
+            <a [routerLink]="['/qcm-group', qcm.qcmGroup?.id, 'view']">{{ qcm.qcmGroup?.name }}</a>
+          </div>
+        </dd>
+        <dt><span>Student</span></dt>
+        <dd>
+          <span>{{ qcm.student?.login }}</span>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/qcm', qcm.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

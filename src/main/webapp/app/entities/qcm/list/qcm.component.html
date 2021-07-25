@@ -1,0 +1,96 @@
+<div>
+  <h2 id="page-heading" data-cy="QcmHeading">
+    <span>Qcms</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info mr-2" (click)="loadAll()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span>Refresh List</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-qcm"
+        [routerLink]="['/qcm/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span> Create a new Qcm </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="qcms?.length === 0">
+    <span>No qcms found</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="qcms && qcms.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr>
+          <th scope="col"><span>ID</span></th>
+          <th scope="col"><span>Question</span></th>
+          <th scope="col"><span>Answer</span></th>
+          <th scope="col"><span>Complete Answer</span></th>
+          <th scope="col"><span>Correction</span></th>
+          <th scope="col"><span>Qcm Group</span></th>
+          <th scope="col"><span>Student</span></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let qcm of qcms; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/qcm', qcm.id, 'view']">{{ qcm.id }}</a>
+          </td>
+          <td>
+            <a *ngIf="qcm.question" (click)="openFile(qcm.question, qcm.questionContentType)">open</a>
+            <span *ngIf="qcm.question">{{ qcm.questionContentType }}, {{ byteSize(qcm.question) }}</span>
+          </td>
+          <td>
+            <a *ngIf="qcm.answer" (click)="openFile(qcm.answer, qcm.answerContentType)">open</a>
+            <span *ngIf="qcm.answer">{{ qcm.answerContentType }}, {{ byteSize(qcm.answer) }}</span>
+          </td>
+          <td>
+            <a *ngIf="qcm.completeAnswer" (click)="openFile(qcm.completeAnswer, qcm.completeAnswerContentType)">open</a>
+            <span *ngIf="qcm.completeAnswer">{{ qcm.completeAnswerContentType }}, {{ byteSize(qcm.completeAnswer) }}</span>
+          </td>
+          <td>
+            <a *ngIf="qcm.correction" (click)="openFile(qcm.correction, qcm.correctionContentType)">open</a>
+            <span *ngIf="qcm.correction">{{ qcm.correctionContentType }}, {{ byteSize(qcm.correction) }}</span>
+          </td>
+          <td>
+            <div *ngIf="qcm.qcmGroup">
+              <a [routerLink]="['/qcm-group', qcm.qcmGroup?.id, 'view']">{{ qcm.qcmGroup?.name }}</a>
+            </div>
+          </td>
+          <td>
+            {{ qcm.student?.login }}
+          </td>
+          <td class="text-right">
+            <div class="btn-group">
+              <button type="submit" [routerLink]="['/qcm', qcm.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline">View</span>
+              </button>
+
+              <button type="submit" [routerLink]="['/qcm', qcm.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(qcm)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
