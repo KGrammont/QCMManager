@@ -5,6 +5,9 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { finalize, map } from 'rxjs/operators';
 
+import * as dayjs from 'dayjs';
+import { DATE_TIME_FORMAT } from 'app/config/input.constants';
+
 import { IQcm, Qcm } from '../qcm.model';
 import { QcmService } from '../service/qcm.service';
 import { AlertError } from 'app/shared/alert/alert-error.model';
@@ -35,6 +38,7 @@ export class QcmUpdateComponent implements OnInit {
     completeAnswerContentType: [],
     correction: [],
     correctionContentType: [],
+    created_at: [null, [Validators.required]],
     qcmGroup: [null, Validators.required],
     student: [null, Validators.required],
   });
@@ -51,6 +55,11 @@ export class QcmUpdateComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ qcm }) => {
+      if (qcm.id === undefined) {
+        const today = dayjs().startOf('day');
+        qcm.created_at = today;
+      }
+
       this.updateForm(qcm);
 
       this.loadRelationshipsOptions();
@@ -126,6 +135,7 @@ export class QcmUpdateComponent implements OnInit {
       completeAnswerContentType: qcm.completeAnswerContentType,
       correction: qcm.correction,
       correctionContentType: qcm.correctionContentType,
+      created_at: qcm.created_at ? qcm.created_at.format(DATE_TIME_FORMAT) : null,
       qcmGroup: qcm.qcmGroup,
       student: qcm.student,
     });
@@ -164,6 +174,7 @@ export class QcmUpdateComponent implements OnInit {
       completeAnswer: this.editForm.get(['completeAnswer'])!.value,
       correctionContentType: this.editForm.get(['correctionContentType'])!.value,
       correction: this.editForm.get(['correction'])!.value,
+      created_at: this.editForm.get(['created_at'])!.value ? dayjs(this.editForm.get(['created_at'])!.value, DATE_TIME_FORMAT) : undefined,
       qcmGroup: this.editForm.get(['qcmGroup'])!.value,
       student: this.editForm.get(['student'])!.value,
     };

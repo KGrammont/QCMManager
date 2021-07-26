@@ -37,6 +37,7 @@
           <th scope="col"><span>Answer</span></th>
           <th scope="col"><span>Complete Answer</span></th>
           <th scope="col"><span>Correction</span></th>
+          <th scope="col"><span>Created At</span></th>
           <th scope="col"><span>Qcm Group</span></th>
           <th scope="col"><span>Student</span></th>
           <th scope="col"></th>
@@ -63,6 +64,7 @@
             <a *ngIf="qcm.correction" (click)="openFile(qcm.correction, qcm.correctionContentType)">open</a>
             <span *ngIf="qcm.correction">{{ qcm.correctionContentType }}, {{ byteSize(qcm.correction) }}</span>
           </td>
+          <td>{{ qcm.created_at | formatMediumDatetime }}</td>
           <td>
             <div *ngIf="qcm.qcmGroup">
               <a [routerLink]="['/qcm-group', qcm.qcmGroup?.id, 'view']">{{ qcm.qcmGroup?.name }}</a>

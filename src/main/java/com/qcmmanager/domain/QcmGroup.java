@@ -2,6 +2,7 @@ package com.qcmmanager.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
+import java.time.Instant;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
@@ -21,6 +22,10 @@ public class QcmGroup implements Serializable {
     @NotNull
     @Column(name = "name", nullable = false)
     private String name;
+
+    @NotNull
+    @Column(name = "created_at", nullable = false)
+    private Instant created_at;
 
     @ManyToOne(optional = false)
     @NotNull
@@ -52,6 +57,19 @@ public class QcmGroup implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Instant getCreated_at() {
+        return this.created_at;
+    }
+
+    public QcmGroup created_at(Instant created_at) {
+        this.created_at = created_at;
+        return this;
+    }
+
+    public void setCreated_at(Instant created_at) {
+        this.created_at = created_at;
     }
 
     public Classe getClasse() {
@@ -92,6 +110,7 @@ public class QcmGroup implements Serializable {
         return "QcmGroup{" +
             "id=" + getId() +
             ", name='" + getName() + "'" +
+            ", created_at='" + getCreated_at() + "'" +
             "}";
     }
 }

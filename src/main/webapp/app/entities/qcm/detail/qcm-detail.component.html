@@ -42,6 +42,10 @@
             {{ qcm.correctionContentType }}, {{ byteSize(qcm.correction) }}
           </div>
         </dd>
+        <dt><span>Created At</span></dt>
+        <dd>
+          <span>{{ qcm.created_at | formatMediumDatetime }}</span>
+        </dd>
         <dt><span>Qcm Group</span></dt>
         <dd>
           <div *ngIf="qcm.qcmGroup">

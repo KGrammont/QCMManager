@@ -47,10 +47,10 @@ describe('Component Tests', () => {
     describe('ngOnInit', () => {
       it('Should call QcmGroup query and add missing value', () => {
         const qcm: IQcm = { id: 456 };
-        const qcmGroup: IQcmGroup = { id: 58065 };
+        const qcmGroup: IQcmGroup = { id: 92222 };
         qcm.qcmGroup = qcmGroup;
 
-        const qcmGroupCollection: IQcmGroup[] = [{ id: 25104 }];
+        const qcmGroupCollection: IQcmGroup[] = [{ id: 10514 }];
         spyOn(qcmGroupService, 'query').and.returnValue(of(new HttpResponse({ body: qcmGroupCollection })));
         const additionalQcmGroups = [qcmGroup];
         const expectedCollection: IQcmGroup[] = [...additionalQcmGroups, ...qcmGroupCollection];
@@ -85,7 +85,7 @@ describe('Component Tests', () => {
 
       it('Should update editForm', () => {
         const qcm: IQcm = { id: 456 };
-        const qcmGroup: IQcmGroup = { id: 91630 };
+        const qcmGroup: IQcmGroup = { id: 88687 };
         qcm.qcmGroup = qcmGroup;
         const student: IUser = { id: 47918 };
         qcm.student = student;
