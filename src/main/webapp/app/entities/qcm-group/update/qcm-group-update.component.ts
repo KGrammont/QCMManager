@@ -5,6 +5,9 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { finalize, map } from 'rxjs/operators';
 
+import * as dayjs from 'dayjs';
+import { DATE_TIME_FORMAT } from 'app/config/input.constants';
+
 import { IQcmGroup, QcmGroup } from '../qcm-group.model';
 import { QcmGroupService } from '../service/qcm-group.service';
 import { IClasse } from 'app/entities/classe/classe.model';
@@ -22,6 +25,7 @@ export class QcmGroupUpdateComponent implements OnInit {
   editForm = this.fb.group({
     id: [],
     name: [null, [Validators.required]],
+    created_at: [null, [Validators.required]],
     classe: [null, Validators.required],
   });
 
@@ -34,6 +38,11 @@ export class QcmGroupUpdateComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ qcmGroup }) => {
+      if (qcmGroup.id === undefined) {
+        const today = dayjs().startOf('day');
+        qcmGroup.created_at = today;
+      }
+
       this.updateForm(qcmGroup);
 
       this.loadRelationshipsOptions();
@@ -81,6 +90,7 @@ export class QcmGroupUpdateComponent implements OnInit {
     this.editForm.patchValue({
       id: qcmGroup.id,
       name: qcmGroup.name,
+      created_at: qcmGroup.created_at ? qcmGroup.created_at.format(DATE_TIME_FORMAT) : null,
       classe: qcmGroup.classe,
     });
 
@@ -100,6 +110,7 @@ export class QcmGroupUpdateComponent implements OnInit {
       ...new QcmGroup(),
       id: this.editForm.get(['id'])!.value,
       name: this.editForm.get(['name'])!.value,
+      created_at: this.editForm.get(['created_at'])!.value ? dayjs(this.editForm.get(['created_at'])!.value, DATE_TIME_FORMAT) : undefined,
       classe: this.editForm.get(['classe'])!.value,
     };
   }

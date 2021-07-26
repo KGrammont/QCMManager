@@ -34,6 +34,7 @@
         <tr>
           <th scope="col"><span>ID</span></th>
           <th scope="col"><span>Name</span></th>
+          <th scope="col"><span>Created At</span></th>
           <th scope="col"><span>Classe</span></th>
           <th scope="col"></th>
         </tr>
@@ -44,6 +45,7 @@
             <a [routerLink]="['/qcm-group', qcmGroup.id, 'view']">{{ qcmGroup.id }}</a>
           </td>
           <td>{{ qcmGroup.name }}</td>
+          <td>{{ qcmGroup.created_at | formatMediumDatetime }}</td>
           <td>
             <div *ngIf="qcmGroup.classe">
               <a [routerLink]="['/classe', qcmGroup.classe?.id, 'view']">{{ qcmGroup.classe?.name }}</a>

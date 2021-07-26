@@ -4,6 +4,11 @@
       "fieldName": "name",
       "fieldType": "String",
       "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "created_at",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
     }
   ],
   "relationships": [

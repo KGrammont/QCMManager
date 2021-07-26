@@ -51,6 +51,9 @@ public class QcmGroupService {
                     if (qcmGroup.getName() != null) {
                         existingQcmGroup.setName(qcmGroup.getName());
                     }
+                    if (qcmGroup.getCreated_at() != null) {
+                        existingQcmGroup.setCreated_at(qcmGroup.getCreated_at());
+                    }
 
                     return existingQcmGroup;
                 }

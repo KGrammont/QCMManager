@@ -20,6 +20,11 @@
       "fieldName": "correction",
       "fieldType": "byte[]",
       "fieldTypeBlobContent": "any"
+    },
+    {
+      "fieldName": "created_at",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
     }
   ],
   "relationships": [

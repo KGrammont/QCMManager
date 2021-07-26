@@ -18,6 +18,10 @@
         <dd>
           <span>{{ qcmGroup.name }}</span>
         </dd>
+        <dt><span>Created At</span></dt>
+        <dd>
+          <span>{{ qcmGroup.created_at | formatMediumDatetime }}</span>
+        </dd>
         <dt><span>Classe</span></dt>
         <dd>
           <div *ngIf="qcmGroup.classe">

@@ -9,6 +9,8 @@ import com.qcmmanager.IntegrationTest;
 import com.qcmmanager.domain.Classe;
 import com.qcmmanager.domain.QcmGroup;
 import com.qcmmanager.repository.QcmGroupRepository;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
@@ -32,6 +34,9 @@ class QcmGroupResourceIT {
 
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
+
+    private static final Instant DEFAULT_CREATED_AT = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_CREATED_AT = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
     private static final String ENTITY_API_URL = "/api/qcm-groups";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -57,7 +62,7 @@ class QcmGroupResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static QcmGroup createEntity(EntityManager em) {
-        QcmGroup qcmGroup = new QcmGroup().name(DEFAULT_NAME);
+        QcmGroup qcmGroup = new QcmGroup().name(DEFAULT_NAME).created_at(DEFAULT_CREATED_AT);
         // Add required entity
         Classe classe;
         if (TestUtil.findAll(em, Classe.class).isEmpty()) {
@@ -78,7 +83,7 @@ class QcmGroupResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static QcmGroup createUpdatedEntity(EntityManager em) {
-        QcmGroup qcmGroup = new QcmGroup().name(UPDATED_NAME);
+        QcmGroup qcmGroup = new QcmGroup().name(UPDATED_NAME).created_at(UPDATED_CREATED_AT);
         // Add required entity
         Classe classe;
         if (TestUtil.findAll(em, Classe.class).isEmpty()) {
@@ -111,6 +116,7 @@ class QcmGroupResourceIT {
         assertThat(qcmGroupList).hasSize(databaseSizeBeforeCreate + 1);
         QcmGroup testQcmGroup = qcmGroupList.get(qcmGroupList.size() - 1);
         assertThat(testQcmGroup.getName()).isEqualTo(DEFAULT_NAME);
+        assertThat(testQcmGroup.getCreated_at()).isEqualTo(DEFAULT_CREATED_AT);
     }
 
     @Test
@@ -150,6 +156,23 @@ class QcmGroupResourceIT {
 
     @Test
     @Transactional
+    void checkCreated_atIsRequired() throws Exception {
+        int databaseSizeBeforeTest = qcmGroupRepository.findAll().size();
+        // set the field null
+        qcmGroup.setCreated_at(null);
+
+        // Create the QcmGroup, which fails.
+
+        restQcmGroupMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(qcmGroup)))
+            .andExpect(status().isBadRequest());
+
+        List<QcmGroup> qcmGroupList = qcmGroupRepository.findAll();
+        assertThat(qcmGroupList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     void getAllQcmGroups() throws Exception {
         // Initialize the database
         qcmGroupRepository.saveAndFlush(qcmGroup);
@@ -160,7 +183,8 @@ class QcmGroupResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(qcmGroup.getId().intValue())))
-            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)));
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
+            .andExpect(jsonPath("$.[*].created_at").value(hasItem(DEFAULT_CREATED_AT.toString())));
     }
 
     @Test
@@ -175,7 +199,8 @@ class QcmGroupResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(qcmGroup.getId().intValue()))
-            .andExpect(jsonPath("$.name").value(DEFAULT_NAME));
+            .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
+            .andExpect(jsonPath("$.created_at").value(DEFAULT_CREATED_AT.toString()));
     }
 
     @Test
@@ -197,7 +222,7 @@ class QcmGroupResourceIT {
         QcmGroup updatedQcmGroup = qcmGroupRepository.findById(qcmGroup.getId()).get();
         // Disconnect from session so that the updates on updatedQcmGroup are not directly saved in db
         em.detach(updatedQcmGroup);
-        updatedQcmGroup.name(UPDATED_NAME);
+        updatedQcmGroup.name(UPDATED_NAME).created_at(UPDATED_CREATED_AT);
 
         restQcmGroupMockMvc
             .perform(
@@ -212,6 +237,7 @@ class QcmGroupResourceIT {
         assertThat(qcmGroupList).hasSize(databaseSizeBeforeUpdate);
         QcmGroup testQcmGroup = qcmGroupList.get(qcmGroupList.size() - 1);
         assertThat(testQcmGroup.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testQcmGroup.getCreated_at()).isEqualTo(UPDATED_CREATED_AT);
     }
 
     @Test
@@ -295,6 +321,7 @@ class QcmGroupResourceIT {
         assertThat(qcmGroupList).hasSize(databaseSizeBeforeUpdate);
         QcmGroup testQcmGroup = qcmGroupList.get(qcmGroupList.size() - 1);
         assertThat(testQcmGroup.getName()).isEqualTo(DEFAULT_NAME);
+        assertThat(testQcmGroup.getCreated_at()).isEqualTo(DEFAULT_CREATED_AT);
     }
 
     @Test
@@ -309,7 +336,7 @@ class QcmGroupResourceIT {
         QcmGroup partialUpdatedQcmGroup = new QcmGroup();
         partialUpdatedQcmGroup.setId(qcmGroup.getId());
 
-        partialUpdatedQcmGroup.name(UPDATED_NAME);
+        partialUpdatedQcmGroup.name(UPDATED_NAME).created_at(UPDATED_CREATED_AT);
 
         restQcmGroupMockMvc
             .perform(
@@ -324,6 +351,7 @@ class QcmGroupResourceIT {
         assertThat(qcmGroupList).hasSize(databaseSizeBeforeUpdate);
         QcmGroup testQcmGroup = qcmGroupList.get(qcmGroupList.size() - 1);
         assertThat(testQcmGroup.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testQcmGroup.getCreated_at()).isEqualTo(UPDATED_CREATED_AT);
     }
 
     @Test

@@ -72,6 +72,9 @@ public class QcmService {
                     if (qcm.getCorrectionContentType() != null) {
                         existingQcm.setCorrectionContentType(qcm.getCorrectionContentType());
                     }
+                    if (qcm.getCreated_at() != null) {
+                        existingQcm.setCreated_at(qcm.getCreated_at());
+                    }
 
                     return existingQcm;
                 }
