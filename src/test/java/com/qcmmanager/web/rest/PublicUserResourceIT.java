@@ -6,9 +6,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.qcmmanager.IntegrationTest;
+import com.qcmmanager.domain.Authority;
 import com.qcmmanager.domain.User;
 import com.qcmmanager.repository.UserRepository;
 import com.qcmmanager.security.AuthoritiesConstants;
+import java.util.Set;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,6 +30,11 @@ import org.springframework.transaction.annotation.Transactional;
 class PublicUserResourceIT {
 
     private static final String DEFAULT_LOGIN = "johndoe";
+    private static final String DEFAULT_EMAIL = "johndoe@localhost";
+    private static final String DEFAULT_FIRSTNAME = "john";
+    private static final String DEFAULT_LASTNAME = "doe";
+    private static final String DEFAULT_IMAGEURL = "http://placehold.it/50x50";
+    private static final String DEFAULT_LANGKEY = "en";
 
     @Autowired
     private UserRepository userRepository;
@@ -60,6 +67,50 @@ class PublicUserResourceIT {
             .andExpect(jsonPath("$.[*].email").doesNotExist())
             .andExpect(jsonPath("$.[*].imageUrl").doesNotExist())
             .andExpect(jsonPath("$.[*].langKey").doesNotExist());
+    }
+
+    @Test
+    @Transactional
+    void getAllProfs() throws Exception {
+        // Initialize the database
+        Authority authority = new Authority();
+        authority.setName(AuthoritiesConstants.PROF);
+        user.setAuthorities(Set.of(authority));
+        userRepository.saveAndFlush(user);
+
+        // Get all the users
+        restUserMockMvc
+            .perform(get("/api/profs?sort=id,desc").accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.[*].login").value(hasItem(DEFAULT_LOGIN)))
+            .andExpect(jsonPath("$.[*].firstName").value(hasItem(DEFAULT_FIRSTNAME)))
+            .andExpect(jsonPath("$.[*].lastName").value(hasItem(DEFAULT_LASTNAME)))
+            .andExpect(jsonPath("$.[*].email").value(hasItem(DEFAULT_EMAIL)))
+            .andExpect(jsonPath("$.[*].imageUrl").value(hasItem(DEFAULT_IMAGEURL)))
+            .andExpect(jsonPath("$.[*].langKey").value(hasItem(DEFAULT_LANGKEY)));
+    }
+
+    @Test
+    @Transactional
+    void getAllStudents() throws Exception {
+        // Initialize the database
+        Authority authority = new Authority();
+        authority.setName(AuthoritiesConstants.STUDENT);
+        user.setAuthorities(Set.of(authority));
+        userRepository.saveAndFlush(user);
+
+        // Get all the users
+        restUserMockMvc
+            .perform(get("/api/students?sort=id,desc").accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.[*].login").value(hasItem(DEFAULT_LOGIN)))
+            .andExpect(jsonPath("$.[*].firstName").value(hasItem(DEFAULT_FIRSTNAME)))
+            .andExpect(jsonPath("$.[*].lastName").value(hasItem(DEFAULT_LASTNAME)))
+            .andExpect(jsonPath("$.[*].email").value(hasItem(DEFAULT_EMAIL)))
+            .andExpect(jsonPath("$.[*].imageUrl").value(hasItem(DEFAULT_IMAGEURL)))
+            .andExpect(jsonPath("$.[*].langKey").value(hasItem(DEFAULT_LANGKEY)));
     }
 
     @Test

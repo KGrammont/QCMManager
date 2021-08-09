@@ -100,6 +100,27 @@ describe('Service Tests', () => {
         service.query().subscribe(resp => (expectedResult = resp.body));
 
         const req = httpMock.expectOne({ method: 'GET' });
+        expect(req.request.url).toEqual('api/classes');
+        req.flush([returnedFromService]);
+        httpMock.verify();
+        expect(expectedResult).toContainEqual(expected);
+      });
+
+      it('should return a list of Classe of current prof', () => {
+        const returnedFromService = Object.assign(
+          {
+            id: 1,
+            name: 'BBBBBB',
+          },
+          elemDefault
+        );
+
+        const expected = Object.assign({}, returnedFromService);
+
+        service.queryForProf().subscribe(resp => (expectedResult = resp.body));
+
+        const req = httpMock.expectOne({ method: 'GET' });
+        expect(req.request.url).toEqual('api/classes/of-current-prof');
         req.flush([returnedFromService]);
         httpMock.verify();
         expect(expectedResult).toContainEqual(expected);

@@ -1,48 +1,48 @@
 <div class="row justify-content-center">
   <div class="col-8">
     <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
-      <h2 id="jhi-classe-heading" data-cy="ClasseCreateUpdateHeading">Create or edit a Classe</h2>
+      <h2 id="jhi-classe-heading" data-cy="ClasseCreateUpdateHeading">Créer ou modifier la classe</h2>
 
       <div>
         <jhi-alert-error></jhi-alert-error>
 
-        <div class="form-group" [hidden]="editForm.get('id')!.value == null">
+        <div class="form-group" [hidden]="editForm.get('id')!.value == null" *jhiHasAnyAuthority="'ROLE_ADMIN'">
           <label class="form-control-label" for="field_id">ID</label>
           <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
         </div>
 
         <div class="form-group">
-          <label class="form-control-label" for="field_name">Name</label>
+          <label class="form-control-label" for="field_name">Nom</label>
           <input type="text" class="form-control" name="name" id="field_name" data-cy="name" formControlName="name" />
           <div *ngIf="editForm.get('name')!.invalid && (editForm.get('name')!.dirty || editForm.get('name')!.touched)">
-            <small class="form-text text-danger" *ngIf="editForm.get('name')?.errors?.required"> This field is required. </small>
+            <small class="form-text text-danger" *ngIf="editForm.get('name')?.errors?.required"> Ce champs est requis. </small>
           </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group" *jhiHasAnyAuthority="'ROLE_ADMIN'">
           <label class="form-control-label" for="field_prof">Prof</label>
           <select class="form-control" id="field_prof" data-cy="prof" name="prof" formControlName="prof">
             <option *ngIf="!editForm.get('prof')!.value" [ngValue]="null" selected></option>
             <option
-              [ngValue]="userOption.id === editForm.get('prof')!.value?.id ? editForm.get('prof')!.value : userOption"
-              *ngFor="let userOption of usersSharedCollection; trackBy: trackUserById"
+              [ngValue]="prof.id === editForm.get('prof')!.value?.id ? editForm.get('prof')!.value : prof"
+              *ngFor="let prof of profsSharedCollection; trackBy: trackUserById"
             >
-              {{ userOption.login }}
+              {{ prof.firstName }} {{ prof.lastName }}
             </option>
           </select>
         </div>
         <div *ngIf="editForm.get(['prof'])!.invalid && (editForm.get(['prof'])!.dirty || editForm.get(['prof'])!.touched)">
-          <small class="form-text text-danger" *ngIf="editForm.get(['prof'])?.errors?.required"> This field is required. </small>
+          <small class="form-text text-danger" *ngIf="editForm.get(['prof'])?.errors?.required"> Ce champs est requis. </small>
         </div>
 
         <div class="form-group">
-          <label for="field_students">Student</label>
+          <label for="field_students">Elèves</label>
           <select class="form-control" id="field_students" data-cy="student" multiple name="students" formControlName="students">
             <option
-              [ngValue]="getSelectedUser(userOption, editForm.get('students')!.value)"
-              *ngFor="let userOption of usersSharedCollection; trackBy: trackUserById"
+              [ngValue]="getSelectedUser(student, editForm.get('students')!.value)"
+              *ngFor="let student of studentsSharedCollection; trackBy: trackUserById"
             >
-              {{ userOption.login }}
+              {{ student.firstName }} {{ student.lastName }}
             </option>
           </select>
         </div>
@@ -50,7 +50,7 @@
 
       <div>
         <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
-          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Annuler</span>
         </button>
 
         <button
@@ -60,7 +60,7 @@
           [disabled]="editForm.invalid || isSaving"
           class="btn btn-primary"
         >
-          <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+          <fa-icon icon="save"></fa-icon>&nbsp;<span>Enregistrer</span>
         </button>
       </div>
     </form>

@@ -5,7 +5,7 @@
     <div class="d-flex justify-content-end">
       <button class="btn btn-info mr-2" (click)="loadAll()" [disabled]="isLoading">
         <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
-        <span>Refresh List</span>
+        <span>Recharger</span>
       </button>
 
       <button
@@ -15,7 +15,7 @@
         [routerLink]="['/classe/new']"
       >
         <fa-icon icon="plus"></fa-icon>
-        <span> Create a new Classe </span>
+        <span> Créer une nouvelle classe </span>
       </button>
     </div>
   </h2>
@@ -25,47 +25,47 @@
   <jhi-alert></jhi-alert>
 
   <div class="alert alert-warning" id="no-result" *ngIf="classes?.length === 0">
-    <span>No classes found</span>
+    <span>Aucune classe</span>
   </div>
 
   <div class="table-responsive" id="entities" *ngIf="classes && classes.length > 0">
     <table class="table table-striped" aria-describedby="page-heading">
       <thead>
         <tr>
-          <th scope="col"><span>ID</span></th>
-          <th scope="col"><span>Name</span></th>
-          <th scope="col"><span>Prof</span></th>
-          <th scope="col"><span>Student</span></th>
+          <th scope="col" *jhiHasAnyAuthority="'ROLE_ADMIN'"><span>ID</span></th>
+          <th scope="col"><span>Nom</span></th>
+          <th scope="col" *jhiHasAnyAuthority="'ROLE_ADMIN'"><span>Prof</span></th>
+          <th scope="col"><span>Elèves</span></th>
           <th scope="col"></th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let classe of classes; trackBy: trackId" data-cy="entityTable">
-          <td>
+          <td *jhiHasAnyAuthority="'ROLE_ADMIN'">
             <a [routerLink]="['/classe', classe.id, 'view']">{{ classe.id }}</a>
           </td>
           <td>{{ classe.name }}</td>
+          <td *jhiHasAnyAuthority="'ROLE_ADMIN'">{{ classe.prof?.firstName }} {{ classe.prof?.lastName }}</td>
           <td>
-            {{ classe.prof?.login }}
-          </td>
-          <td>
-            <span *ngFor="let student of classe.students; let last = last"> {{ student.login }}{{ last ? '' : ', ' }} </span>
+            <span *ngFor="let student of classe.students; let last = last">
+              {{ student.firstName }} {{ student.lastName }}{{ last ? '' : ', ' }}
+            </span>
           </td>
           <td class="text-right">
             <div class="btn-group">
               <button type="submit" [routerLink]="['/classe', classe.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
                 <fa-icon icon="eye"></fa-icon>
-                <span class="d-none d-md-inline">View</span>
+                <span class="d-none d-md-inline">Voir</span>
               </button>
 
               <button type="submit" [routerLink]="['/classe', classe.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
                 <fa-icon icon="pencil-alt"></fa-icon>
-                <span class="d-none d-md-inline">Edit</span>
+                <span class="d-none d-md-inline">Modifier</span>
               </button>
 
               <button type="submit" (click)="delete(classe)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
                 <fa-icon icon="times"></fa-icon>
-                <span class="d-none d-md-inline">Delete</span>
+                <span class="d-none d-md-inline">Supprimer</span>
               </button>
             </div>
           </td>

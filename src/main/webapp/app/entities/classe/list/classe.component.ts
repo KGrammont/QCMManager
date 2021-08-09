@@ -5,6 +5,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { IClasse } from '../classe.model';
 import { ClasseService } from '../service/classe.service';
 import { ClasseDeleteDialogComponent } from '../delete/classe-delete-dialog.component';
+import { AccountService } from 'app/core/auth/account.service';
 
 @Component({
   selector: 'jhi-classe',
@@ -14,20 +15,32 @@ export class ClasseComponent implements OnInit {
   classes?: IClasse[];
   isLoading = false;
 
-  constructor(protected classeService: ClasseService, protected modalService: NgbModal) {}
+  constructor(protected classeService: ClasseService, private accountService: AccountService, protected modalService: NgbModal) {}
 
   loadAll(): void {
     this.isLoading = true;
 
-    this.classeService.query().subscribe(
-      (res: HttpResponse<IClasse[]>) => {
-        this.isLoading = false;
-        this.classes = res.body ?? [];
-      },
-      () => {
-        this.isLoading = false;
-      }
-    );
+    if (this.accountService.hasAnyAuthority('ROLE_ADMIN')) {
+      this.classeService.query().subscribe(
+        (res: HttpResponse<IClasse[]>) => {
+          this.isLoading = false;
+          this.classes = res.body ?? [];
+        },
+        () => {
+          this.isLoading = false;
+        }
+      );
+    } else {
+      this.classeService.queryForProf().subscribe(
+        (res: HttpResponse<IClasse[]>) => {
+          this.isLoading = false;
+          this.classes = res.body ?? [];
+        },
+        () => {
+          this.isLoading = false;
+        }
+      );
+    }
   }
 
   ngOnInit(): void {

@@ -145,6 +145,18 @@ public class ClasseResource {
     }
 
     /**
+     * {@code GET  /classes/of-current-prof} : get all the classes of current prof.
+     *
+     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of classes in body.
+     */
+    @GetMapping("/classes/of-current-prof")
+    public List<Classe> getClassesOfProf(@RequestParam(required = false, defaultValue = "false") boolean eagerload) {
+        log.debug("REST request to get all Classes of current prof");
+        return classeService.findByProfIsCurrentUser();
+    }
+
+    /**
      * {@code GET  /classes/:id} : get the "id" classe.
      *
      * @param id the id of the classe to retrieve.

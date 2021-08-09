@@ -11,12 +11,24 @@ import { IUser, getUserIdentifier } from './user.model';
 @Injectable({ providedIn: 'root' })
 export class UserService {
   public resourceUrl = this.applicationConfigService.getEndpointFor('api/users');
+  public studentResourceUrl = this.applicationConfigService.getEndpointFor('api/students');
+  public profResourceUrl = this.applicationConfigService.getEndpointFor('api/profs');
 
   constructor(private http: HttpClient, private applicationConfigService: ApplicationConfigService) {}
 
   query(req?: Pagination): Observable<HttpResponse<IUser[]>> {
     const options = createRequestOption(req);
     return this.http.get<IUser[]>(this.resourceUrl, { params: options, observe: 'response' });
+  }
+
+  queryStudents(req?: Pagination): Observable<HttpResponse<IUser[]>> {
+    const options = createRequestOption(req);
+    return this.http.get<IUser[]>(this.studentResourceUrl, { params: options, observe: 'response' });
+  }
+
+  queryProfs(req?: Pagination): Observable<HttpResponse<IUser[]>> {
+    const options = createRequestOption(req);
+    return this.http.get<IUser[]>(this.profResourceUrl, { params: options, observe: 'response' });
   }
 
   addUserToCollectionIfMissing(userCollection: IUser[], ...usersToCheck: (IUser | null | undefined)[]): IUser[] {

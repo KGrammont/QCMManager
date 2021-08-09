@@ -72,6 +72,17 @@ public class ClasseService {
     }
 
     /**
+     * Get all the classes of the current user.
+     *
+     * @return the list of entities.
+     */
+    @Transactional(readOnly = true)
+    public List<Classe> findByProfIsCurrentUser() {
+        log.debug("Request to get all Classes of the current prof user");
+        return classeRepository.findByProfIsCurrentUser();
+    }
+
+    /**
      * Get all the classes with eager load of many-to-many relationships.
      *
      * @return the list of entities.
