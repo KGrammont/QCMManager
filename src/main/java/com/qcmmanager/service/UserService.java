@@ -275,6 +275,20 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
+    public Page<AdminUserDTO> getAllManagedStudents(Pageable pageable) {
+        Authority studentAuthority = new Authority();
+        studentAuthority.setName(AuthoritiesConstants.STUDENT);
+        return userRepository.findAllByAuthorities(studentAuthority, pageable).map(AdminUserDTO::new);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<AdminUserDTO> getAllManagedProfs(Pageable pageable) {
+        Authority profAuthority = new Authority();
+        profAuthority.setName(AuthoritiesConstants.PROF);
+        return userRepository.findAllByAuthorities(profAuthority, pageable).map(AdminUserDTO::new);
+    }
+
+    @Transactional(readOnly = true)
     public Page<UserDTO> getAllPublicUsers(Pageable pageable) {
         return userRepository.findAllByIdNotNullAndActivatedIsTrue(pageable).map(UserDTO::new);
     }

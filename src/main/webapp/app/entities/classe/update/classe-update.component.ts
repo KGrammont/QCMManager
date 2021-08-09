@@ -9,6 +9,8 @@ import { IClasse, Classe } from '../classe.model';
 import { ClasseService } from '../service/classe.service';
 import { IUser } from 'app/entities/user/user.model';
 import { UserService } from 'app/entities/user/user.service';
+import { AccountService } from 'app/core/auth/account.service';
+import { Authority } from 'app/config/authority.constants';
 
 @Component({
   selector: 'jhi-classe-update',
@@ -17,7 +19,8 @@ import { UserService } from 'app/entities/user/user.service';
 export class ClasseUpdateComponent implements OnInit {
   isSaving = false;
 
-  usersSharedCollection: IUser[] = [];
+  profsSharedCollection: IUser[] = [];
+  studentsSharedCollection: IUser[] = [];
 
   editForm = this.fb.group({
     id: [],
@@ -30,14 +33,16 @@ export class ClasseUpdateComponent implements OnInit {
     protected classeService: ClasseService,
     protected userService: UserService,
     protected activatedRoute: ActivatedRoute,
-    protected fb: FormBuilder
+    protected fb: FormBuilder,
+    private accountService: AccountService
   ) {}
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ classe }) => {
       this.updateForm(classe);
 
-      this.loadRelationshipsOptions();
+      this.loadStudents();
+      this.loadProfs();
     });
   }
 
@@ -97,27 +102,27 @@ export class ClasseUpdateComponent implements OnInit {
       students: classe.students,
     });
 
-    this.usersSharedCollection = this.userService.addUserToCollectionIfMissing(
-      this.usersSharedCollection,
-      classe.prof,
+    this.studentsSharedCollection = this.userService.addUserToCollectionIfMissing(
+      this.studentsSharedCollection,
       ...(classe.students ?? [])
     );
   }
 
-  protected loadRelationshipsOptions(): void {
+  protected loadStudents(): void {
     this.userService
-      .query()
+      .queryStudents()
       .pipe(map((res: HttpResponse<IUser[]>) => res.body ?? []))
-      .pipe(
-        map((users: IUser[]) =>
-          this.userService.addUserToCollectionIfMissing(
-            users,
-            this.editForm.get('prof')!.value,
-            ...(this.editForm.get('students')!.value ?? [])
-          )
-        )
-      )
-      .subscribe((users: IUser[]) => (this.usersSharedCollection = users));
+      .pipe(map((users: IUser[]) => this.userService.addUserToCollectionIfMissing(users, ...(this.editForm.get('students')!.value ?? []))))
+      .subscribe((users: IUser[]) => (this.studentsSharedCollection = users));
+  }
+
+  protected loadProfs(): void {
+    if (this.accountService.hasAnyAuthority(Authority.ADMIN)) {
+      this.userService
+        .queryProfs()
+        .pipe(map((res: HttpResponse<IUser[]>) => res.body ?? []))
+        .subscribe((users: IUser[]) => (this.profsSharedCollection = users));
+    }
   }
 
   protected createFromForm(): IClasse {

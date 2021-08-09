@@ -32,12 +32,58 @@ describe('Service Tests', () => {
         });
 
         const req = httpMock.expectOne({ method: 'GET' });
-        req.flush([new User(123, 'user')]);
-        expect(expectedResult).toEqual([{ id: 123, login: 'user' }]);
+        req.flush([new User(123, 'user', 'firstname', 'lastname')]);
+        expect(expectedResult).toEqual([{ id: 123, login: 'user', firstName: 'firstname', lastName: 'lastname' }]);
       });
 
       it('should propagate not found response', () => {
         service.query().subscribe({
+          error: (error: HttpErrorResponse) => (expectedResult = error.status),
+        });
+
+        const req = httpMock.expectOne({ method: 'GET' });
+        req.flush('Internal Server Error', {
+          status: 500,
+          statusText: 'Inernal Server Error',
+        });
+        expect(expectedResult).toEqual(500);
+      });
+
+      it('should return Students', () => {
+        service.queryStudents().subscribe(received => {
+          expectedResult = received.body;
+        });
+
+        const req = httpMock.expectOne({ method: 'GET' });
+        req.flush([new User(123, 'user', 'firstname', 'lastname')]);
+        expect(expectedResult).toEqual([{ id: 123, login: 'user', firstName: 'firstname', lastName: 'lastname' }]);
+      });
+
+      it('should propagate not found response', () => {
+        service.queryStudents().subscribe({
+          error: (error: HttpErrorResponse) => (expectedResult = error.status),
+        });
+
+        const req = httpMock.expectOne({ method: 'GET' });
+        req.flush('Internal Server Error', {
+          status: 500,
+          statusText: 'Inernal Server Error',
+        });
+        expect(expectedResult).toEqual(500);
+      });
+
+      it('should return Profs', () => {
+        service.queryProfs().subscribe(received => {
+          expectedResult = received.body;
+        });
+
+        const req = httpMock.expectOne({ method: 'GET' });
+        req.flush([new User(123, 'user', 'firstname', 'lastname')]);
+        expect(expectedResult).toEqual([{ id: 123, login: 'user', firstName: 'firstname', lastName: 'lastname' }]);
+      });
+
+      it('should propagate not found response', () => {
+        service.queryProfs().subscribe({
           error: (error: HttpErrorResponse) => (expectedResult = error.status),
         });
 

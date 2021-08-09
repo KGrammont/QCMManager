@@ -14,6 +14,8 @@ import { IUser } from 'app/entities/user/user.model';
 import { UserService } from 'app/entities/user/user.service';
 
 import { ClasseUpdateComponent } from './classe-update.component';
+import { AccountService } from 'app/core/auth/account.service';
+import { Authority } from 'app/config/authority.constants';
 
 describe('Component Tests', () => {
   describe('Classe Management Update Component', () => {
@@ -22,12 +24,14 @@ describe('Component Tests', () => {
     let activatedRoute: ActivatedRoute;
     let classeService: ClasseService;
     let userService: UserService;
+    const accountService = { hasAnyAuthority: jest.fn(() => true) };
 
     beforeEach(() => {
+      TestBed.overrideProvider(AccountService, { useValue: accountService });
       TestBed.configureTestingModule({
         imports: [HttpClientTestingModule],
         declarations: [ClasseUpdateComponent],
-        providers: [FormBuilder, ActivatedRoute],
+        providers: [FormBuilder, ActivatedRoute, AccountService],
       })
         .overrideTemplate(ClasseUpdateComponent, '')
         .compileComponents();
@@ -41,25 +45,52 @@ describe('Component Tests', () => {
     });
 
     describe('ngOnInit', () => {
-      it('Should call User query and add missing value', () => {
+      it('Should call student and prof query and add missing student when ADMIN', () => {
+        const classe: IClasse = { id: 456 };
+        const students: IUser[] = [{ id: 8136 }];
+        classe.students = students;
+
+        const studentsFromQuery: IUser[] = [{ id: 62330 }];
+        spyOn(userService, 'queryStudents').and.returnValue(of(new HttpResponse({ body: studentsFromQuery })));
+        const expectedStudents: IUser[] = [...students, ...studentsFromQuery];
+        spyOn(userService, 'addUserToCollectionIfMissing').and.returnValue(expectedStudents);
+
+        spyOn(accountService, 'hasAnyAuthority').and.returnValue(true);
+        const expectedProfs: IUser[] = [{ id: 62330 }];
+        spyOn(userService, 'queryProfs').and.returnValue(of(new HttpResponse({ body: expectedProfs })));
+
+        activatedRoute.data = of({ classe });
+        comp.ngOnInit();
+
+        expect(accountService.hasAnyAuthority).toHaveBeenCalledWith(Authority.ADMIN);
+        expect(userService.queryStudents).toHaveBeenCalled();
+        expect(userService.queryProfs).toHaveBeenCalled();
+        expect(userService.addUserToCollectionIfMissing).toHaveBeenCalledWith(studentsFromQuery, ...students);
+        expect(comp.studentsSharedCollection).toEqual(expectedStudents);
+        expect(comp.profsSharedCollection).toEqual(expectedProfs);
+      });
+
+      it('Should call only student query and add missing student when not ADMIN', () => {
         const classe: IClasse = { id: 456 };
         const prof: IUser = { id: 13820 };
         classe.prof = prof;
         const students: IUser[] = [{ id: 8136 }];
         classe.students = students;
 
-        const userCollection: IUser[] = [{ id: 62330 }];
-        spyOn(userService, 'query').and.returnValue(of(new HttpResponse({ body: userCollection })));
-        const additionalUsers = [prof, ...students];
-        const expectedCollection: IUser[] = [...additionalUsers, ...userCollection];
-        spyOn(userService, 'addUserToCollectionIfMissing').and.returnValue(expectedCollection);
+        const studentsFromQuery: IUser[] = [{ id: 62330 }];
+        spyOn(userService, 'queryStudents').and.returnValue(of(new HttpResponse({ body: studentsFromQuery })));
+        const expectedStudents: IUser[] = [...students, ...studentsFromQuery];
+        spyOn(userService, 'addUserToCollectionIfMissing').and.returnValue(expectedStudents);
+
+        spyOn(accountService, 'hasAnyAuthority').and.returnValue(false);
 
         activatedRoute.data = of({ classe });
         comp.ngOnInit();
 
-        expect(userService.query).toHaveBeenCalled();
-        expect(userService.addUserToCollectionIfMissing).toHaveBeenCalledWith(userCollection, ...additionalUsers);
-        expect(comp.usersSharedCollection).toEqual(expectedCollection);
+        expect(accountService.hasAnyAuthority).toHaveBeenCalledWith(Authority.ADMIN);
+        expect(userService.queryStudents).toHaveBeenCalled();
+        expect(userService.addUserToCollectionIfMissing).toHaveBeenCalledWith(studentsFromQuery, ...students);
+        expect(comp.studentsSharedCollection).toEqual(expectedStudents);
       });
 
       it('Should update editForm', () => {
@@ -73,8 +104,7 @@ describe('Component Tests', () => {
         comp.ngOnInit();
 
         expect(comp.editForm.value).toEqual(expect.objectContaining(classe));
-        expect(comp.usersSharedCollection).toContain(prof);
-        expect(comp.usersSharedCollection).toContain(students);
+        expect(comp.studentsSharedCollection).toContain(students);
       });
     });
 
