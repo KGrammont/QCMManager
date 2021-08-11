@@ -25,7 +25,7 @@ export const userManagementRoute: Routes = [
     path: '',
     component: StudentManagementComponent,
     data: {
-      defaultSort: 'id,asc',
+      defaultSort: 'login,asc',
     },
   },
   {
