@@ -22,6 +22,14 @@ const LAYOUT_ROUTES = [navbarRoute, ...errorRoute];
           loadChildren: () => import('./admin/admin-routing.module').then(m => m.AdminRoutingModule),
         },
         {
+          path: 'prof',
+          data: {
+            authorities: [Authority.PROF],
+          },
+          canActivate: [UserRouteAccessService],
+          loadChildren: () => import('./prof/prof-routing.module').then(m => m.ProfRoutingModule),
+        },
+        {
           path: 'account',
           loadChildren: () => import('./account/account.module').then(m => m.AccountModule),
         },
