@@ -79,6 +79,7 @@ public class UserService {
         return userRepository
             .findOneByEmailIgnoreCase(mail)
             .filter(User::isActivated)
+            .filter(user -> user.getAuthorities().stream().noneMatch(authority -> AuthoritiesConstants.STUDENT.equals(authority.getName())))
             .map(
                 user -> {
                     user.setResetKey(RandomUtil.generateResetKey());
