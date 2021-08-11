@@ -37,7 +37,15 @@
 
         <div class="form-group">
           <label for="field_students">Elèves</label>
-          <select class="form-control" id="field_students" data-cy="student" multiple name="students" formControlName="students">
+          <select
+            class="form-control"
+            id="field_students"
+            data-cy="student"
+            multiple
+            name="students"
+            formControlName="students"
+            style="height: 400px"
+          >
             <option
               [ngValue]="getSelectedUser(student, editForm.get('students')!.value)"
               *ngFor="let student of studentsSharedCollection; trackBy: trackUserById"

@@ -1,9 +1,9 @@
 <div>
   <div class="row justify-content-center">
     <div class="col-lg-6 col-md-8 col-sm-10">
-      <h1 data-cy="loginTitle">Sign in</h1>
+      <h1 data-cy="loginTitle">Se connecter</h1>
       <div class="alert alert-danger" *ngIf="authenticationError" data-cy="loginError">
-        <strong>Failed to sign in!</strong> Please check your credentials and try again.
+        <strong>Echec de la connexion!</strong> Vérifier votre login / mot de passe et réessayer.
       </div>
       <form class="form" role="form" (ngSubmit)="login()" [formGroup]="loginForm">
         <div class="form-group">
@@ -13,7 +13,7 @@
             class="form-control"
             name="username"
             id="username"
-            placeholder="Your username"
+            placeholder="Votre login"
             formControlName="username"
             #username
             data-cy="username"
@@ -21,13 +21,13 @@
         </div>
 
         <div class="form-group">
-          <label for="password">Password</label>
+          <label for="password">Mot de passe</label>
           <input
             type="password"
             class="form-control"
             name="password"
             id="password"
-            placeholder="Your password"
+            placeholder="Votre mot de passe"
             formControlName="password"
             data-cy="password"
           />
@@ -36,19 +36,17 @@
         <div class="form-check">
           <label class="form-check-label" for="rememberMe">
             <input class="form-check-input" type="checkbox" name="rememberMe" id="rememberMe" formControlName="rememberMe" />
-            <span>Remember me</span>
+            <span>Se souvenir de moi</span>
           </label>
         </div>
 
-        <button type="submit" class="btn btn-primary" data-cy="submit">Sign in</button>
+        <button type="submit" class="btn btn-primary" data-cy="submit">Se connecter</button>
       </form>
       <div class="mt-3 alert alert-warning">
-        <a class="alert-link" routerLink="/account/reset/request" data-cy="forgetYourPasswordSelector">Did you forget your password?</a>
-      </div>
-
-      <div class="alert alert-warning">
-        <span>You don't have an account yet?</span>
-        <a class="alert-link" routerLink="/account/register">Register a new account</a>
+        <span>Vous avez oublié votre mot de passe?</span> <br />
+        <span>Si vous êtes un professeur, </span>
+        <a class="alert-link" routerLink="/account/reset/request" data-cy="forgetYourPasswordSelector">cliquer ici</a>.<br />
+        <span>Si vous êtes un élève, veuillez demander à votre professeur.</span>
       </div>
     </div>
   </div>
