@@ -8,7 +8,7 @@ import { RouterModule } from '@angular/router';
         path: 'user-management',
         loadChildren: () => import('./student-management/student-management.module').then(m => m.StudentManagementModule),
         data: {
-          pageTitle: 'Utilisateurs',
+          pageTitle: 'Elèves',
         },
       },
     ]),

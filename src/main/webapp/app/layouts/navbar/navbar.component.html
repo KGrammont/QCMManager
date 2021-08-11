@@ -136,7 +136,7 @@
         </ul>
       </li>
       <li
-        *jhiHasAnyAuthority="['ROLE_PROF']"
+        *jhiHasAnyAuthority="'ROLE_PROF'"
         ngbDropdown
         class="nav-item dropdown pointer"
         display="dynamic"
@@ -177,7 +177,7 @@
         </ul>
       </li>
       <li
-        *jhiHasAnyAuthority="['ROLE_PROF']"
+        *jhiHasAnyAuthority="'ROLE_PROF'"
         ngbDropdown
         class="nav-item dropdown pointer"
         display="dynamic"
@@ -217,6 +217,14 @@
           </li>
         </ul>
       </li>
+      <li *jhiHasAnyAuthority="'ROLE_STUDENT'" class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        <a class="nav-link" routerLink="qcm" (click)="collapseNavbar()">
+          <span>
+            <fa-icon icon="pencil"></fa-icon>
+            <span>QCM</span>
+          </span>
+        </a>
+      </li>
       <li
         ngbDropdown
         class="nav-item dropdown pointer"
@@ -234,13 +242,13 @@
           </span>
         </a>
         <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="account-menu">
-          <li *ngSwitchCase="true">
+          <li *jhiHasAnyAuthority="['ROLE_ADMIN', 'ROLE_PROF']">
             <a class="dropdown-item" routerLink="account/settings" routerLinkActive="active" (click)="collapseNavbar()" data-cy="settings">
               <fa-icon icon="wrench" [fixedWidth]="true"></fa-icon>
               <span>Profil</span>
             </a>
           </li>
-          <li *ngSwitchCase="true">
+          <li *jhiHasAnyAuthority="['ROLE_ADMIN', 'ROLE_PROF']">
             <a
               class="dropdown-item"
               routerLink="account/password"

@@ -31,6 +31,9 @@ const LAYOUT_ROUTES = [navbarRoute, ...errorRoute];
         },
         {
           path: 'account',
+          data: {
+            authorities: [Authority.ADMIN, Authority.PROF],
+          },
           loadChildren: () => import('./account/account.module').then(m => m.AccountModule),
         },
         {
