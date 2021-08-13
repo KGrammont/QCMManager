@@ -36,7 +36,7 @@ export class StudentManagementUpdateComponent implements OnInit {
       if (user) {
         this.user = user;
         if (this.user.id === undefined) {
-          this.user.pass = this.generateRandomPass();
+          this.user.pass = this.userService.generateRandomPass();
         }
         this.updateForm(user);
       }
@@ -71,16 +71,6 @@ export class StudentManagementUpdateComponent implements OnInit {
         () => this.onSaveError()
       );
     }
-  }
-
-  private generateRandomPass(): string {
-    let pass = '';
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    const charactersLength = characters.length;
-    for (let i = 0; i < 4; i++) {
-      pass += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return pass;
   }
 
   private updateForm(user: User): void {

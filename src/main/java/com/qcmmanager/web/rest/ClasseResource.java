@@ -58,7 +58,7 @@ public class ClasseResource {
         Classe result = classeService.save(classe);
         return ResponseEntity
             .created(new URI("/api/classes/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
+            .headers(HeaderUtil.createAlert(applicationName, "La classe " + result.getName() + " a bien été créée.", result.getName()))
             .body(result);
     }
 
@@ -92,7 +92,7 @@ public class ClasseResource {
         Classe result = classeService.save(classe);
         return ResponseEntity
             .ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, classe.getId().toString()))
+            .headers(HeaderUtil.createAlert(applicationName, "La classe " + result.getName() + " a bien été modifiée.", result.getName()))
             .body(result);
     }
 
@@ -181,7 +181,7 @@ public class ClasseResource {
         classeService.delete(id);
         return ResponseEntity
             .noContent()
-            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString()))
+            .headers(HeaderUtil.createAlert(applicationName, "La classe a bien été supprimée.", id.toString()))
             .build();
     }
 }

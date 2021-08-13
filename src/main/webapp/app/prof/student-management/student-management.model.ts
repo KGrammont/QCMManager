@@ -31,3 +31,23 @@ export class User implements IUser {
     public lastModifiedDate?: Date
   ) {}
 }
+
+export interface IUserCreationFeedback {
+  email: string;
+  hasBeenCreated: boolean;
+  reason: string;
+}
+
+export class UserCreationFeedback implements IUserCreationFeedback {
+  constructor(public email: string, public hasBeenCreated: boolean, public reason: string) {}
+}
+
+export interface IUserPlusFeedback {
+  user: User;
+  hasBeenCreated?: boolean;
+  reason?: string;
+}
+
+export class UserPlusFeedback implements IUserPlusFeedback {
+  constructor(public user: User, public hasBeenCreated?: boolean, public reason?: string) {}
+}

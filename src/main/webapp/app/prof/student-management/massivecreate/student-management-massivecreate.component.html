@@ -1,0 +1,59 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <h2 id="myUserLabel">Créer plusieurs élèves</h2>
+
+    <div class="mb-2">
+      <jhi-alert-error></jhi-alert-error>
+      <span>
+        Voici les quelques contraintes à respecter : <br />
+        - prénom, nom et email sont obligatoires; <br />
+        - le prénom et le nom ne doivent pas dépasser 50 caractères à eux deux; <br />
+        - l'email doit avoir entre 5 et 100 caractères. <br />
+      </span>
+    </div>
+
+    <div class="mb-2">
+      <input type="file" class="upload" (change)="changeListener($event)" />
+    </div>
+
+    <div *ngIf="users">
+      <table class="table table-striped" aria-describedby="student-management-creation-csv">
+        <thead>
+          <tr>
+            <th scope="col"><span>Prénom</span></th>
+            <th scope="col"><span>Nom</span></th>
+            <th scope="col"><span>Email</span></th>
+            <th scope="col"><span>Login</span></th>
+            <th scope="col"><span>Mot de passe</span></th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody *ngIf="users">
+          <tr *ngFor="let user of users; trackBy: trackLogin">
+            <td>{{ user.user.firstName }}</td>
+            <td>{{ user.user.lastName }}</td>
+            <td>{{ user.user.email }}</td>
+            <td>{{ user.user.login }}</td>
+            <td>{{ user.user.pass }}</td>
+            <td *ngIf="user.hasBeenCreated" style="background-color: rgba(95, 255, 21, 0.5)">
+              {{ user.reason }}
+            </td>
+            <td *ngIf="user.hasBeenCreated === false" style="background-color: rgba(255, 38, 0, 0.5)">
+              {{ user.reason }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div>
+      <button type="button" class="btn btn-secondary" (click)="previousState()">
+        <fa-icon icon="ban"></fa-icon>&nbsp;<span>Retour à la vue élève</span>
+      </button>
+
+      <button type="button" [disabled]="users === null || isSaving" class="btn btn-primary" (click)="save()">
+        <fa-icon icon="save"></fa-icon>&nbsp;<span>Enregistrer</span>
+      </button>
+    </div>
+  </div>
+</div>

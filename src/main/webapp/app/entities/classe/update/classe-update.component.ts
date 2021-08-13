@@ -122,6 +122,8 @@ export class ClasseUpdateComponent implements OnInit {
         .queryProfs()
         .pipe(map((res: HttpResponse<IUser[]>) => res.body ?? []))
         .subscribe((users: IUser[]) => (this.profsSharedCollection = users));
+    } else {
+      this.accountService.identity().subscribe(profAccount => this.editForm.get(['prof'])!.setValue(profAccount));
     }
   }
 

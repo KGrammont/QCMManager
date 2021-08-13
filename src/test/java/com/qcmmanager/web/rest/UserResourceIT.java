@@ -3,6 +3,7 @@ package com.qcmmanager.web.rest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasItems;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -12,6 +13,7 @@ import com.qcmmanager.domain.User;
 import com.qcmmanager.repository.UserRepository;
 import com.qcmmanager.security.AuthoritiesConstants;
 import com.qcmmanager.service.dto.AdminUserDTO;
+import com.qcmmanager.service.dto.AdminUserWithPassDTO;
 import com.qcmmanager.service.mapper.UserMapper;
 import com.qcmmanager.web.rest.vm.ManagedUserVM;
 import java.time.Instant;
@@ -56,8 +58,10 @@ class UserResourceIT {
     private static final String DEFAULT_IMAGEURL = "http://placehold.it/50x50";
     private static final String UPDATED_IMAGEURL = "http://placehold.it/40x40";
 
-    private static final String DEFAULT_LANGKEY = "en";
-    private static final String UPDATED_LANGKEY = "fr";
+    private static final String DEFAULT_LANGKEY = "fr";
+    private static final String UPDATED_LANGKEY = "en";
+
+    private static final Authority STUDENT_AUTHORITY = new Authority();
 
     @Autowired
     private UserRepository userRepository;
@@ -105,6 +109,7 @@ class UserResourceIT {
     @BeforeEach
     public void initTest() {
         user = initTestUser(userRepository, em);
+        STUDENT_AUTHORITY.setName(AuthoritiesConstants.STUDENT);
     }
 
     @Test
@@ -225,6 +230,107 @@ class UserResourceIT {
             .perform(
                 post("/api/admin/users").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(managedUserVM))
             )
+            .andExpect(status().isBadRequest());
+
+        // Validate the User in the database
+        assertPersistedUsers(users -> assertThat(users).hasSize(databaseSizeBeforeCreate));
+    }
+
+    @Test
+    @Transactional
+    void createStudent() throws Exception {
+        int databaseSizeBeforeCreate = userRepository.findAll().size();
+
+        // Create the User
+        AdminUserWithPassDTO user = new AdminUserWithPassDTO();
+        user.setLogin(DEFAULT_LOGIN);
+        user.setPass(DEFAULT_PASSWORD);
+        user.setFirstName(DEFAULT_FIRSTNAME);
+        user.setLastName(DEFAULT_LASTNAME);
+        user.setEmail(DEFAULT_EMAIL);
+
+        restUserMockMvc
+            .perform(post("/api/admin/students").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(user)))
+            .andExpect(status().isCreated());
+
+        // Validate the User in the database
+        assertPersistedUsers(
+            users -> {
+                assertThat(users).hasSize(databaseSizeBeforeCreate + 1);
+                User testUser = users.get(users.size() - 1);
+                assertThat(testUser.getLogin()).isEqualTo(DEFAULT_LOGIN);
+                assertThat(testUser.getFirstName()).isEqualTo(DEFAULT_FIRSTNAME);
+                assertThat(testUser.getLastName()).isEqualTo(DEFAULT_LASTNAME);
+                assertThat(testUser.getEmail()).isEqualTo(DEFAULT_EMAIL);
+                assertThat(testUser.getLangKey()).isEqualTo(DEFAULT_LANGKEY);
+                assertTrue(testUser.isActivated());
+                assertThat(testUser.getAuthorities()).containsExactly(STUDENT_AUTHORITY);
+            }
+        );
+    }
+
+    @Test
+    @Transactional
+    void createStudentWithExistingId() throws Exception {
+        int databaseSizeBeforeCreate = userRepository.findAll().size();
+
+        AdminUserWithPassDTO user = new AdminUserWithPassDTO();
+        user.setId(DEFAULT_ID);
+        user.setLogin(DEFAULT_LOGIN);
+        user.setPass(DEFAULT_PASSWORD);
+        user.setFirstName(DEFAULT_FIRSTNAME);
+        user.setLastName(DEFAULT_LASTNAME);
+        user.setEmail(DEFAULT_EMAIL);
+
+        // An entity with an existing ID cannot be created, so this API call must fail
+        restUserMockMvc
+            .perform(post("/api/admin/students").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(user)))
+            .andExpect(status().isBadRequest());
+
+        // Validate the User in the database
+        assertPersistedUsers(users -> assertThat(users).hasSize(databaseSizeBeforeCreate));
+    }
+
+    @Test
+    @Transactional
+    void createStudentWithExistingLogin() throws Exception {
+        // Initialize the database
+        userRepository.saveAndFlush(user);
+        int databaseSizeBeforeCreate = userRepository.findAll().size();
+
+        AdminUserWithPassDTO user = new AdminUserWithPassDTO();
+        user.setLogin(DEFAULT_LOGIN); // this login should already be used
+        user.setPass(DEFAULT_PASSWORD);
+        user.setFirstName(DEFAULT_FIRSTNAME);
+        user.setLastName(DEFAULT_LASTNAME);
+        user.setEmail("anothermail@localhost");
+
+        // Create the User
+        restUserMockMvc
+            .perform(post("/api/admin/students").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(user)))
+            .andExpect(status().isBadRequest());
+
+        // Validate the User in the database
+        assertPersistedUsers(users -> assertThat(users).hasSize(databaseSizeBeforeCreate));
+    }
+
+    @Test
+    @Transactional
+    void createStudentWithExistingEmail() throws Exception {
+        // Initialize the database
+        userRepository.saveAndFlush(user);
+        int databaseSizeBeforeCreate = userRepository.findAll().size();
+
+        AdminUserWithPassDTO user = new AdminUserWithPassDTO();
+        user.setLogin("anotherlogin");
+        user.setPass(DEFAULT_PASSWORD);
+        user.setFirstName(DEFAULT_FIRSTNAME);
+        user.setLastName(DEFAULT_LASTNAME);
+        user.setEmail(DEFAULT_EMAIL); // this email should already be used
+
+        // Create the User
+        restUserMockMvc
+            .perform(post("/api/admin/students").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(user)))
             .andExpect(status().isBadRequest());
 
         // Validate the User in the database
