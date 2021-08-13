@@ -5,18 +5,26 @@ import { Observable } from 'rxjs';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { createRequestOption } from 'app/core/request/request-util';
 import { Pagination } from 'app/core/request/request.model';
-import { IUser } from '../student-management.model';
+import { IUser, IUserCreationFeedback } from '../student-management.model';
 
 @Injectable({ providedIn: 'root' })
 export class StudentManagementService {
   public adminResourceUrl = this.applicationConfigService.getEndpointFor('api/admin/users');
   public studentCreationResourceUrl = this.applicationConfigService.getEndpointFor('api/admin/students');
+  public studentMassiveCreationResourceUrl = this.applicationConfigService.getEndpointFor('api/admin/students/multiple');
   public studentsResourceUrl = this.applicationConfigService.getEndpointFor('api/students');
+
+  private characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  private charactersLength = this.characters.length;
 
   constructor(private http: HttpClient, private applicationConfigService: ApplicationConfigService) {}
 
   create(user: IUser): Observable<IUser> {
     return this.http.post<IUser>(this.studentCreationResourceUrl, user);
+  }
+
+  massiveCreate(users: IUser[]): Observable<IUserCreationFeedback[]> {
+    return this.http.post<IUserCreationFeedback[]>(this.studentMassiveCreationResourceUrl, users);
   }
 
   update(user: IUser): Observable<IUser> {
@@ -34,5 +42,13 @@ export class StudentManagementService {
 
   delete(login: string): Observable<{}> {
     return this.http.delete(`${this.adminResourceUrl}/${login}`);
+  }
+
+  generateRandomPass(): string {
+    let pass = '';
+    for (let i = 0; i < 4; i++) {
+      pass += this.characters.charAt(Math.floor(Math.random() * this.charactersLength));
+    }
+    return pass;
   }
 }

@@ -8,15 +8,15 @@ import com.qcmmanager.service.MailService;
 import com.qcmmanager.service.UserService;
 import com.qcmmanager.service.dto.AdminUserDTO;
 import com.qcmmanager.service.dto.AdminUserWithPassDTO;
-import com.qcmmanager.service.dto.PasswordChangeDTO;
 import com.qcmmanager.web.rest.errors.BadRequestAlertException;
 import com.qcmmanager.web.rest.errors.EmailAlreadyUsedException;
 import com.qcmmanager.web.rest.errors.LoginAlreadyUsedException;
+import com.qcmmanager.web.rest.vm.UserCreationFeedback;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
 import java.util.Collections;
-import javax.validation.Valid;
+import javax.validation.*;
 import javax.validation.constraints.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -113,7 +113,11 @@ public class UserResource {
             return ResponseEntity
                 .created(new URI("/api/admin/users/" + newUser.getLogin()))
                 .headers(
-                    HeaderUtil.createAlert(applicationName, "A user is created with identifier " + newUser.getLogin(), newUser.getLogin())
+                    HeaderUtil.createAlert(
+                        applicationName,
+                        "L'utilisateur " + newUser.getFirstName() + " " + newUser.getLastName() + " a bien été créé.",
+                        newUser.getLogin()
+                    )
                 )
                 .body(newUser);
         }
@@ -146,10 +150,58 @@ public class UserResource {
             return ResponseEntity
                 .created(new URI("/api/admin/users/" + newUser.getLogin()))
                 .headers(
-                    HeaderUtil.createAlert(applicationName, "A user is created with identifier " + newUser.getLogin(), newUser.getLogin())
+                    HeaderUtil.createAlert(
+                        applicationName,
+                        "L'élève " + newUser.getFirstName() + " " + newUser.getLastName() + " a bien été créé.",
+                        newUser.getLogin()
+                    )
                 )
                 .body(newUser);
         }
+    }
+
+    /**
+     * {@code POST  /admin/students/multiple}  : Creates a set of users with student authority.
+     * <p>
+     * Creates a set of users if the login and email are not already used, account is activated and password set, no email sent.
+     *
+     * @param users the user to create.
+     * @return the {@link ResponseEntity} with status {@code 200 (Ok)} and with body the description of the creation.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PostMapping("/students/multiple")
+    @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.ADMIN + "\", \"" + AuthoritiesConstants.PROF + "\")")
+    public ResponseEntity<List<UserCreationFeedback>> createStudents(@Valid @RequestBody List<AdminUserWithPassDTO> users)
+        throws URISyntaxException {
+        log.debug("REST request to save Users : {}", users);
+        List<UserCreationFeedback> feedbacks = new ArrayList<>();
+
+        users.forEach(
+            userDTO -> {
+                ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+                Validator validator = factory.getValidator();
+                Set<ConstraintViolation<AdminUserWithPassDTO>> validationErrors = validator.validate(userDTO);
+                if (!validationErrors.isEmpty()) {
+                    StringJoiner errors = new StringJoiner("/n");
+                    validationErrors.forEach(
+                        constraint -> {
+                            errors.add(String.format("Contrainte sur '%s' : %s.", constraint.getPropertyPath(), constraint.getMessage()));
+                        }
+                    );
+                    feedbacks.add(new UserCreationFeedback(userDTO.getEmail(), false, errors.toString()));
+                } else if (userDTO.getId() != null) {
+                    throw new BadRequestAlertException("A new user cannot already have an ID", "userManagement", "idexists");
+                } else if (userRepository.findOneByLogin(userDTO.getLogin().toLowerCase()).isPresent()) {
+                    feedbacks.add(new UserCreationFeedback(userDTO.getEmail(), false, "Le login est déjà utilisé."));
+                } else if (userRepository.findOneByEmailIgnoreCase(userDTO.getEmail()).isPresent()) {
+                    feedbacks.add(new UserCreationFeedback(userDTO.getEmail(), false, "L'email est déjà utilisé."));
+                } else {
+                    userService.createStudentWithPass(userDTO);
+                    feedbacks.add(new UserCreationFeedback(userDTO.getEmail(), true, "Créé"));
+                }
+            }
+        );
+        return ResponseEntity.ok(feedbacks);
     }
 
     /**
@@ -176,7 +228,11 @@ public class UserResource {
 
         return ResponseUtil.wrapOrNotFound(
             updatedUser,
-            HeaderUtil.createAlert(applicationName, "A user is updated with identifier " + userDTO.getLogin(), userDTO.getLogin())
+            HeaderUtil.createAlert(
+                applicationName,
+                "L'utilisateur " + userDTO.getFirstName() + " " + userDTO.getLastName() + " a bien été mis à jour.",
+                userDTO.getLogin()
+            )
         );
     }
 
@@ -229,7 +285,7 @@ public class UserResource {
         userService.deleteUser(login);
         return ResponseEntity
             .noContent()
-            .headers(HeaderUtil.createAlert(applicationName, "A user is deleted with identifier " + login, login))
+            .headers(HeaderUtil.createAlert(applicationName, "L'utilisateur " + login + " a bien été supprimé.", login))
             .build();
     }
 }

@@ -34,7 +34,7 @@ class PublicUserResourceIT {
     private static final String DEFAULT_FIRSTNAME = "john";
     private static final String DEFAULT_LASTNAME = "doe";
     private static final String DEFAULT_IMAGEURL = "http://placehold.it/50x50";
-    private static final String DEFAULT_LANGKEY = "en";
+    private static final String DEFAULT_LANGKEY = "fr";
 
     @Autowired
     private UserRepository userRepository;

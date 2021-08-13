@@ -27,7 +27,7 @@ public class AdminUserDTO {
     private String lastName;
 
     @Email
-    @Size(min = 5, max = 254)
+    @Size(min = 5, max = 100)
     private String email;
 
     @Size(max = 256)

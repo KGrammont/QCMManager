@@ -24,7 +24,10 @@ describe('Component Tests', () => {
     let activatedRoute: ActivatedRoute;
     let classeService: ClasseService;
     let userService: UserService;
-    const accountService = { hasAnyAuthority: jest.fn(() => true) };
+    const accountService = {
+      hasAnyAuthority: jest.fn(() => true),
+      identity: jest.fn(() => null),
+    };
 
     beforeEach(() => {
       TestBed.overrideProvider(AccountService, { useValue: accountService });
@@ -70,10 +73,9 @@ describe('Component Tests', () => {
         expect(comp.profsSharedCollection).toEqual(expectedProfs);
       });
 
-      it('Should call only student query and add missing student when not ADMIN', () => {
+      it('Should put itself on prof and call only student query and add missing student when not ADMIN', () => {
         const classe: IClasse = { id: 456 };
         const prof: IUser = { id: 13820 };
-        classe.prof = prof;
         const students: IUser[] = [{ id: 8136 }];
         classe.students = students;
 
@@ -83,6 +85,7 @@ describe('Component Tests', () => {
         spyOn(userService, 'addUserToCollectionIfMissing').and.returnValue(expectedStudents);
 
         spyOn(accountService, 'hasAnyAuthority').and.returnValue(false);
+        spyOn(accountService, 'identity').and.returnValue(of(prof));
 
         activatedRoute.data = of({ classe });
         comp.ngOnInit();
@@ -91,6 +94,7 @@ describe('Component Tests', () => {
         expect(userService.queryStudents).toHaveBeenCalled();
         expect(userService.addUserToCollectionIfMissing).toHaveBeenCalledWith(studentsFromQuery, ...students);
         expect(comp.studentsSharedCollection).toEqual(expectedStudents);
+        expect(comp.editForm.get(['prof'])!.value).toEqual(prof);
       });
 
       it('Should update editForm', () => {

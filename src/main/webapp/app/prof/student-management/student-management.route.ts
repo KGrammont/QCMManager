@@ -6,6 +6,7 @@ import { User, IUser } from './student-management.model';
 import { StudentManagementService } from './service/student-management.service';
 import { StudentManagementComponent } from './list/student-management.component';
 import { StudentManagementUpdateComponent } from './update/student-management-update.component';
+import { StudentManagementMassiveCreateComponent } from './massivecreate/student-management-massivecreate.component';
 
 @Injectable({ providedIn: 'root' })
 export class UserManagementResolve implements Resolve<IUser> {
@@ -38,6 +39,13 @@ export const userManagementRoute: Routes = [
   {
     path: ':login/edit',
     component: StudentManagementUpdateComponent,
+    resolve: {
+      user: UserManagementResolve,
+    },
+  },
+  {
+    path: 'somenew',
+    component: StudentManagementMassiveCreateComponent,
     resolve: {
       user: UserManagementResolve,
     },
