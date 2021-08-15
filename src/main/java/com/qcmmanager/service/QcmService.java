@@ -36,6 +36,16 @@ public class QcmService {
     }
 
     /**
+     * Save qcms.
+     *
+     * @param qcms the qcms to save.
+     */
+    public List<Qcm> saveAll(List<Qcm> qcms) {
+        log.debug("Request to save Qcm : {}", qcms);
+        return qcmRepository.saveAll(qcms);
+    }
+
+    /**
      * Partially update a qcm.
      *
      * @param qcm the entity to update partially.

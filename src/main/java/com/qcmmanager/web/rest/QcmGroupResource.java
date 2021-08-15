@@ -2,7 +2,9 @@ package com.qcmmanager.web.rest;
 
 import com.qcmmanager.domain.QcmGroup;
 import com.qcmmanager.repository.QcmGroupRepository;
+import com.qcmmanager.security.AuthoritiesConstants;
 import com.qcmmanager.service.QcmGroupService;
+import com.qcmmanager.service.dto.QcmGroupDTO;
 import com.qcmmanager.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -15,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.ResponseUtil;
@@ -60,6 +63,37 @@ public class QcmGroupResource {
             .created(new URI("/api/qcm-groups/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
+    }
+
+    /**
+     * {@code POST  /qcm-groups/distribute} : Create a new qcmGroup and distribute qcms to students.
+     *
+     * @param qcmGroupDTO the qcmGroup to create with qcms attached.
+     * @return the {@link ResponseEntity} with status {@code 200 (Ok)}, or with status {@code 400 (Bad Request)} if the qcmGroup has already an ID.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PostMapping("/qcm-groups/distribute")
+    @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.ADMIN + "\", \"" + AuthoritiesConstants.PROF + "\")")
+    public ResponseEntity<Void> createQcmGroupAndDistribute(@Valid @RequestBody QcmGroupDTO qcmGroupDTO) throws URISyntaxException {
+        log.debug("REST request to save adn distribute QcmGroup : {}", qcmGroupDTO);
+        if (qcmGroupDTO.getId() != null) {
+            throw new BadRequestAlertException("A new qcmGroup cannot already have an ID", ENTITY_NAME, "idexists");
+        }
+        qcmGroupService.saveAndDistributeQcms(qcmGroupDTO);
+        return ResponseEntity
+            .ok()
+            .headers(
+                HeaderUtil.createAlert(
+                    applicationName,
+                    "Le groupe de Qcm " +
+                    qcmGroupDTO.getName() +
+                    " a bien été créé et les qcms ont été distribués à la classe " +
+                    qcmGroupDTO.getClasse().getName() +
+                    ".",
+                    qcmGroupDTO.getName()
+                )
+            )
+            .build();
     }
 
     /**

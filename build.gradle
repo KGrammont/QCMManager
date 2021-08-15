@@ -262,6 +262,8 @@ dependencies {
     testRuntimeOnly "com.tngtech.archunit:archunit-junit5-engine:${archunitJunit5Version}"
     testImplementation "com.h2database:h2"
     //jhipster-needle-gradle-dependency - JHipster will add additional dependencies here
+    implementation 'com.itextpdf:itext7-core:7.1.16'
+    implementation group: 'org.apache.pdfbox', name: 'pdfbox', version: '3.0.0-RC1'
 }
 
 if (project.hasProperty("gae")) {

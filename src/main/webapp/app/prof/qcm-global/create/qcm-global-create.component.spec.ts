@@ -13,7 +13,7 @@ import { ClasseService } from 'app/entities/classe/service/classe.service';
 
 import { QcmGlobalCreateComponent } from './qcm-global-create.component';
 import * as dayjs from 'dayjs';
-import { QcmGroup } from '../qcm-group.model';
+import { CompleteQcmGroup } from '../qcm-group.model';
 
 describe('Component Tests', () => {
   describe('QcmGroup Management Create Component', () => {
@@ -54,7 +54,7 @@ describe('Component Tests', () => {
       it('Should call create service on save for new entity', () => {
         // GIVEN
         const saveSubject = new Subject();
-        const qcmGroup = new QcmGroup();
+        const qcmGroup = new CompleteQcmGroup();
         qcmGroup.created_at = dayjs().startOf('day');
         spyOn(qcmGroupService, 'create').and.returnValue(saveSubject);
         spyOn(comp, 'previousState');

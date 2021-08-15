@@ -5,10 +5,13 @@ import { map } from 'rxjs/operators';
 
 import * as dayjs from 'dayjs';
 
-import { IQcmGroup, QcmGroup } from '../qcm-group.model';
+import { ICompleteQcmGroup, CompleteQcmGroup } from '../qcm-group.model';
 import { QcmGlobalService } from '../service/qcm-global.service';
 import { IClasse } from 'app/entities/classe/classe.model';
 import { ClasseService } from 'app/entities/classe/service/classe.service';
+import { DataUtils, FileLoadError } from 'app/core/util/data-util.service';
+import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
+import { AlertError } from 'app/shared/alert/alert-error.model';
 
 @Component({
   selector: 'jhi-qcm-group-update',
@@ -22,9 +25,17 @@ export class QcmGlobalCreateComponent implements OnInit {
   editForm = this.fb.group({
     name: [null, Validators.required],
     classe: [null, Validators.required],
+    qcms: [null, [Validators.required]],
+    qcmsContentType: [],
   });
 
-  constructor(protected qcmGroupService: QcmGlobalService, protected classeService: ClasseService, protected fb: FormBuilder) {}
+  constructor(
+    protected dataUtils: DataUtils,
+    protected eventManager: EventManager,
+    protected qcmGroupService: QcmGlobalService,
+    protected classeService: ClasseService,
+    protected fb: FormBuilder
+  ) {}
 
   ngOnInit(): void {
     this.loadRelationshipsOptions();
@@ -32,6 +43,27 @@ export class QcmGlobalCreateComponent implements OnInit {
 
   previousState(): void {
     window.history.back();
+  }
+
+  openFile(base64String: string, contentType: string | null | undefined): void {
+    this.dataUtils.openFile(base64String, contentType);
+  }
+
+  setFileData(event: Event, field: string, isImage: boolean): void {
+    const eventTarget: HTMLInputElement | null = event.target as HTMLInputElement | null;
+    if (eventTarget?.files?.[0]) {
+      const file: File = eventTarget.files[0];
+      this.editForm.patchValue({ qcmsContentType: file.type });
+      this.editForm.get(['qcmsContentType'])!.markAsDirty();
+      if (file.type === 'application/pdf') {
+        this.dataUtils.loadFileToForm(event, this.editForm, field, isImage).subscribe({
+          error: (err: FileLoadError) =>
+            this.eventManager.broadcast(
+              new EventWithContent<AlertError>('qcmManagerApp.error', { message: err.message })
+            ),
+        });
+      }
+    }
   }
 
   save(): void {
@@ -64,13 +96,14 @@ export class QcmGlobalCreateComponent implements OnInit {
       .subscribe((classes: IClasse[]) => (this.classesSharedCollection = classes));
   }
 
-  protected createFromForm(): IQcmGroup {
+  protected createFromForm(): ICompleteQcmGroup {
     const today = dayjs().startOf('day');
     return {
-      ...new QcmGroup(),
+      ...new CompleteQcmGroup(),
       name: this.editForm.get(['name'])!.value ?? undefined,
       created_at: today,
       classe: this.editForm.get(['classe'])!.value ?? undefined,
+      qcms: this.editForm.get(['qcms'])!.value ?? undefined,
     };
   }
 }
