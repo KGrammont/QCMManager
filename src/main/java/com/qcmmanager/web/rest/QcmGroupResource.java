@@ -144,6 +144,17 @@ public class QcmGroupResource {
     }
 
     /**
+     * {@code GET  /qcm-groups/of-current-prof} : get all the qcmGroups of current prof.
+     *
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of qcmGroups in body.
+     */
+    @GetMapping("/qcm-groups/of-current-prof")
+    public List<QcmGroup> getAllQcmGroupsOfCurrentProf() {
+        log.debug("REST request to get all QcmGroups of current prof");
+        return qcmGroupService.findAllOfCurrentProf();
+    }
+
+    /**
      * {@code GET  /qcm-groups/:id} : get the "id" qcmGroup.
      *
      * @param id the id of the qcmGroup to retrieve.

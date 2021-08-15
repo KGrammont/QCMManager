@@ -1,9 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync, inject, fakeAsync, tick } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { HttpResponse } from '@angular/common/http';
 import { of } from 'rxjs';
 
-import { Authority } from 'app/config/authority.constants';
 import { StudentManagementService } from '../service/student-management.service';
 import { User, UserCreationFeedback, UserPlusFeedback } from '../student-management.model';
 
