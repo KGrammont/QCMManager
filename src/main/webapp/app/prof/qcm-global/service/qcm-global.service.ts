@@ -6,22 +6,24 @@ import * as dayjs from 'dayjs';
 
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { createRequestOption } from 'app/core/request/request-util';
-import { IQcmGroup } from '../qcm-group.model';
+import { ICompleteQcmGroup } from '../qcm-group.model';
+import { IQcmGroup } from 'app/entities/qcm-group/qcm-group.model';
 
-export type EntityResponseType = HttpResponse<IQcmGroup>;
-export type EntityArrayResponseType = HttpResponse<IQcmGroup[]>;
+export type EntityResponseType = HttpResponse<ICompleteQcmGroup>;
+export type EntityArrayResponseType = HttpResponse<ICompleteQcmGroup[]>;
 
 @Injectable({ providedIn: 'root' })
 export class QcmGlobalService {
   public resourceUrl = this.applicationConfigService.getEndpointFor('api/qcm-groups');
+  public distributeResourceUrl = this.applicationConfigService.getEndpointFor('api/qcm-groups/distribute');
   public currentProfResourceUrl = this.applicationConfigService.getEndpointFor('api/qcm-groups/of-current-prof');
 
   constructor(protected http: HttpClient, private applicationConfigService: ApplicationConfigService) {}
 
-  create(qcmGroup: IQcmGroup): Observable<EntityResponseType> {
+  create(qcmGroup: ICompleteQcmGroup): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(qcmGroup);
     return this.http
-      .post<IQcmGroup>(this.resourceUrl, copy, { observe: 'response' })
+      .post<ICompleteQcmGroup>(this.distributeResourceUrl, copy, { observe: 'response' })
       .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
   }
 
@@ -36,7 +38,7 @@ export class QcmGlobalService {
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
 
-  protected convertDateFromClient(qcmGroup: IQcmGroup): IQcmGroup {
+  protected convertDateFromClient(qcmGroup: ICompleteQcmGroup): ICompleteQcmGroup {
     return Object.assign({}, qcmGroup, {
       created_at: qcmGroup.created_at?.isValid() ? qcmGroup.created_at.toJSON() : undefined,
     });

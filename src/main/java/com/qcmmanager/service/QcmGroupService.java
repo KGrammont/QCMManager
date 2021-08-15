@@ -1,11 +1,16 @@
 package com.qcmmanager.service;
 
-import com.qcmmanager.domain.Classe;
+import com.qcmmanager.domain.Qcm;
 import com.qcmmanager.domain.QcmGroup;
-import com.qcmmanager.repository.ClasseRepository;
+import com.qcmmanager.domain.User;
 import com.qcmmanager.repository.QcmGroupRepository;
+import com.qcmmanager.service.dto.QcmGroupDTO;
+import com.qcmmanager.service.mapper.QcmGroupMapper;
+import com.qcmmanager.service.pdf.PdfUtils;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -19,14 +24,24 @@ import org.springframework.transaction.annotation.Transactional;
 public class QcmGroupService {
 
     private final Logger log = LoggerFactory.getLogger(QcmGroupService.class);
-
+    private final ClasseService classeService;
+    private final QcmService qcmService;
+    private final PdfUtils pdfUtils;
+    private final QcmGroupMapper qcmGroupMapper;
     private final QcmGroupRepository qcmGroupRepository;
 
-    private final ClasseRepository classeRepository;
-
-    public QcmGroupService(QcmGroupRepository qcmGroupRepository, ClasseRepository classeRepository) {
+    public QcmGroupService(
+        ClasseService classeService,
+        QcmService qcmService,
+        PdfUtils pdfUtils,
+        QcmGroupMapper qcmGroupMapper,
+        QcmGroupRepository qcmGroupRepository
+    ) {
+        this.classeService = classeService;
+        this.qcmService = qcmService;
+        this.pdfUtils = pdfUtils;
+        this.qcmGroupMapper = qcmGroupMapper;
         this.qcmGroupRepository = qcmGroupRepository;
-        this.classeRepository = classeRepository;
     }
 
     /**
@@ -38,6 +53,38 @@ public class QcmGroupService {
     public QcmGroup save(QcmGroup qcmGroup) {
         log.debug("Request to save QcmGroup : {}", qcmGroup);
         return qcmGroupRepository.save(qcmGroup);
+    }
+
+    /**
+     * Call save and distribute qcms.
+     *
+     * @param qcmGroupDTO the entity to save.
+     */
+    public void saveAndDistributeQcms(QcmGroupDTO qcmGroupDTO) {
+        QcmGroup qcmGroup = qcmGroupMapper.qcmGroupDTOToQcmGroup(qcmGroupDTO);
+        QcmGroup savedQcmGroup = qcmGroupRepository.save(qcmGroup);
+        List<byte[]> splitEditableQcms = pdfUtils.getSplitEditableQcms(qcmGroupDTO.getQcms());
+        Set<User> students = qcmGroupDTO.getClasse().getStudents();
+        List<Qcm> qcms = distribute(students, splitEditableQcms, savedQcmGroup);
+        qcmService.saveAll(qcms);
+    }
+
+    private List<Qcm> distribute(Set<User> students, List<byte[]> splitEditableQcms, QcmGroup qcmGroup) {
+        int qcmNumber = splitEditableQcms.size();
+        List<Qcm> qcms = new ArrayList<>();
+        int index = -1;
+        for (User student : students) {
+            index++;
+            qcms.add(
+                new Qcm()
+                    .qcmGroup(qcmGroup)
+                    .student(student)
+                    .created_at(qcmGroup.getCreated_at())
+                    .questionContentType("application/pdf")
+                    .question(splitEditableQcms.get(index % qcmNumber))
+            );
+        }
+        return qcms;
     }
 
     /**
@@ -84,8 +131,7 @@ public class QcmGroupService {
      */
     @Transactional(readOnly = true)
     public List<QcmGroup> findAllOfCurrentProf() {
-        log.debug("Request to get all classe ids of current prof");
-        List<Long> classeIds = classeRepository.findClasseIdsByProfIsCurrentUser();
+        List<Long> classeIds = classeService.findIdsByProfIsCurrentUser();
         log.debug("Request to get all QcmGroups of classes");
         return qcmGroupRepository.findAllByClasseIdIn(classeIds);
     }

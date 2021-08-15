@@ -29,6 +29,37 @@
         <div *ngIf="editForm.get(['classe'])!.invalid && (editForm.get(['classe'])!.dirty || editForm.get(['classe'])!.touched)">
           <small class="form-text text-danger" *ngIf="editForm.get(['classe'])?.errors?.required"> Ce champs est requis. </small>
         </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_qcms">QCMs</label>
+          <div>
+            <div *ngIf="editForm.get('qcms')!.value" class="form-text text-danger clearfix">
+              <a class="pull-left" (click)="openFile(editForm.get('qcms')!.value, editForm.get('qcmsContentType')!.value)">open</a><br />
+              <span class="pull-left">{{ editForm.get('qcmsContentType')!.value }}</span>
+              <button
+                type="button"
+                (click)="editForm.patchValue({ qcms: null }); editForm.patchValue({ qcmsContentType: null })"
+                class="btn btn-secondary btn-xs pull-right"
+              >
+                <fa-icon icon="times"></fa-icon>
+              </button>
+            </div>
+            <input type="file" id="file_qcms" data-cy="qcms" (change)="setFileData($event, 'qcms', false)" />
+          </div>
+          <input type="hidden" class="form-control" name="qcms" id="field_qcms" data-cy="qcms" formControlName="qcms" />
+          <input type="hidden" class="form-control" name="qcmsContentType" id="field_qcmsContentType" formControlName="qcmsContentType" />
+          <div *ngIf="editForm.get('qcms')!.invalid && (editForm.get('qcms')!.dirty || editForm.get('qcms')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('question')?.errors?.required"> Ce champs est requis. </small>
+          </div>
+          <div
+            *ngIf="
+              editForm.get('qcmsContentType')!.value !== 'application/pdf' &&
+              (editForm.get('qcmsContentType')!.dirty || editForm.get('qcmsContentType')!.touched)
+            "
+          >
+            <small class="form-text text-danger"> Le fichier dit être au format pdf. </small>
+          </div>
+        </div>
       </div>
 
       <div>

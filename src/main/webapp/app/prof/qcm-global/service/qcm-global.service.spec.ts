@@ -3,7 +3,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import * as dayjs from 'dayjs';
 
 import { DATE_TIME_FORMAT } from 'app/config/input.constants';
-import { IQcmGroup, QcmGroup } from '../qcm-group.model';
+import { ICompleteQcmGroup, CompleteQcmGroup } from '../qcm-group.model';
 
 import { QcmGlobalService } from './qcm-global.service';
 
@@ -11,8 +11,8 @@ describe('Service Tests', () => {
   describe('QcmGroup Service', () => {
     let service: QcmGlobalService;
     let httpMock: HttpTestingController;
-    let elemDefault: IQcmGroup;
-    let expectedResult: IQcmGroup | IQcmGroup[] | boolean | null;
+    let elemDefault: ICompleteQcmGroup;
+    let expectedResult: ICompleteQcmGroup | ICompleteQcmGroup[] | boolean | null;
     let currentDate: dayjs.Dayjs;
 
     beforeEach(() => {
@@ -48,7 +48,7 @@ describe('Service Tests', () => {
           returnedFromService
         );
 
-        service.create(new QcmGroup()).subscribe(resp => (expectedResult = resp.body));
+        service.create(new CompleteQcmGroup()).subscribe(resp => (expectedResult = resp.body));
 
         const req = httpMock.expectOne({ method: 'POST' });
         req.flush(returnedFromService);
