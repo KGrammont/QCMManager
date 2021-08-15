@@ -1,0 +1,72 @@
+<div>
+  <h2 id="page-heading" data-cy="QcmGroupHeading">
+    <span>Qcm: vue globale</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info mr-2" (click)="loadAll()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span>Recharger</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-qcm-group"
+        [routerLink]="['/prof/qcm-global/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span> Créer un nouveau QCM </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="qcmGroups?.length === 0">
+    <span>Aucun QCM trouvé</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="qcmGroups && qcmGroups.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr>
+          <th scope="col"><span>Nom</span></th>
+          <th scope="col"><span>Classe</span></th>
+          <th scope="col"><span>Date de création</span></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let qcmGroup of qcmGroups; trackBy: trackId" data-cy="entityTable">
+          <td>{{ qcmGroup.name }}</td>
+          <td>
+            <div *ngIf="qcmGroup.classe">
+              {{ qcmGroup.classe?.name }}
+            </div>
+          </td>
+          <td>{{ qcmGroup.created_at | formatMediumDatetime }}</td>
+          <td class="text-right">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/qcm-group', qcmGroup.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline">Voir</span>
+              </button>
+
+              <button type="submit" (click)="delete(qcmGroup)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline">Supprimer</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

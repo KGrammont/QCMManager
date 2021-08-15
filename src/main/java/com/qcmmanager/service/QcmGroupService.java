@@ -1,6 +1,8 @@
 package com.qcmmanager.service;
 
+import com.qcmmanager.domain.Classe;
 import com.qcmmanager.domain.QcmGroup;
+import com.qcmmanager.repository.ClasseRepository;
 import com.qcmmanager.repository.QcmGroupRepository;
 import java.util.List;
 import java.util.Optional;
@@ -20,8 +22,11 @@ public class QcmGroupService {
 
     private final QcmGroupRepository qcmGroupRepository;
 
-    public QcmGroupService(QcmGroupRepository qcmGroupRepository) {
+    private final ClasseRepository classeRepository;
+
+    public QcmGroupService(QcmGroupRepository qcmGroupRepository, ClasseRepository classeRepository) {
         this.qcmGroupRepository = qcmGroupRepository;
+        this.classeRepository = classeRepository;
     }
 
     /**
@@ -70,6 +75,19 @@ public class QcmGroupService {
     public List<QcmGroup> findAll() {
         log.debug("Request to get all QcmGroups");
         return qcmGroupRepository.findAll();
+    }
+
+    /**
+     * Get all the qcmGroups of current prof.
+     *
+     * @return the list of entities.
+     */
+    @Transactional(readOnly = true)
+    public List<QcmGroup> findAllOfCurrentProf() {
+        log.debug("Request to get all classe ids of current prof");
+        List<Long> classeIds = classeRepository.findClasseIdsByProfIsCurrentUser();
+        log.debug("Request to get all QcmGroups of classes");
+        return qcmGroupRepository.findAllByClasseIdIn(classeIds);
     }
 
     /**

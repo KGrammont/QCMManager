@@ -17,6 +17,9 @@ public interface ClasseRepository extends JpaRepository<Classe, Long> {
     @Query("select classe from Classe classe where classe.prof.login = ?#{principal.username}")
     List<Classe> findByProfIsCurrentUser();
 
+    @Query("select classe.id from Classe classe where classe.prof.login = ?#{principal.username}")
+    List<Long> findClasseIdsByProfIsCurrentUser();
+
     @Query(
         value = "select distinct classe from Classe classe left join fetch classe.students",
         countQuery = "select count(distinct classe) from Classe classe"
