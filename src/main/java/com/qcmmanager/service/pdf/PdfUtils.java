@@ -76,4 +76,33 @@ public class PdfUtils {
         checkField.setFontSize(50);
         form.addField(checkField);
     }
+
+    public byte[] getPdfWithUpdatedCheckboxes(byte[] oneQcmByte, List<Checkbox> checkboxes) {
+        try {
+            ByteArrayOutputStream output = new ByteArrayOutputStream(500000);
+            PdfDocument oneQCM = new PdfDocument(new PdfReader(new ByteArrayInputStream(oneQcmByte)), new PdfWriter(output));
+
+            PdfAcroForm form = PdfAcroForm.getAcroForm(oneQCM, false);
+            setCheckboxesValue(checkboxes, form);
+
+            oneQCM.close();
+            return output.toByteArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private void setCheckboxesValue(List<Checkbox> checkboxes, PdfAcroForm form) {
+        checkboxes.forEach(
+            checkbox -> {
+                PdfFormField field = form.getField(checkbox.getName());
+                if (checkbox.isValue()) {
+                    field.setValue("Yes");
+                } else {
+                    field.setValue("Off");
+                }
+            }
+        );
+    }
 }

@@ -1,0 +1,57 @@
+<div>
+  <h2 id="page-heading" data-cy="QcmHeading">
+    <span>Qcms</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info mr-2" (click)="loadAll()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span>Recharger</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="qcms?.length === 0">
+    <span>Vous n'avez pas de Qcm.</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="qcms && qcms.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading" style="text-align: center">
+      <thead>
+        <tr>
+          <th scope="col"><span>Nom</span></th>
+          <th scope="col">Etat</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let qcm of qcms; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <div *ngIf="qcm.qcmGroup">
+              {{ qcm.qcmGroup?.name }}
+            </div>
+          </td>
+          <td>
+            <div class="btn-group">
+              <div [hidden]="qcm.answer === null" style="background-color: #28a745" class="btn-sm">
+                <span style="color: whitesmoke">QCM complété</span>
+              </div>
+              <button
+                [hidden]="qcm.answer !== null"
+                type="submit"
+                [routerLink]="['./', qcm.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline">Compléter</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
