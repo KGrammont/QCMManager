@@ -30,6 +30,10 @@ const LAYOUT_ROUTES = [navbarRoute, ...errorRoute];
           loadChildren: () => import('./prof/prof-routing.module').then(m => m.ProfRoutingModule),
         },
         {
+          path: 'student',
+          loadChildren: () => import('./student/student-routing.module').then(m => m.StudentRoutingModule),
+        },
+        {
           path: 'account',
           data: {
             authorities: [Authority.ADMIN, Authority.PROF],

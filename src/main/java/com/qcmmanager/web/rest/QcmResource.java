@@ -3,6 +3,7 @@ package com.qcmmanager.web.rest;
 import com.qcmmanager.domain.Qcm;
 import com.qcmmanager.repository.QcmRepository;
 import com.qcmmanager.service.QcmService;
+import com.qcmmanager.service.dto.CompleteQcmPatch;
 import com.qcmmanager.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -129,6 +130,33 @@ public class QcmResource {
     }
 
     /**
+     * {@code PATCH  /qcms/:id/complete} : Partial updates given name of the pdf to change and new values of the checkboxes
+     *
+     * @param id the id of the qcm to save.
+     * @param completeQcmPatch with the name of the pdf to update and the new values of the checkoxes.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated qcm,
+     * or with status {@code 404 (Not Found)} if the qcm is not found,
+     * or with status {@code 500 (Internal Server Error)} if the qcm couldn't be updated.
+     */
+    @PatchMapping(value = "/qcms/{id}/complete")
+    public ResponseEntity<Qcm> partialUpdateQcm(
+        @PathVariable(value = "id", required = false) final long id,
+        @Valid @RequestBody CompleteQcmPatch completeQcmPatch
+    ) {
+        log.debug("REST request to fill {} of the Qcm {}", completeQcmPatch.getName(), id);
+        if (!qcmRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
+        Optional<Qcm> result = qcmService.completeQcmWithCheckboxes(id, completeQcmPatch);
+
+        return ResponseUtil.wrapOrNotFound(
+            result,
+            HeaderUtil.createAlert(applicationName, "Le qcm a bien été complété.", String.valueOf(id))
+        );
+    }
+
+    /**
      * {@code GET  /qcms} : get all the qcms.
      *
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of qcms in body.
@@ -137,6 +165,17 @@ public class QcmResource {
     public List<Qcm> getAllQcms() {
         log.debug("REST request to get all Qcms");
         return qcmService.findAll();
+    }
+
+    /**
+     * {@code GET  /qcms} : get all qcms of current student.
+     *
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of qcms in body.
+     */
+    @GetMapping("/qcms/student")
+    public List<Qcm> getAllQcmsOfCurrentStudent() {
+        log.debug("REST request to get all Qcms of current student");
+        return qcmService.findAllOfCurrentStudent();
     }
 
     /**

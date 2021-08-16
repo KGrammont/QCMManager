@@ -25,6 +25,7 @@ import { Authority } from 'app/config/authority.constants';
         path: 'qcm',
         data: {
           pageTitle: 'Qcms',
+          authorities: [Authority.ADMIN],
         },
         loadChildren: () => import('./qcm/qcm.module').then(m => m.QcmModule),
       },
