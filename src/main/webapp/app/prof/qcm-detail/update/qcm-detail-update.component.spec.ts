@@ -7,24 +7,24 @@ import { of } from 'rxjs';
 
 import { IQcm } from '../../../entities/qcm/qcm.model';
 
-import { QcmUpdateComponent } from './qcm-update.component';
+import { QcmDetailUpdateComponent } from './qcm-detail-update.component';
 
 describe('Component Tests', () => {
   describe('Qcm Update Component', () => {
-    let comp: QcmUpdateComponent;
-    let fixture: ComponentFixture<QcmUpdateComponent>;
+    let comp: QcmDetailUpdateComponent;
+    let fixture: ComponentFixture<QcmDetailUpdateComponent>;
     let activatedRoute: ActivatedRoute;
 
     beforeEach(() => {
       TestBed.configureTestingModule({
         imports: [HttpClientTestingModule],
-        declarations: [QcmUpdateComponent],
+        declarations: [QcmDetailUpdateComponent],
         providers: [ActivatedRoute],
       })
-        .overrideTemplate(QcmUpdateComponent, '')
+        .overrideTemplate(QcmDetailUpdateComponent, '')
         .compileComponents();
 
-      fixture = TestBed.createComponent(QcmUpdateComponent);
+      fixture = TestBed.createComponent(QcmDetailUpdateComponent);
       activatedRoute = TestBed.inject(ActivatedRoute);
 
       comp = fixture.componentInstance;
@@ -32,13 +32,13 @@ describe('Component Tests', () => {
 
     describe('ngOnInit', () => {
       it('Should update qcm and pdf', () => {
-        const qcm: IQcm = { id: 456, question: 'pdfquestion' };
+        const qcm: IQcm = { id: 456, question: 'pdfquestion', answer: 'pdfanswer' };
 
         activatedRoute.data = of({ qcm });
         comp.ngOnInit();
 
         expect(comp.qcm).toEqual(qcm);
-        expect(comp.pdf).toEqual('pdfquestion');
+        expect(comp.pdf).toEqual('pdfanswer');
       });
     });
   });

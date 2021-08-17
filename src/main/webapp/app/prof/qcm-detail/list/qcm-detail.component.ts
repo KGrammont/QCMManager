@@ -3,18 +3,18 @@ import { HttpResponse } from '@angular/common/http';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { IQcm } from '../../../entities/qcm/qcm.model';
-import { QcmService } from '../service/qcm.service';
+import { QcmDetailService } from '../service/qcm-detail.service';
 import { DataUtils } from 'app/core/util/data-util.service';
 
 @Component({
   selector: 'jhi-qcm',
-  templateUrl: './qcm.component.html',
+  templateUrl: './qcm-detail.component.html',
 })
-export class QcmComponent implements OnInit {
+export class QcmDetailComponent implements OnInit {
   qcms?: IQcm[];
   isLoading = false;
 
-  constructor(protected qcmService: QcmService, protected dataUtils: DataUtils, protected modalService: NgbModal) {}
+  constructor(protected qcmService: QcmDetailService, protected dataUtils: DataUtils, protected modalService: NgbModal) {}
 
   loadAll(): void {
     this.isLoading = true;

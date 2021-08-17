@@ -2,27 +2,27 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { IQcm } from '../../../entities/qcm/qcm.model';
-import { QcmService } from '../service/qcm.service';
+import { QcmDetailService } from '../service/qcm-detail.service';
 import { IPDFViewerApplication } from 'ngx-extended-pdf-viewer';
 import { PDFDocumentProxy, PDFPageProxy } from 'pdfjs-dist/types/display/api';
 import { Checkbox, CompleteQcmPatch } from 'app/shared/pdf/pdf.model';
 
 @Component({
   selector: 'jhi-qcm-update',
-  templateUrl: './qcm-update.component.html',
+  templateUrl: './qcm-detail-update.component.html',
 })
-export class QcmUpdateComponent implements OnInit {
+export class QcmDetailUpdateComponent implements OnInit {
   isSaving = false;
   qcm?: IQcm;
   pdf?: string;
   responses: boolean[] = [];
 
-  constructor(protected qcmService: QcmService, protected activatedRoute: ActivatedRoute) {}
+  constructor(protected qcmService: QcmDetailService, protected activatedRoute: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ qcm }) => {
       this.qcm = qcm;
-      this.pdf = qcm.question;
+      this.pdf = qcm.answer;
     });
   }
 
@@ -52,7 +52,7 @@ export class QcmUpdateComponent implements OnInit {
         });
       })
       .then(() =>
-        this.qcmService.completePdf(new CompleteQcmPatch(this.qcm!.id!, 'answer', checkboxes)).subscribe(
+        this.qcmService.completePdf(new CompleteQcmPatch(this.qcm!.id!, 'completeAnswer', checkboxes)).subscribe(
           () => this.onSaveSuccess(),
           () => this.onSaveError()
         )

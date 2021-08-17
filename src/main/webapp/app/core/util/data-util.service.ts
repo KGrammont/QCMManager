@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, Observer } from 'rxjs';
 import { FormGroup } from '@angular/forms';
-import { IQcm } from 'app/student/qcm/qcm.model';
 
 export type FileLoadErrorType = 'not.image' | 'could.not.extract';
 
@@ -98,41 +97,6 @@ export class DataUtils {
         observer.error(error);
       }
     });
-  }
-
-  /**
-   * Sets the base 64 data of the 1st file on the event (event.target.files[0]) in the passed entity object
-   * and returns an observable.
-   *
-   * @param blob the blob representing the pdf
-   * @param qcm the qcm where the input field will be set
-   * @param field the field name to set the file's 'base 64 data' inside qcm
-   * @returns an observable that loads file to form field and completes if sussessful
-   *      or returns error as FileLoadError on failure
-   */
-  loadBlobToQcm(blob: Blob, qcm: IQcm, field: string): Observable<void> {
-    return new Observable((observer: Observer<void>) => {
-      const file: File = this.blobToFile(blob, 'toto.pdf');
-      this.toBase64(file, (base64Data: string) => {
-        if (field === 'answer') {
-          qcm.answer = base64Data;
-          qcm.answerContentType = 'application/pdf';
-        }
-        if (field === 'completeAnswer') {
-          qcm.completeAnswer = base64Data;
-          qcm.completeAnswerContentType = 'application/pdf';
-        }
-        observer.next();
-        observer.complete();
-      });
-    });
-  }
-
-  private blobToFile(theBlob: Blob, fileName: string): File {
-    const b: any = theBlob;
-    b.lastModifiedDate = new Date();
-    b.name = fileName;
-    return <File>b;
   }
 
   /**

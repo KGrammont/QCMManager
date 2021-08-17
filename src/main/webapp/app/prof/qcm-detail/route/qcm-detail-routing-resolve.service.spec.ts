@@ -7,16 +7,16 @@ import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { of } from 'rxjs';
 
 import { IQcm, Qcm } from '../../../entities/qcm/qcm.model';
-import { QcmService } from '../service/qcm.service';
+import { QcmDetailService } from '../service/qcm-detail.service';
 
-import { QcmRoutingResolveService } from './qcm-routing-resolve.service';
+import { QcmDetailRoutingResolveService } from './qcm-detail-routing-resolve.service';
 
 describe('Service Tests', () => {
-  describe('Qcm routing resolve service', () => {
+  describe('Qcm Detail routing resolve service', () => {
     let mockRouter: Router;
     let mockActivatedRouteSnapshot: ActivatedRouteSnapshot;
-    let routingResolveService: QcmRoutingResolveService;
-    let service: QcmService;
+    let routingResolveService: QcmDetailRoutingResolveService;
+    let service: QcmDetailService;
     let resultQcm: IQcm | undefined;
 
     beforeEach(() => {
@@ -26,8 +26,8 @@ describe('Service Tests', () => {
       });
       mockRouter = TestBed.inject(Router);
       mockActivatedRouteSnapshot = TestBed.inject(ActivatedRouteSnapshot);
-      routingResolveService = TestBed.inject(QcmRoutingResolveService);
-      service = TestBed.inject(QcmService);
+      routingResolveService = TestBed.inject(QcmDetailRoutingResolveService);
+      service = TestBed.inject(QcmDetailService);
       resultQcm = undefined;
     });
 
