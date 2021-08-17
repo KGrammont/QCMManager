@@ -5,11 +5,11 @@ import * as dayjs from 'dayjs';
 import { DATE_TIME_FORMAT } from 'app/config/input.constants';
 import { IQcm, Qcm } from '../../../entities/qcm/qcm.model';
 
-import { QcmService } from './qcm.service';
+import { QcmDetailService } from './qcm-detail.service';
 
 describe('Service Tests', () => {
   describe('Qcm Service', () => {
-    let service: QcmService;
+    let service: QcmDetailService;
     let httpMock: HttpTestingController;
     let elemDefault: IQcm;
     let expectedResult: IQcm | IQcm[] | boolean | null;
@@ -20,7 +20,7 @@ describe('Service Tests', () => {
         imports: [HttpClientTestingModule],
       });
       expectedResult = null;
-      service = TestBed.inject(QcmService);
+      service = TestBed.inject(QcmDetailService);
       httpMock = TestBed.inject(HttpTestingController);
       currentDate = dayjs();
 

@@ -5,11 +5,11 @@ import { Observable, of, EMPTY } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 
 import { IQcm, Qcm } from '../../../entities/qcm/qcm.model';
-import { QcmService } from '../service/qcm.service';
+import { QcmDetailService } from '../service/qcm-detail.service';
 
 @Injectable({ providedIn: 'root' })
-export class QcmRoutingResolveService implements Resolve<IQcm> {
-  constructor(protected service: QcmService, protected router: Router) {}
+export class QcmDetailRoutingResolveService implements Resolve<IQcm> {
+  constructor(protected service: QcmDetailService, protected router: Router) {}
 
   resolve(route: ActivatedRouteSnapshot): Observable<IQcm> | Observable<never> {
     const id = route.params['id'];

@@ -139,7 +139,7 @@ public class QcmResource {
      * or with status {@code 500 (Internal Server Error)} if the qcm couldn't be updated.
      */
     @PatchMapping(value = "/qcms/{id}/complete")
-    public ResponseEntity<Qcm> partialUpdateQcm(
+    public ResponseEntity<Qcm> completeQcm(
         @PathVariable(value = "id", required = false) final long id,
         @Valid @RequestBody CompleteQcmPatch completeQcmPatch
     ) {
@@ -168,7 +168,18 @@ public class QcmResource {
     }
 
     /**
-     * {@code GET  /qcms} : get all qcms of current student.
+     * {@code GET  /qcms/prof} : get all qcms of current prof.
+     *
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of qcms in body.
+     */
+    @GetMapping("/qcms/prof")
+    public List<Qcm> getAllQcmsOfCurrentProf() {
+        log.debug("REST request to get all Qcms of current pof");
+        return qcmService.findAllOfCurrentProf();
+    }
+
+    /**
+     * {@code GET  /qcms/student} : get all qcms of current student.
      *
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of qcms in body.
      */

@@ -21,6 +21,14 @@ import { Authority } from 'app/config/authority.constants';
         },
         loadChildren: () => import('./qcm-global/qcm-global.module').then(m => m.QcmGlobalModule),
       },
+      {
+        path: 'qcm-detail',
+        data: {
+          pageTitle: 'Qcm: vue détaillée',
+          authorities: [Authority.ADMIN, Authority.PROF],
+        },
+        loadChildren: () => import('./qcm-detail/qcm-detail.module').then(m => m.QcmDetailModule),
+      },
     ]),
   ],
 })

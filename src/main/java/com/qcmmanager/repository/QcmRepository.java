@@ -11,6 +11,9 @@ import org.springframework.stereotype.Repository;
 @SuppressWarnings("unused")
 @Repository
 public interface QcmRepository extends JpaRepository<Qcm, Long> {
+    @Query("select qcm from Qcm qcm where qcm.qcmGroup.classe.prof.login = ?#{principal.username}")
+    List<Qcm> findByQcmGroupClasseProfIsCurrentUser();
+
     @Query("select qcm from Qcm qcm where qcm.student.login = ?#{principal.username}")
     List<Qcm> findByStudentIsCurrentUser();
 }

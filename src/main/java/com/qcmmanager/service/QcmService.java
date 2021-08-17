@@ -145,6 +145,17 @@ public class QcmService {
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
+    public List<Qcm> findAllOfCurrentProf() {
+        log.debug("Request to get all Qcms of prof");
+        return qcmRepository.findByQcmGroupClasseProfIsCurrentUser();
+    }
+
+    /**
+     * Get all qcms for student.
+     *
+     * @return the list of entities.
+     */
+    @Transactional(readOnly = true)
     public List<Qcm> findAllOfCurrentStudent() {
         log.debug("Request to get all Qcms of student");
         return qcmRepository.findByStudentIsCurrentUser();
