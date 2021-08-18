@@ -3,7 +3,7 @@
     <span>Vos classes</span>
 
     <div class="d-flex justify-content-end">
-      <button class="btn btn-info mr-2" (click)="loadAll()" [disabled]="isLoading">
+      <button class="btn btn-info mr-2" (click)="loadPage()" [disabled]="isLoading">
         <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
         <span>Recharger</span>
       </button>
@@ -31,10 +31,10 @@
   <div class="table-responsive" id="entities" *ngIf="classes && classes.length > 0">
     <table class="table table-striped" aria-describedby="page-heading">
       <thead>
-        <tr>
-          <th scope="col" *jhiHasAnyAuthority="'ROLE_ADMIN'"><span>ID</span></th>
-          <th scope="col"><span>Nom</span></th>
-          <th scope="col" *jhiHasAnyAuthority="'ROLE_ADMIN'"><span>Prof</span></th>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" [callback]="loadPage.bind(this)">
+          <th scope="col" jhiSortBy="id" *jhiHasAnyAuthority="'ROLE_ADMIN'"><span>ID</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="name"><span>Nom</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="prof.login" *jhiHasAnyAuthority="'ROLE_ADMIN'"><span>Prof</span> <fa-icon icon="sort"></fa-icon></th>
           <th scope="col"><span>Elèves</span></th>
           <th scope="col"></th>
         </tr>
@@ -72,5 +72,23 @@
         </tr>
       </tbody>
     </table>
+  </div>
+
+  <div *ngIf="classes && classes.length > 0">
+    <div class="row justify-content-center">
+      <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>
+    </div>
+
+    <div class="row justify-content-center">
+      <ngb-pagination
+        [collectionSize]="totalItems"
+        [(page)]="ngbPaginationPage"
+        [pageSize]="itemsPerPage"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="loadPage($event)"
+      ></ngb-pagination>
+    </div>
   </div>
 </div>

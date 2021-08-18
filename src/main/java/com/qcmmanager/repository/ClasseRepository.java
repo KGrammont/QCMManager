@@ -14,8 +14,11 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface ClasseRepository extends JpaRepository<Classe, Long> {
-    @Query("select classe from Classe classe where classe.prof.login = ?#{principal.username}")
-    List<Classe> findByProfIsCurrentUser();
+    @Query(
+        value = "select classe from Classe classe where classe.prof.login = ?#{principal.username}",
+        countQuery = "select count(distinct classe) from Classe classe where classe.prof.login = ?#{principal.username}"
+    )
+    Page<Classe> findByProfIsCurrentUser(Pageable pageable);
 
     @Query("select classe.id from Classe classe where classe.prof.login = ?#{principal.username}")
     List<Long> findClasseIdsByProfIsCurrentUser();

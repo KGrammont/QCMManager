@@ -44,12 +44,7 @@
                 <span class="d-none d-md-inline">Modifer</span>
               </button>
 
-              <button
-                type="button"
-                (click)="deleteUser(user)"
-                class="btn btn-danger btn-sm"
-                [disabled]="!currentAccount || currentAccount.login === user.login"
-              >
+              <button type="button" (click)="deleteUser(user)" class="btn btn-danger btn-sm">
                 <fa-icon icon="times"></fa-icon>
                 <span class="d-none d-md-inline">Supprimer</span>
               </button>
