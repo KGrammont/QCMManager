@@ -43,6 +43,9 @@
     "clientThemeVariant": "",
     "languages": ["en", "fr"],
     "lastLiquibaseTimestamp": 1627250996000,
-    "entities": ["Classe", "QcmGroup", "Qcm"]
+    "entities": ["Classe", "QcmGroup", "Qcm"],
+    "herokuAppName": "qcm-manager",
+    "herokuDeployType": "git",
+    "herokuJavaVersion": "11"
   }
 }
