@@ -5,8 +5,6 @@ import { combineLatest } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { ITEMS_PER_PAGE } from 'app/config/pagination.constants';
-import { AccountService } from 'app/core/auth/account.service';
-import { Account } from 'app/core/auth/account.model';
 import { StudentManagementService } from '../service/student-management.service';
 import { User } from '../student-management.model';
 import { StudentManagementDeleteDialogComponent } from '../delete/student-management-delete-dialog.component';
@@ -16,7 +14,6 @@ import { StudentManagementDeleteDialogComponent } from '../delete/student-manage
   templateUrl: './student-management.component.html',
 })
 export class StudentManagementComponent implements OnInit {
-  currentAccount: Account | null = null;
   users: User[] | null = null;
   isLoading = false;
   totalItems = 0;
@@ -27,14 +24,12 @@ export class StudentManagementComponent implements OnInit {
 
   constructor(
     private userService: StudentManagementService,
-    private accountService: AccountService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private modalService: NgbModal
   ) {}
 
   ngOnInit(): void {
-    this.accountService.identity().subscribe(account => (this.currentAccount = account));
     this.handleNavigation();
   }
 

@@ -63,23 +63,45 @@ public class ClasseService {
     /**
      * Get all the classes.
      *
+     * @param pageable the pagination information.
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
-    public List<Classe> findAll() {
+    public Page<Classe> findAll(Pageable pageable) {
         log.debug("Request to get all Classes");
-        return classeRepository.findAllWithEagerRelationships();
+        return classeRepository.findAll(pageable);
     }
 
     /**
-     * Get all the classes of the current user.
+     * Get all the classes with eager load of many-to-many relationships.
      *
+     * @param pageable the pagination information.
+     * @return the list of entities.
+     */
+    public Page<Classe> findAllWithEagerRelationships(Pageable pageable) {
+        return classeRepository.findAllWithEagerRelationships(pageable);
+    }
+
+    /**
+     * Get all the classes of the current prof.
+     *
+     * @param pageable the pagination information.
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
-    public List<Classe> findByProfIsCurrentUser() {
+    public Page<Classe> findByProfIsCurrentUser(Pageable pageable) {
         log.debug("Request to get all Classes of the current prof user");
-        return classeRepository.findByProfIsCurrentUser();
+        return classeRepository.findByProfIsCurrentUser(pageable);
+    }
+
+    /**
+     * Get all the classes of the current prof with eager load of many-to-many relationships.
+     *
+     * @param pageable the pagination information.
+     * @return the list of entities.
+     */
+    public Page<Classe> findByProfIsCurrentUserWithEagerRelationships(Pageable pageable) {
+        return classeRepository.findByProfIsCurrentUser(pageable);
     }
 
     /**
@@ -91,15 +113,6 @@ public class ClasseService {
     public List<Long> findIdsByProfIsCurrentUser() {
         log.debug("Request to get all Classe ids of the current prof user");
         return classeRepository.findClasseIdsByProfIsCurrentUser();
-    }
-
-    /**
-     * Get all the classes with eager load of many-to-many relationships.
-     *
-     * @return the list of entities.
-     */
-    public Page<Classe> findAllWithEagerRelationships(Pageable pageable) {
-        return classeRepository.findAllWithEagerRelationships(pageable);
     }
 
     /**
