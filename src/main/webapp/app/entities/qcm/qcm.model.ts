@@ -12,7 +12,7 @@ export interface IQcm {
   completeAnswer?: string | null;
   correctionContentType?: string | null;
   correction?: string | null;
-  created_at?: dayjs.Dayjs;
+  createdAt?: dayjs.Dayjs;
   qcmGroup?: IQcmGroup;
   student?: IUser;
 }
@@ -28,7 +28,7 @@ export class Qcm implements IQcm {
     public completeAnswer?: string | null,
     public correctionContentType?: string | null,
     public correction?: string | null,
-    public created_at?: dayjs.Dayjs,
+    public createdAt?: dayjs.Dayjs,
     public qcmGroup?: IQcmGroup,
     public student?: IUser
   ) {}

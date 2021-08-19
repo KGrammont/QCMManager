@@ -57,7 +57,7 @@ export class QcmUpdateComponent implements OnInit {
     this.activatedRoute.data.subscribe(({ qcm }) => {
       if (qcm.id === undefined) {
         const today = dayjs().startOf('day');
-        qcm.created_at = today;
+        qcm.createdAt = today;
       }
 
       this.updateForm(qcm);
@@ -135,7 +135,7 @@ export class QcmUpdateComponent implements OnInit {
       completeAnswerContentType: qcm.completeAnswerContentType,
       correction: qcm.correction,
       correctionContentType: qcm.correctionContentType,
-      created_at: qcm.created_at ? qcm.created_at.format(DATE_TIME_FORMAT) : null,
+      created_at: qcm.createdAt ? qcm.createdAt.format(DATE_TIME_FORMAT) : null,
       qcmGroup: qcm.qcmGroup,
       student: qcm.student,
     });
@@ -174,7 +174,7 @@ export class QcmUpdateComponent implements OnInit {
       completeAnswer: this.editForm.get(['completeAnswer'])!.value,
       correctionContentType: this.editForm.get(['correctionContentType'])!.value,
       correction: this.editForm.get(['correction'])!.value,
-      created_at: this.editForm.get(['created_at'])!.value ? dayjs(this.editForm.get(['created_at'])!.value, DATE_TIME_FORMAT) : undefined,
+      createdAt: this.editForm.get(['created_at'])!.value ? dayjs(this.editForm.get(['created_at'])!.value, DATE_TIME_FORMAT) : undefined,
       qcmGroup: this.editForm.get(['qcmGroup'])!.value,
       student: this.editForm.get(['student'])!.value,
     };

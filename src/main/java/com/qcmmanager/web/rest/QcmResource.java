@@ -15,9 +15,15 @@ import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
+import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.ResponseUtil;
 
 /**
@@ -159,12 +165,15 @@ public class QcmResource {
     /**
      * {@code GET  /qcms} : get all the qcms.
      *
+     * @param pageable the pagination information.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of qcms in body.
      */
     @GetMapping("/qcms")
-    public List<Qcm> getAllQcms() {
-        log.debug("REST request to get all Qcms");
-        return qcmService.findAll();
+    public ResponseEntity<List<Qcm>> getAllQcms(Pageable pageable) {
+        log.debug("REST request to get a page of Qcms");
+        Page<Qcm> page = qcmService.findAll(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**
@@ -173,9 +182,11 @@ public class QcmResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of qcms in body.
      */
     @GetMapping("/qcms/prof")
-    public List<Qcm> getAllQcmsOfCurrentProf() {
+    public ResponseEntity<List<Qcm>> getAllQcmsOfCurrentProf(Pageable pageable) {
         log.debug("REST request to get all Qcms of current pof");
-        return qcmService.findAllOfCurrentProf();
+        Page<Qcm> page = qcmService.findAllOfCurrentProf(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**
@@ -184,9 +195,11 @@ public class QcmResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of qcms in body.
      */
     @GetMapping("/qcms/student")
-    public List<Qcm> getAllQcmsOfCurrentStudent() {
+    public ResponseEntity<List<Qcm>> getAllQcmsOfCurrentStudent(Pageable pageable) {
         log.debug("REST request to get all Qcms of current student");
-        return qcmService.findAllOfCurrentStudent();
+        Page<Qcm> page = qcmService.findAllOfCurrentStudent(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**

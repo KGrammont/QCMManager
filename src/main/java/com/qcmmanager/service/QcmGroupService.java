@@ -79,7 +79,7 @@ public class QcmGroupService {
                 new Qcm()
                     .qcmGroup(qcmGroup)
                     .student(student)
-                    .created_at(qcmGroup.getCreated_at())
+                    .createdAt(qcmGroup.getCreated_at())
                     .questionContentType("application/pdf")
                     .question(splitEditableQcms.get(index % qcmNumber))
             );

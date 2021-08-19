@@ -90,7 +90,7 @@ class QcmResourceIT {
             .completeAnswerContentType(DEFAULT_COMPLETE_ANSWER_CONTENT_TYPE)
             .correction(DEFAULT_CORRECTION)
             .correctionContentType(DEFAULT_CORRECTION_CONTENT_TYPE)
-            .created_at(DEFAULT_CREATED_AT);
+            .createdAt(DEFAULT_CREATED_AT);
         // Add required entity
         QcmGroup qcmGroup;
         if (TestUtil.findAll(em, QcmGroup.class).isEmpty()) {
@@ -125,7 +125,7 @@ class QcmResourceIT {
             .completeAnswerContentType(UPDATED_COMPLETE_ANSWER_CONTENT_TYPE)
             .correction(UPDATED_CORRECTION)
             .correctionContentType(UPDATED_CORRECTION_CONTENT_TYPE)
-            .created_at(UPDATED_CREATED_AT);
+            .createdAt(UPDATED_CREATED_AT);
         // Add required entity
         QcmGroup qcmGroup;
         if (TestUtil.findAll(em, QcmGroup.class).isEmpty()) {
@@ -170,7 +170,7 @@ class QcmResourceIT {
         assertThat(testQcm.getCompleteAnswerContentType()).isEqualTo(DEFAULT_COMPLETE_ANSWER_CONTENT_TYPE);
         assertThat(testQcm.getCorrection()).isEqualTo(DEFAULT_CORRECTION);
         assertThat(testQcm.getCorrectionContentType()).isEqualTo(DEFAULT_CORRECTION_CONTENT_TYPE);
-        assertThat(testQcm.getCreated_at()).isEqualTo(DEFAULT_CREATED_AT);
+        assertThat(testQcm.getCreatedAt()).isEqualTo(DEFAULT_CREATED_AT);
     }
 
     @Test
@@ -193,10 +193,10 @@ class QcmResourceIT {
 
     @Test
     @Transactional
-    void checkCreated_atIsRequired() throws Exception {
+    void checkCreatedAtIsRequired() throws Exception {
         int databaseSizeBeforeTest = qcmRepository.findAll().size();
         // set the field null
-        qcm.setCreated_at(null);
+        qcm.setCreatedAt(null);
 
         // Create the Qcm, which fails.
 
@@ -228,7 +228,7 @@ class QcmResourceIT {
             .andExpect(jsonPath("$.[*].completeAnswer").value(hasItem(Base64Utils.encodeToString(DEFAULT_COMPLETE_ANSWER))))
             .andExpect(jsonPath("$.[*].correctionContentType").value(hasItem(DEFAULT_CORRECTION_CONTENT_TYPE)))
             .andExpect(jsonPath("$.[*].correction").value(hasItem(Base64Utils.encodeToString(DEFAULT_CORRECTION))))
-            .andExpect(jsonPath("$.[*].created_at").value(hasItem(DEFAULT_CREATED_AT.toString())));
+            .andExpect(jsonPath("$.[*].createdAt").value(hasItem(DEFAULT_CREATED_AT.toString())));
     }
 
     @Test
@@ -251,7 +251,7 @@ class QcmResourceIT {
             .andExpect(jsonPath("$.completeAnswer").value(Base64Utils.encodeToString(DEFAULT_COMPLETE_ANSWER)))
             .andExpect(jsonPath("$.correctionContentType").value(DEFAULT_CORRECTION_CONTENT_TYPE))
             .andExpect(jsonPath("$.correction").value(Base64Utils.encodeToString(DEFAULT_CORRECTION)))
-            .andExpect(jsonPath("$.created_at").value(DEFAULT_CREATED_AT.toString()));
+            .andExpect(jsonPath("$.createdAt").value(DEFAULT_CREATED_AT.toString()));
     }
 
     @Test
@@ -282,7 +282,7 @@ class QcmResourceIT {
             .completeAnswerContentType(UPDATED_COMPLETE_ANSWER_CONTENT_TYPE)
             .correction(UPDATED_CORRECTION)
             .correctionContentType(UPDATED_CORRECTION_CONTENT_TYPE)
-            .created_at(UPDATED_CREATED_AT);
+            .createdAt(UPDATED_CREATED_AT);
 
         restQcmMockMvc
             .perform(
@@ -304,7 +304,7 @@ class QcmResourceIT {
         assertThat(testQcm.getCompleteAnswerContentType()).isEqualTo(UPDATED_COMPLETE_ANSWER_CONTENT_TYPE);
         assertThat(testQcm.getCorrection()).isEqualTo(UPDATED_CORRECTION);
         assertThat(testQcm.getCorrectionContentType()).isEqualTo(UPDATED_CORRECTION_CONTENT_TYPE);
-        assertThat(testQcm.getCreated_at()).isEqualTo(UPDATED_CREATED_AT);
+        assertThat(testQcm.getCreatedAt()).isEqualTo(UPDATED_CREATED_AT);
     }
 
     @Test
@@ -373,7 +373,7 @@ class QcmResourceIT {
         Qcm partialUpdatedQcm = new Qcm();
         partialUpdatedQcm.setId(qcm.getId());
 
-        partialUpdatedQcm.answer(UPDATED_ANSWER).answerContentType(UPDATED_ANSWER_CONTENT_TYPE).created_at(UPDATED_CREATED_AT);
+        partialUpdatedQcm.answer(UPDATED_ANSWER).answerContentType(UPDATED_ANSWER_CONTENT_TYPE).createdAt(UPDATED_CREATED_AT);
 
         restQcmMockMvc
             .perform(
@@ -395,7 +395,7 @@ class QcmResourceIT {
         assertThat(testQcm.getCompleteAnswerContentType()).isEqualTo(DEFAULT_COMPLETE_ANSWER_CONTENT_TYPE);
         assertThat(testQcm.getCorrection()).isEqualTo(DEFAULT_CORRECTION);
         assertThat(testQcm.getCorrectionContentType()).isEqualTo(DEFAULT_CORRECTION_CONTENT_TYPE);
-        assertThat(testQcm.getCreated_at()).isEqualTo(UPDATED_CREATED_AT);
+        assertThat(testQcm.getCreatedAt()).isEqualTo(UPDATED_CREATED_AT);
     }
 
     @Test
@@ -419,7 +419,7 @@ class QcmResourceIT {
             .completeAnswerContentType(UPDATED_COMPLETE_ANSWER_CONTENT_TYPE)
             .correction(UPDATED_CORRECTION)
             .correctionContentType(UPDATED_CORRECTION_CONTENT_TYPE)
-            .created_at(UPDATED_CREATED_AT);
+            .createdAt(UPDATED_CREATED_AT);
 
         restQcmMockMvc
             .perform(
@@ -441,7 +441,7 @@ class QcmResourceIT {
         assertThat(testQcm.getCompleteAnswerContentType()).isEqualTo(UPDATED_COMPLETE_ANSWER_CONTENT_TYPE);
         assertThat(testQcm.getCorrection()).isEqualTo(UPDATED_CORRECTION);
         assertThat(testQcm.getCorrectionContentType()).isEqualTo(UPDATED_CORRECTION_CONTENT_TYPE);
-        assertThat(testQcm.getCreated_at()).isEqualTo(UPDATED_CREATED_AT);
+        assertThat(testQcm.getCreatedAt()).isEqualTo(UPDATED_CREATED_AT);
     }
 
     @Test
