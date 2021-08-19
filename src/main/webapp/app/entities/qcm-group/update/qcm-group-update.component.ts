@@ -40,7 +40,7 @@ export class QcmGroupUpdateComponent implements OnInit {
     this.activatedRoute.data.subscribe(({ qcmGroup }) => {
       if (qcmGroup.id === undefined) {
         const today = dayjs().startOf('day');
-        qcmGroup.created_at = today;
+        qcmGroup.createdAt = today;
       }
 
       this.updateForm(qcmGroup);
@@ -90,7 +90,7 @@ export class QcmGroupUpdateComponent implements OnInit {
     this.editForm.patchValue({
       id: qcmGroup.id,
       name: qcmGroup.name,
-      created_at: qcmGroup.created_at ? qcmGroup.created_at.format(DATE_TIME_FORMAT) : null,
+      created_at: qcmGroup.createdAt ? qcmGroup.createdAt.format(DATE_TIME_FORMAT) : null,
       classe: qcmGroup.classe,
     });
 
@@ -110,7 +110,7 @@ export class QcmGroupUpdateComponent implements OnInit {
       ...new QcmGroup(),
       id: this.editForm.get(['id'])!.value,
       name: this.editForm.get(['name'])!.value,
-      created_at: this.editForm.get(['created_at'])!.value ? dayjs(this.editForm.get(['created_at'])!.value, DATE_TIME_FORMAT) : undefined,
+      createdAt: this.editForm.get(['created_at'])!.value ? dayjs(this.editForm.get(['created_at'])!.value, DATE_TIME_FORMAT) : undefined,
       classe: this.editForm.get(['classe'])!.value,
     };
   }

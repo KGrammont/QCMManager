@@ -14,7 +14,7 @@ public class QcmGroupMapper {
             return new QcmGroup()
                 .id(qcmGroupDTO.getId())
                 .name(qcmGroupDTO.getName())
-                .created_at(qcmGroupDTO.getCreated_at())
+                .createdAt(qcmGroupDTO.getCreatedAt())
                 .classe(qcmGroupDTO.getClasse());
         }
     }

@@ -13,6 +13,8 @@ import java.util.Optional;
 import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -79,7 +81,7 @@ public class QcmGroupService {
                 new Qcm()
                     .qcmGroup(qcmGroup)
                     .student(student)
-                    .createdAt(qcmGroup.getCreated_at())
+                    .createdAt(qcmGroup.getCreatedAt())
                     .questionContentType("application/pdf")
                     .question(splitEditableQcms.get(index % qcmNumber))
             );
@@ -103,8 +105,8 @@ public class QcmGroupService {
                     if (qcmGroup.getName() != null) {
                         existingQcmGroup.setName(qcmGroup.getName());
                     }
-                    if (qcmGroup.getCreated_at() != null) {
-                        existingQcmGroup.setCreated_at(qcmGroup.getCreated_at());
+                    if (qcmGroup.getCreatedAt() != null) {
+                        existingQcmGroup.setCreatedAt(qcmGroup.getCreatedAt());
                     }
 
                     return existingQcmGroup;
@@ -116,12 +118,13 @@ public class QcmGroupService {
     /**
      * Get all the qcmGroups.
      *
+     * @param pageable the pagination information.
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
-    public List<QcmGroup> findAll() {
+    public Page<QcmGroup> findAll(Pageable pageable) {
         log.debug("Request to get all QcmGroups");
-        return qcmGroupRepository.findAll();
+        return qcmGroupRepository.findAll(pageable);
     }
 
     /**
@@ -130,10 +133,10 @@ public class QcmGroupService {
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
-    public List<QcmGroup> findAllOfCurrentProf() {
+    public Page<QcmGroup> findAllOfCurrentProf(Pageable pageable) {
         List<Long> classeIds = classeService.findIdsByProfIsCurrentUser();
         log.debug("Request to get all QcmGroups of classes");
-        return qcmGroupRepository.findAllByClasseIdIn(classeIds);
+        return qcmGroupRepository.findAllByClasseIdIn(classeIds, pageable);
     }
 
     /**

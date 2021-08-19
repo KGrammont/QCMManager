@@ -25,7 +25,7 @@ public class QcmGroup implements Serializable {
 
     @NotNull
     @Column(name = "created_at", nullable = false)
-    private Instant created_at;
+    private Instant createdAt;
 
     @ManyToOne(optional = false)
     @NotNull
@@ -59,17 +59,17 @@ public class QcmGroup implements Serializable {
         this.name = name;
     }
 
-    public Instant getCreated_at() {
-        return this.created_at;
+    public Instant getCreatedAt() {
+        return this.createdAt;
     }
 
-    public QcmGroup created_at(Instant created_at) {
-        this.created_at = created_at;
+    public QcmGroup createdAt(Instant createdAt) {
+        this.createdAt = createdAt;
         return this;
     }
 
-    public void setCreated_at(Instant created_at) {
-        this.created_at = created_at;
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
     }
 
     public Classe getClasse() {
@@ -110,7 +110,7 @@ public class QcmGroup implements Serializable {
         return "QcmGroup{" +
             "id=" + getId() +
             ", name='" + getName() + "'" +
-            ", created_at='" + getCreated_at() + "'" +
+            ", createdAt='" + getCreatedAt() + "'" +
             "}";
     }
 }

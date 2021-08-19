@@ -27,7 +27,7 @@ describe('Service Tests', () => {
       elemDefault = {
         id: 0,
         name: 'AAAAAAA',
-        created_at: currentDate,
+        createdAt: currentDate,
       };
     });
 
@@ -36,14 +36,14 @@ describe('Service Tests', () => {
         const returnedFromService = Object.assign(
           {
             id: 0,
-            created_at: currentDate.format(DATE_TIME_FORMAT),
+            createdAt: currentDate.format(DATE_TIME_FORMAT),
           },
           elemDefault
         );
 
         const expected = Object.assign(
           {
-            created_at: currentDate,
+            createdAt: currentDate,
           },
           returnedFromService
         );
@@ -60,14 +60,14 @@ describe('Service Tests', () => {
           {
             id: 1,
             name: 'BBBBBB',
-            created_at: currentDate.format(DATE_TIME_FORMAT),
+            createdAt: currentDate.format(DATE_TIME_FORMAT),
           },
           elemDefault
         );
 
         const expected = Object.assign(
           {
-            created_at: currentDate,
+            createdAt: currentDate,
           },
           returnedFromService
         );

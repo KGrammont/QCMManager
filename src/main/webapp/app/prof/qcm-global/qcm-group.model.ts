@@ -4,13 +4,13 @@ import { IClasse } from 'app/entities/classe/classe.model';
 export interface ICompleteQcmGroup {
   id?: number;
   name?: string;
-  created_at?: dayjs.Dayjs;
+  createdAt?: dayjs.Dayjs;
   classe?: IClasse;
   qcms?: string;
 }
 
 export class CompleteQcmGroup implements ICompleteQcmGroup {
-  constructor(public id?: number, public name?: string, public created_at?: dayjs.Dayjs, public classe?: IClasse, public qcms?: string) {}
+  constructor(public id?: number, public name?: string, public createdAt?: dayjs.Dayjs, public classe?: IClasse, public qcms?: string) {}
 }
 
 export function getQcmGroupIdentifier(qcmGroup: ICompleteQcmGroup): number | undefined {
