@@ -55,7 +55,7 @@ describe('Component Tests', () => {
         // GIVEN
         const saveSubject = new Subject();
         const qcmGroup = new CompleteQcmGroup();
-        qcmGroup.created_at = dayjs().startOf('day');
+        qcmGroup.createdAt = dayjs().startOf('day');
         spyOn(qcmGroupService, 'create').and.returnValue(saveSubject);
         spyOn(comp, 'previousState');
         comp.ngOnInit();
@@ -75,7 +75,7 @@ describe('Component Tests', () => {
       it('Should set isSaving to false on error', () => {
         // GIVEN
         const saveSubject = new Subject();
-        const qcmGroup = { created_at: dayjs().startOf('day') };
+        const qcmGroup = { createdAt: dayjs().startOf('day') };
         spyOn(qcmGroupService, 'create').and.returnValue(saveSubject);
         spyOn(comp, 'previousState');
         comp.ngOnInit();

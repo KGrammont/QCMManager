@@ -24,7 +24,7 @@
   "dto": "no",
   "jpaMetamodelFiltering": false,
   "readOnly": false,
-  "pagination": "no",
+  "pagination": "pagination",
   "name": "QcmGroup",
   "changelogDate": "20210710225256"
 }
