@@ -3,7 +3,7 @@
     <span>Qcms</span>
 
     <div class="d-flex justify-content-end">
-      <button class="btn btn-info mr-2" (click)="loadAll()" [disabled]="isLoading">
+      <button class="btn btn-info mr-2" (click)="loadPage()" [disabled]="isLoading">
         <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
         <span>Refresh List</span>
       </button>
@@ -31,15 +31,15 @@
   <div class="table-responsive" id="entities" *ngIf="qcms && qcms.length > 0">
     <table class="table table-striped" aria-describedby="page-heading">
       <thead>
-        <tr>
-          <th scope="col"><span>ID</span></th>
-          <th scope="col"><span>Question</span></th>
-          <th scope="col"><span>Answer</span></th>
-          <th scope="col"><span>Complete Answer</span></th>
-          <th scope="col"><span>Correction</span></th>
-          <th scope="col"><span>Created At</span></th>
-          <th scope="col"><span>Qcm Group</span></th>
-          <th scope="col"><span>Student</span></th>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" [callback]="loadPage.bind(this)">
+          <th scope="col" jhiSortBy="id"><span>ID</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="question"><span>Question</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="answer"><span>Answer</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="completeAnswer"><span>Complete Answer</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="correction"><span>Correction</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="createdAt"><span>Created At</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="qcmGroup.name"><span>Qcm Group</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="student.login"><span>Student</span> <fa-icon icon="sort"></fa-icon></th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -64,7 +64,7 @@
             <a *ngIf="qcm.correction" (click)="openFile(qcm.correction, qcm.correctionContentType)">open</a>
             <span *ngIf="qcm.correction">{{ qcm.correctionContentType }}, {{ byteSize(qcm.correction) }}</span>
           </td>
-          <td>{{ qcm.created_at | formatMediumDatetime }}</td>
+          <td>{{ qcm.createdAt | formatMediumDatetime }}</td>
           <td>
             <div *ngIf="qcm.qcmGroup">
               <a [routerLink]="['/qcm-group', qcm.qcmGroup?.id, 'view']">{{ qcm.qcmGroup?.name }}</a>
@@ -94,5 +94,23 @@
         </tr>
       </tbody>
     </table>
+  </div>
+
+  <div *ngIf="qcms && qcms.length > 0">
+    <div class="row justify-content-center">
+      <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>
+    </div>
+
+    <div class="row justify-content-center">
+      <ngb-pagination
+        [collectionSize]="totalItems"
+        [(page)]="ngbPaginationPage"
+        [pageSize]="itemsPerPage"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="loadPage($event)"
+      ></ngb-pagination>
+    </div>
   </div>
 </div>

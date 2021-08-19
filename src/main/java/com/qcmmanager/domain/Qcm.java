@@ -49,7 +49,7 @@ public class Qcm implements Serializable {
 
     @NotNull
     @Column(name = "created_at", nullable = false)
-    private Instant created_at;
+    private Instant createdAt;
 
     @ManyToOne(optional = false)
     @NotNull
@@ -178,17 +178,17 @@ public class Qcm implements Serializable {
         this.correctionContentType = correctionContentType;
     }
 
-    public Instant getCreated_at() {
-        return this.created_at;
+    public Instant getCreatedAt() {
+        return this.createdAt;
     }
 
-    public Qcm created_at(Instant created_at) {
-        this.created_at = created_at;
+    public Qcm createdAt(Instant createdAt) {
+        this.createdAt = createdAt;
         return this;
     }
 
-    public void setCreated_at(Instant created_at) {
-        this.created_at = created_at;
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
     }
 
     public QcmGroup getQcmGroup() {
@@ -249,7 +249,7 @@ public class Qcm implements Serializable {
             ", completeAnswerContentType='" + getCompleteAnswerContentType() + "'" +
             ", correction='" + getCorrection() + "'" +
             ", correctionContentType='" + getCorrectionContentType() + "'" +
-            ", created_at='" + getCreated_at() + "'" +
+            ", created_at='" + getCreatedAt() + "'" +
             "}";
     }
 }

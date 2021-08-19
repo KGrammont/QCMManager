@@ -12,6 +12,9 @@ const qcmRoute: Routes = [
   {
     path: '',
     component: QcmComponent,
+    data: {
+      defaultSort: 'id,asc',
+    },
     canActivate: [UserRouteAccessService],
   },
   {

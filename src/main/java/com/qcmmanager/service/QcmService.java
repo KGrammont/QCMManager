@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -85,8 +87,8 @@ public class QcmService {
                     if (qcm.getCorrectionContentType() != null) {
                         existingQcm.setCorrectionContentType(qcm.getCorrectionContentType());
                     }
-                    if (qcm.getCreated_at() != null) {
-                        existingQcm.setCreated_at(qcm.getCreated_at());
+                    if (qcm.getCreatedAt() != null) {
+                        existingQcm.setCreatedAt(qcm.getCreatedAt());
                     }
 
                     return existingQcm;
@@ -131,34 +133,37 @@ public class QcmService {
     /**
      * Get all the qcms.
      *
+     * @param pageable the pagination information.
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
-    public List<Qcm> findAll() {
+    public Page<Qcm> findAll(Pageable pageable) {
         log.debug("Request to get all Qcms");
-        return qcmRepository.findAll();
+        return qcmRepository.findAll(pageable);
     }
 
     /**
      * Get all qcms for student.
      *
+     * @param pageable the pagination information.
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
-    public List<Qcm> findAllOfCurrentProf() {
+    public Page<Qcm> findAllOfCurrentProf(Pageable pageable) {
         log.debug("Request to get all Qcms of prof");
-        return qcmRepository.findByQcmGroupClasseProfIsCurrentUser();
+        return qcmRepository.findByQcmGroupClasseProfIsCurrentUser(pageable);
     }
 
     /**
      * Get all qcms for student.
      *
+     * @param pageable the pagination information.
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
-    public List<Qcm> findAllOfCurrentStudent() {
+    public Page<Qcm> findAllOfCurrentStudent(Pageable pageable) {
         log.debug("Request to get all Qcms of student");
-        return qcmRepository.findByStudentIsCurrentUser();
+        return qcmRepository.findByStudentIsCurrentUser(pageable);
     }
 
     /**
