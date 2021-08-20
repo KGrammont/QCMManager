@@ -8,7 +8,7 @@ import { ActivatedRoute } from '@angular/router';
 import { of, Subject } from 'rxjs';
 
 import { ClasseService } from '../service/classe.service';
-import { IClasse, Classe } from '../classe.model';
+import { IClasse, Classe, SelectableUser } from '../classe.model';
 
 import { IUser } from 'app/entities/user/user.model';
 import { UserService } from 'app/entities/user/user.service';
@@ -48,18 +48,20 @@ describe('Component Tests', () => {
     });
 
     describe('ngOnInit', () => {
-      it('Should call student and prof query and add missing student when ADMIN', () => {
+      it('Should call student and prof query and update selected students when ADMIN', () => {
         const classe: IClasse = { id: 456 };
         const students: IUser[] = [{ id: 8136 }];
         classe.students = students;
 
-        const studentsFromQuery: IUser[] = [{ id: 62330 }];
+        const studentsFromQuery: IUser[] = [{ id: 62330 }, { id: 8136 }];
         spyOn(userService, 'queryStudents').and.returnValue(of(new HttpResponse({ body: studentsFromQuery })));
-        const expectedStudents: IUser[] = [...students, ...studentsFromQuery];
-        spyOn(userService, 'addUserToCollectionIfMissing').and.returnValue(expectedStudents);
+        const expectedSelectableStudents: SelectableUser[] = [
+          { id: 62330, isSelected: false },
+          { id: 8136, isSelected: true },
+        ];
 
         spyOn(accountService, 'hasAnyAuthority').and.returnValue(true);
-        const expectedProfs: IUser[] = [{ id: 62330 }];
+        const expectedProfs: IUser[] = [{ id: 1243 }];
         spyOn(userService, 'queryProfs').and.returnValue(of(new HttpResponse({ body: expectedProfs })));
 
         activatedRoute.data = of({ classe });
@@ -68,21 +70,22 @@ describe('Component Tests', () => {
         expect(accountService.hasAnyAuthority).toHaveBeenCalledWith(Authority.ADMIN);
         expect(userService.queryStudents).toHaveBeenCalled();
         expect(userService.queryProfs).toHaveBeenCalled();
-        expect(userService.addUserToCollectionIfMissing).toHaveBeenCalledWith(studentsFromQuery, ...students);
-        expect(comp.studentsSharedCollection).toEqual(expectedStudents);
+        expect(comp.studentsSharedCollection).toEqual(expectedSelectableStudents);
         expect(comp.profsSharedCollection).toEqual(expectedProfs);
       });
 
-      it('Should put itself on prof and call only student query and add missing student when not ADMIN', () => {
+      it('Should put itself on prof and call only student query and update selectable students when not ADMIN', () => {
         const classe: IClasse = { id: 456 };
         const prof: IUser = { id: 13820 };
         const students: IUser[] = [{ id: 8136 }];
         classe.students = students;
 
-        const studentsFromQuery: IUser[] = [{ id: 62330 }];
+        const studentsFromQuery: IUser[] = [{ id: 62330 }, { id: 8136 }];
         spyOn(userService, 'queryStudents').and.returnValue(of(new HttpResponse({ body: studentsFromQuery })));
-        const expectedStudents: IUser[] = [...students, ...studentsFromQuery];
-        spyOn(userService, 'addUserToCollectionIfMissing').and.returnValue(expectedStudents);
+        const expectedSelectableStudents: SelectableUser[] = [
+          { id: 62330, isSelected: false },
+          { id: 8136, isSelected: true },
+        ];
 
         spyOn(accountService, 'hasAnyAuthority').and.returnValue(false);
         spyOn(accountService, 'identity').and.returnValue(of(prof));
@@ -92,13 +95,12 @@ describe('Component Tests', () => {
 
         expect(accountService.hasAnyAuthority).toHaveBeenCalledWith(Authority.ADMIN);
         expect(userService.queryStudents).toHaveBeenCalled();
-        expect(userService.addUserToCollectionIfMissing).toHaveBeenCalledWith(studentsFromQuery, ...students);
-        expect(comp.studentsSharedCollection).toEqual(expectedStudents);
+        expect(comp.studentsSharedCollection).toEqual(expectedSelectableStudents);
         expect(comp.editForm.get(['prof'])!.value).toEqual(prof);
       });
 
       it('Should update editForm', () => {
-        const classe: IClasse = { id: 456 };
+        const classe: IClasse = { id: 456, name: 'name' };
         const prof: IUser = { id: 48385 };
         classe.prof = prof;
         const students: IUser = { id: 2487 };
@@ -107,8 +109,10 @@ describe('Component Tests', () => {
         activatedRoute.data = of({ classe });
         comp.ngOnInit();
 
-        expect(comp.editForm.value).toEqual(expect.objectContaining(classe));
-        expect(comp.studentsSharedCollection).toContain(students);
+        expect(comp.editForm.get(['id'])!.value).toEqual(classe.id);
+        expect(comp.editForm.get(['name'])!.value).toEqual(classe.name);
+        expect(comp.editForm.get(['prof'])!.value).toEqual(prof);
+        expect(comp.selectedStudents).toContain(students);
       });
     });
 
@@ -116,7 +120,7 @@ describe('Component Tests', () => {
       it('Should call update service on save for existing entity', () => {
         // GIVEN
         const saveSubject = new Subject();
-        const classe = { id: 123 };
+        const classe = { id: 123, students: [] };
         spyOn(classeService, 'update').and.returnValue(saveSubject);
         spyOn(comp, 'previousState');
         activatedRoute.data = of({ classe });
@@ -138,6 +142,7 @@ describe('Component Tests', () => {
         // GIVEN
         const saveSubject = new Subject();
         const classe = new Classe();
+        classe.students = [];
         spyOn(classeService, 'create').and.returnValue(saveSubject);
         spyOn(comp, 'previousState');
         activatedRoute.data = of({ classe });
@@ -158,7 +163,7 @@ describe('Component Tests', () => {
       it('Should set isSaving to false on error', () => {
         // GIVEN
         const saveSubject = new Subject();
-        const classe = { id: 123 };
+        const classe = { id: 123, students: [] };
         spyOn(classeService, 'update').and.returnValue(saveSubject);
         spyOn(comp, 'previousState');
         activatedRoute.data = of({ classe });
@@ -182,34 +187,6 @@ describe('Component Tests', () => {
           const entity = { id: 123 };
           const trackResult = comp.trackUserById(0, entity);
           expect(trackResult).toEqual(entity.id);
-        });
-      });
-    });
-
-    describe('Getting selected relationships', () => {
-      describe('getSelectedUser', () => {
-        it('Should return option if no User is selected', () => {
-          const option = { id: 123 };
-          const result = comp.getSelectedUser(option);
-          expect(result === option).toEqual(true);
-        });
-
-        it('Should return selected User for according option', () => {
-          const option = { id: 123 };
-          const selected = { id: 123 };
-          const selected2 = { id: 456 };
-          const result = comp.getSelectedUser(option, [selected2, selected]);
-          expect(result === selected).toEqual(true);
-          expect(result === selected2).toEqual(false);
-          expect(result === option).toEqual(false);
-        });
-
-        it('Should return option if this User is not selected', () => {
-          const option = { id: 123 };
-          const selected = { id: 456 };
-          const result = comp.getSelectedUser(option, [selected]);
-          expect(result === option).toEqual(true);
-          expect(result === selected).toEqual(false);
         });
       });
     });
