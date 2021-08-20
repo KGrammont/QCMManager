@@ -3,6 +3,7 @@ package com.qcmmanager.web.rest;
 import com.qcmmanager.domain.Qcm;
 import com.qcmmanager.repository.QcmRepository;
 import com.qcmmanager.service.QcmService;
+import com.qcmmanager.service.dto.CompleteQcmDTO;
 import com.qcmmanager.service.dto.CompleteQcmPatch;
 import com.qcmmanager.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
@@ -200,6 +201,19 @@ public class QcmResource {
         Page<Qcm> page = qcmService.findAllOfCurrentStudent(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    /**
+     * {@code GET  /qcms/of-group/:id/to-download} : get all completed qcms of qcmGroup.
+     *
+     * @param id the id of the qcmGroup to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the qcms to download, or with status {@code 404 (Not Found)}.
+     */
+    @GetMapping("/qcms/of-group/{id}/to-download")
+    public ResponseEntity<List<CompleteQcmDTO>> getQcmsOfQcmGroup(@PathVariable Long id) {
+        log.debug("REST request to get all qcms of QcmGroup : {}", id);
+        List<CompleteQcmDTO> qcms = qcmService.getAllCompletedQcmOfGroup(id);
+        return ResponseEntity.ok(qcms);
     }
 
     /**

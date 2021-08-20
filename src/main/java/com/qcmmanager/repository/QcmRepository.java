@@ -18,4 +18,7 @@ public interface QcmRepository extends JpaRepository<Qcm, Long> {
 
     @Query(value = "select qcm from Qcm qcm where qcm.student.login = ?#{principal.username}")
     Page<Qcm> findByStudentIsCurrentUser(Pageable pageable);
+
+    @Query(value = "select qcm from Qcm qcm where qcm.qcmGroup.id = :groupId")
+    List<Qcm> findByQcmGroupId(Long groupId);
 }

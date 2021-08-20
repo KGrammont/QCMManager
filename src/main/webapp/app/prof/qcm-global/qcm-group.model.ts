@@ -16,3 +16,12 @@ export class CompleteQcmGroup implements ICompleteQcmGroup {
 export function getQcmGroupIdentifier(qcmGroup: ICompleteQcmGroup): number | undefined {
   return qcmGroup.id;
 }
+
+export interface IFileToDownload {
+  name?: string;
+  pdf?: string;
+}
+
+export class FileToDownload implements IFileToDownload {
+  constructor(public name?: string, public pdf?: string) {}
+}
