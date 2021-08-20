@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpHeaders, HttpResponse } from '@angular/common/http';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { ICompleteQcmGroup } from '../qcm-group.model';
+import { ICompleteQcmGroup, IFileToDownload } from '../qcm-group.model';
 import { QcmGlobalService } from '../service/qcm-global.service';
 import { QcmGroupDeleteDialogComponent } from '../delete/qcm-group-delete-dialog.component';
 import { ITEMS_PER_PAGE } from 'app/config/pagination.constants';
@@ -56,6 +56,27 @@ export class QcmGlobalComponent implements OnInit {
 
   trackId(index: number, item: ICompleteQcmGroup): number {
     return item.id!;
+  }
+
+  download(qcmGroup: ICompleteQcmGroup): void {
+    this.qcmGroupService.download(qcmGroup.id!).subscribe(x => {
+      const files = x.body;
+
+      files?.forEach((file: IFileToDownload) => {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        if (window.navigator?.msSaveOrOpenBlob) {
+          const blob = new Blob([file.pdf!], { type: 'image/jpg' });
+          window.navigator.msSaveOrOpenBlob(blob, `${file.name!}.jpg`);
+          return;
+        }
+
+        const source = `data:image/jpg;base64,${file.pdf!}`;
+        const link = document.createElement('a');
+        link.href = source;
+        link.download = `${file.name!}.jpg`;
+        link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+      });
+    });
   }
 
   delete(qcmGroup: ICompleteQcmGroup): void {

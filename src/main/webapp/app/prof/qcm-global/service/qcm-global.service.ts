@@ -6,7 +6,7 @@ import * as dayjs from 'dayjs';
 
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { createRequestOption } from 'app/core/request/request-util';
-import { ICompleteQcmGroup } from '../qcm-group.model';
+import { ICompleteQcmGroup, IFileToDownload } from '../qcm-group.model';
 import { IQcmGroup } from 'app/entities/qcm-group/qcm-group.model';
 
 export type EntityResponseType = HttpResponse<ICompleteQcmGroup>;
@@ -17,6 +17,7 @@ export class QcmGlobalService {
   public resourceUrl = this.applicationConfigService.getEndpointFor('api/qcm-groups');
   public distributeResourceUrl = this.applicationConfigService.getEndpointFor('api/qcm-groups/distribute');
   public currentProfResourceUrl = this.applicationConfigService.getEndpointFor('api/qcm-groups/of-current-prof');
+  public downloadResourceUrl = this.applicationConfigService.getEndpointFor('api/qcms/of-group');
 
   constructor(protected http: HttpClient, private applicationConfigService: ApplicationConfigService) {}
 
@@ -36,6 +37,10 @@ export class QcmGlobalService {
 
   delete(id: number): Observable<HttpResponse<{}>> {
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
+  }
+
+  download(id: number): Observable<EntityArrayResponseType> {
+    return this.http.get<IFileToDownload[]>(`${this.downloadResourceUrl}/${id}/to-download`, { observe: 'response' });
   }
 
   protected convertDateFromClient(qcmGroup: ICompleteQcmGroup): ICompleteQcmGroup {
