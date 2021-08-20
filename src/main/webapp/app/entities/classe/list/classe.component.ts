@@ -10,6 +10,7 @@ import { ITEMS_PER_PAGE } from 'app/config/pagination.constants';
 import { ClasseService } from '../service/classe.service';
 import { ClasseDeleteDialogComponent } from '../delete/classe-delete-dialog.component';
 import { AccountService } from 'app/core/auth/account.service';
+import { IUser } from 'app/admin/user-management/user-management.model';
 
 @Component({
   selector: 'jhi-classe',
@@ -131,6 +132,9 @@ export class ClasseComponent implements OnInit {
       });
     }
     this.classes = data ?? [];
+    this.classes.forEach((classe: IClasse) => {
+      classe.students?.sort((a: IUser, b: IUser) => (a.lastName! > b.lastName! ? 1 : -1));
+    });
     this.ngbPaginationPage = this.page;
   }
 
