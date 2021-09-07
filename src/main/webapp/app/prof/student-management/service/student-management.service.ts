@@ -14,7 +14,7 @@ export class StudentManagementService {
   public studentMassiveCreationResourceUrl = this.applicationConfigService.getEndpointFor('api/admin/students/multiple');
   public studentsResourceUrl = this.applicationConfigService.getEndpointFor('api/students');
 
-  private characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  private characters = 'ABCDEFGHIJKLMNPQRSTUVWXYZabcdefghijklmnpqrstuvwxyz0123456789';
   private charactersLength = this.characters.length;
 
   constructor(private http: HttpClient, private applicationConfigService: ApplicationConfigService) {}
