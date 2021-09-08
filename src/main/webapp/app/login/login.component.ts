@@ -57,7 +57,10 @@ export class LoginComponent implements OnInit, AfterViewInit {
             this.router.navigate(['']);
           }
         },
-        () => (this.authenticationError = true)
+        () => {
+          this.authenticationError = true;
+          this.loginForm.get('password')?.setValue('');
+        }
       );
   }
 }
