@@ -214,4 +214,15 @@ public class QcmService {
         log.debug("Request to delete Qcm : {}", id);
         qcmRepository.deleteById(id);
     }
+
+    /**
+     * Delete the qcm by id.
+     *
+     * @param id the id of the entity.
+     */
+    @Transactional
+    public void deleteByQcmGroupId(Long id) {
+        log.debug("Request to delete all Qcm of QcmGroup : {}", id);
+        qcmRepository.deleteByQcmGroupId(id);
+    }
 }
