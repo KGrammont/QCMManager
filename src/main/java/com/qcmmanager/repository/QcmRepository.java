@@ -21,4 +21,8 @@ public interface QcmRepository extends JpaRepository<Qcm, Long> {
 
     @Query(value = "select qcm from Qcm qcm where qcm.qcmGroup.id = :groupId")
     List<Qcm> findByQcmGroupId(Long groupId);
+
+    @Modifying
+    @Query(value = "delete from Qcm qcm where qcm.qcmGroup.id = :groupId")
+    void deleteByQcmGroupId(Long groupId);
 }

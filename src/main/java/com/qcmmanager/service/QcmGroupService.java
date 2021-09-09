@@ -158,6 +158,7 @@ public class QcmGroupService {
      */
     public void delete(Long id) {
         log.debug("Request to delete QcmGroup : {}", id);
+        qcmService.deleteByQcmGroupId(id);
         qcmGroupRepository.deleteById(id);
     }
 }
