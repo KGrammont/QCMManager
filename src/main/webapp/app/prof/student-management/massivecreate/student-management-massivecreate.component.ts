@@ -62,7 +62,7 @@ export class StudentManagementMassiveCreateComponent {
                 user.firstName = firstname;
                 user.lastName = lastname;
                 user.email = email;
-                user.login = firstname.toLowerCase() + lastname.toLowerCase();
+                user.login = this.sanitize(firstname + lastname);
                 user.pass = this.userService.generateRandomPass();
                 user.langKey = 'fr';
                 this.users![i] = new UserPlusFeedback(user);
@@ -72,6 +72,14 @@ export class StudentManagementMassiveCreateComponent {
         };
       }
     }
+  }
+
+  private sanitize(login: string): string {
+    return login
+      .toLowerCase()
+      .trim()
+      .normalize('NFD')
+      .replace(/[^0-9a-zA-Z]/gi, '');
   }
 
   private onUploadError(message: string): void {

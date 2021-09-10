@@ -44,12 +44,12 @@ export class StudentManagementUpdateComponent implements OnInit {
     this.editForm.get(['firstName'])!.valueChanges.subscribe((value: string) => {
       const lastname: string = this.editForm.get(['lastName'])!.value ?? '';
       const login = value + lastname;
-      this.editForm.get(['login'])!.setValue(login.toLowerCase());
+      this.editForm.get(['login'])!.setValue(this.sanitize(login));
     });
     this.editForm.get(['lastName'])!.valueChanges.subscribe((value: string) => {
       const firstname: string = this.editForm.get(['firstName'])!.value ?? '';
       const login = firstname + value;
-      this.editForm.get(['login'])!.setValue(login.toLowerCase());
+      this.editForm.get(['login'])!.setValue(this.sanitize(login));
     });
   }
 
@@ -97,5 +97,13 @@ export class StudentManagementUpdateComponent implements OnInit {
 
   private onSaveError(): void {
     this.isSaving = false;
+  }
+
+  private sanitize(login: string): string {
+    return login
+      .toLowerCase()
+      .trim()
+      .normalize('NFD')
+      .replace(/[^0-9a-zA-Z]/gi, '');
   }
 }
