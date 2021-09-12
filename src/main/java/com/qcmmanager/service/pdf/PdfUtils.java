@@ -53,7 +53,7 @@ public class PdfUtils {
             pdfCanvas
                 .beginText()
                 .setFontAndSize(PdfFontFactory.createFont(StandardFonts.COURIER_BOLD), 14)
-                .moveText(175, 524)
+                .moveText(190, 770)
                 .showText(lastname + " " + firstname);
             pdf.close();
             return os.toByteArray();
