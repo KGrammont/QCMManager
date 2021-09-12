@@ -9,10 +9,16 @@
         - prénom, nom et email sont obligatoires; <br />
         - le prénom et le nom ne doivent pas dépasser 50 caractères à eux deux; <br />
         - l'email doit avoir entre 5 et 100 caractères. <br />
+        <br />
+        Le fichier csv doit suivre un certain format, une ligne par élève, chaque ligne étant composée du prénom, du nom et de l'email
+        séparés par des ';'. <br />
+        Exemple: <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;John;Doe;john.doe@gmail.com <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;Foo;De Bar;fooDeBar@gmail.com
       </span>
     </div>
 
-    <div class="mb-2">
+    <div class="mb-2" style="margin-top: 25px">
       <input type="file" class="upload" (change)="changeListener($event)" />
     </div>
 
@@ -49,6 +55,10 @@
     <div>
       <button type="button" class="btn btn-secondary" (click)="previousState()">
         <fa-icon icon="ban"></fa-icon>&nbsp;<span>Retour à la vue élève</span>
+      </button>
+
+      <button type="button" [disabled]="users === null" class="btn btn-info" (click)="download()">
+        <fa-icon icon="download"></fa-icon>&nbsp;<span>Télécharger</span>
       </button>
 
       <button type="button" [disabled]="users === null || isSaving" class="btn btn-primary" (click)="save()">

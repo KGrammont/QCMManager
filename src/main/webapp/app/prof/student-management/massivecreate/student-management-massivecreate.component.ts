@@ -25,6 +25,23 @@ export class StudentManagementMassiveCreateComponent {
     this.userService.massiveCreate(pureUsers).subscribe(userCreationFeedbacks => this.onSaveFeedback(userCreationFeedbacks));
   }
 
+  download(): void {
+    const csv = this.users?.map(u => `${u.user.firstName!};${u.user.lastName!};${u.user.email!};${u.user.pass!}`).join('\r\n');
+    const blob = new Blob([csv!], { type: 'text/csv' });
+
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (window.navigator?.msSaveOrOpenBlob) {
+      window.navigator.msSaveOrOpenBlob(blob, 'mots de passe.csv');
+      return;
+    }
+
+    const source = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = source;
+    link.download = 'mots de passe.csv';
+    link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+  }
+
   trackLogin(index: number, item: UserPlusFeedback): string {
     return item.user.login!;
   }
