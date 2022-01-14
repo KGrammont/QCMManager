@@ -2,6 +2,7 @@ package com.qcmmanager.web.rest;
 
 import com.qcmmanager.domain.Qcm;
 import com.qcmmanager.repository.QcmRepository;
+import com.qcmmanager.security.AuthoritiesConstants;
 import com.qcmmanager.service.QcmService;
 import com.qcmmanager.service.dto.CompleteQcmDTO;
 import com.qcmmanager.service.dto.CompleteQcmPatch;
@@ -21,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
@@ -178,14 +180,15 @@ public class QcmResource {
     }
 
     /**
-     * {@code GET  /qcms/prof} : get all qcms of current prof.
+     * {@code GET  /qcms/of-group/{id}} : get all qcms of group.
      *
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of qcms in body.
      */
-    @GetMapping("/qcms/prof")
-    public ResponseEntity<List<Qcm>> getAllQcmsOfCurrentProf(Pageable pageable) {
-        log.debug("REST request to get all Qcms of current pof");
-        Page<Qcm> page = qcmService.findAllOfCurrentProf(pageable);
+    @GetMapping("/qcms/of-group/{id}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.PROF + "\")")
+    public ResponseEntity<List<Qcm>> getAllQcmsOfQcmGroupForCurrentProf(@PathVariable Long id, Pageable pageable) {
+        log.debug("REST request to get all Qcms of qcmGroup {}", id);
+        Page<Qcm> page = qcmService.findAllOfQcmGroup(id, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }

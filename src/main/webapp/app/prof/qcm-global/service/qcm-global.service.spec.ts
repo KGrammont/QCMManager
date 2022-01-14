@@ -32,6 +32,21 @@ describe('Service Tests', () => {
     });
 
     describe('Service methods', () => {
+      it('should find an element', () => {
+        const returnedFromService = Object.assign(
+          {
+            createdAt: currentDate.format(DATE_TIME_FORMAT),
+          },
+          elemDefault
+        );
+
+        service.find(123).subscribe(resp => (expectedResult = resp.body));
+
+        const req = httpMock.expectOne({ method: 'GET' });
+        req.flush(returnedFromService);
+        expect(expectedResult).toMatchObject(elemDefault);
+      });
+
       it('should create a QcmGroup', () => {
         const returnedFromService = Object.assign(
           {

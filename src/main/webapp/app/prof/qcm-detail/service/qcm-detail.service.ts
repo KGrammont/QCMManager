@@ -16,7 +16,7 @@ export type EntityArrayResponseType = HttpResponse<IQcm[]>;
 @Injectable({ providedIn: 'root' })
 export class QcmDetailService {
   public resourceUrl = this.applicationConfigService.getEndpointFor('api/qcms');
-  public profResourceUrl = this.applicationConfigService.getEndpointFor('api/qcms/prof');
+  public profResourceUrl = this.applicationConfigService.getEndpointFor('api/qcms/of-group');
 
   constructor(protected http: HttpClient, private applicationConfigService: ApplicationConfigService) {}
 
@@ -53,10 +53,10 @@ export class QcmDetailService {
       .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
   }
 
-  query(req?: any): Observable<EntityArrayResponseType> {
+  query(qcmGroupId: number, req?: any): Observable<EntityArrayResponseType> {
     const options = createRequestOption(req);
     return this.http
-      .get<IQcm[]>(this.profResourceUrl, { params: options, observe: 'response' })
+      .get<IQcm[]>(`${this.profResourceUrl}/${qcmGroupId}`, { params: options, observe: 'response' })
       .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
   }
 
