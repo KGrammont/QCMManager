@@ -144,15 +144,16 @@ public class QcmService {
     }
 
     /**
-     * Get all qcms for student.
+     * Get all qcms of group.
      *
+     * @param qcmGroupId the id of the qcmGroup.
      * @param pageable the pagination information.
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
-    public Page<Qcm> findAllOfCurrentProf(Pageable pageable) {
-        log.debug("Request to get all Qcms of prof");
-        return qcmRepository.findByQcmGroupClasseProfIsCurrentUser(pageable);
+    public Page<Qcm> findAllOfQcmGroup(Long qcmGroupId, Pageable pageable) {
+        log.debug("Request to get all Qcms of qcmGroup {}", qcmGroupId);
+        return qcmRepository.findByQcmGroupIdAndClasseProfIsCurrentUser(qcmGroupId, pageable);
     }
 
     /**

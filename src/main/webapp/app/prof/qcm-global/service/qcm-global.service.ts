@@ -28,6 +28,12 @@ export class QcmGlobalService {
       .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
   }
 
+  find(id: number): Observable<EntityResponseType> {
+    return this.http
+      .get<IQcmGroup>(`${this.resourceUrl}/${id}`, { observe: 'response' })
+      .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
+  }
+
   query(req?: any): Observable<EntityArrayResponseType> {
     const options = createRequestOption(req);
     return this.http

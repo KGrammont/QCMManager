@@ -5,12 +5,24 @@ import { UserRouteAccessService } from 'app/core/auth/user-route-access.service'
 import { QcmDetailComponent } from '../list/qcm-detail.component';
 import { QcmDetailUpdateComponent } from '../update/qcm-detail-update.component';
 import { QcmDetailRoutingResolveService } from './qcm-detail-routing-resolve.service';
+import { QcmGroupRoutingResolveService } from './qcm-group-routing-resolve.service';
 
 const qcmRoute: Routes = [
   {
     path: '',
     component: QcmDetailComponent,
     canActivate: [UserRouteAccessService],
+    resolve: {
+      qcmGroup: QcmGroupRoutingResolveService,
+    },
+  },
+  {
+    path: ':id',
+    component: QcmDetailComponent,
+    canActivate: [UserRouteAccessService],
+    resolve: {
+      qcmGroup: QcmGroupRoutingResolveService,
+    },
   },
   {
     path: ':id/edit',

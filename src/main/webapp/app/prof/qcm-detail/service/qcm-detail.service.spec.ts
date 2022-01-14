@@ -149,7 +149,7 @@ describe('Service Tests', () => {
           returnedFromService
         );
 
-        service.query().subscribe(resp => (expectedResult = resp.body));
+        service.query(123).subscribe(resp => (expectedResult = resp.body));
 
         const req = httpMock.expectOne({ method: 'GET' });
         req.flush([returnedFromService]);
