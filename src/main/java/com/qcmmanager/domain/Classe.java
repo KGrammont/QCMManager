@@ -27,7 +27,7 @@ public class Classe implements Serializable {
     @NotNull
     private User prof;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(
         name = "rel_classe__student",
         joinColumns = @JoinColumn(name = "classe_id"),

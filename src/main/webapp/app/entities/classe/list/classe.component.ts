@@ -45,6 +45,7 @@ export class ClasseComponent implements OnInit {
           page: pageToLoad - 1,
           size: this.itemsPerPage,
           sort: this.sort(),
+          eagerload: true,
         })
         .subscribe(
           (res: HttpResponse<IClasse[]>) => {
@@ -62,6 +63,7 @@ export class ClasseComponent implements OnInit {
           page: pageToLoad - 1,
           size: this.itemsPerPage,
           sort: this.sort(),
+          eagerload: true,
         })
         .subscribe(
           (res: HttpResponse<IClasse[]>) => {
