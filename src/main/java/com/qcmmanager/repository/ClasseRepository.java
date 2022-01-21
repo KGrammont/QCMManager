@@ -20,6 +20,12 @@ public interface ClasseRepository extends JpaRepository<Classe, Long> {
     )
     Page<Classe> findByProfIsCurrentUser(Pageable pageable);
 
+    @Query(
+        value = "select classe from Classe classe left join fetch classe.students where classe.prof.login = ?#{principal.username}",
+        countQuery = "select count(distinct classe) from Classe classe where classe.prof.login = ?#{principal.username}"
+    )
+    Page<Classe> findByProfIsCurrentUserWithEagerRelationships(Pageable pageable);
+
     @Query("select classe.id from Classe classe where classe.prof.login = ?#{principal.username}")
     List<Long> findClasseIdsByProfIsCurrentUser();
 

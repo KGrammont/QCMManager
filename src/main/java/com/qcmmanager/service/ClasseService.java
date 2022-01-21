@@ -101,7 +101,7 @@ public class ClasseService {
      * @return the list of entities.
      */
     public Page<Classe> findByProfIsCurrentUserWithEagerRelationships(Pageable pageable) {
-        return classeRepository.findByProfIsCurrentUser(pageable);
+        return classeRepository.findByProfIsCurrentUserWithEagerRelationships(pageable);
     }
 
     /**
