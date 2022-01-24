@@ -4,13 +4,11 @@ import com.qcmmanager.domain.Qcm;
 import com.qcmmanager.domain.QcmGroup;
 import com.qcmmanager.domain.User;
 import com.qcmmanager.repository.QcmGroupRepository;
+import com.qcmmanager.service.custom.ClasseCService;
 import com.qcmmanager.service.dto.QcmGroupDTO;
 import com.qcmmanager.service.mapper.QcmGroupMapper;
 import com.qcmmanager.service.pdf.PdfUtils;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -26,14 +24,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class QcmGroupService {
 
     private final Logger log = LoggerFactory.getLogger(QcmGroupService.class);
-    private final ClasseService classeService;
+    private final ClasseCService classeService;
     private final QcmService qcmService;
     private final PdfUtils pdfUtils;
     private final QcmGroupMapper qcmGroupMapper;
     private final QcmGroupRepository qcmGroupRepository;
 
     public QcmGroupService(
-        ClasseService classeService,
+        ClasseCService classeService,
         QcmService qcmService,
         PdfUtils pdfUtils,
         QcmGroupMapper qcmGroupMapper,

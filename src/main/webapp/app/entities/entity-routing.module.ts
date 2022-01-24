@@ -9,7 +9,7 @@ import { Authority } from 'app/config/authority.constants';
         path: 'classe',
         data: {
           pageTitle: 'Classes',
-          authorities: [Authority.ADMIN, Authority.PROF],
+          authorities: [Authority.ADMIN],
         },
         loadChildren: () => import('./classe/classe.module').then(m => m.ClasseModule),
       },

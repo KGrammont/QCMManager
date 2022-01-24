@@ -2,15 +2,13 @@ package com.qcmmanager.web.controller;
 
 import com.qcmmanager.domain.Classe;
 import com.qcmmanager.repository.ClasseRepository;
-import com.qcmmanager.service.ClasseService;
+import com.qcmmanager.service.custom.ClasseCService;
 import com.qcmmanager.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
-import tech.jhipster.web.util.ResponseUtil;
 
 @RestController
 @RequestMapping("/api/custom")
@@ -35,11 +32,11 @@ public class ClasseController {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    private final ClasseService classeService;
+    private final ClasseCService classeService;
 
     private final ClasseRepository classeRepository;
 
-    public ClasseController(ClasseService classeService, ClasseRepository classeRepository) {
+    public ClasseController(ClasseCService classeService, ClasseRepository classeRepository) {
         this.classeService = classeService;
         this.classeRepository = classeRepository;
     }
@@ -111,12 +108,7 @@ public class ClasseController {
         @RequestParam(required = false, defaultValue = "false") boolean eagerload
     ) {
         log.debug("REST request to get a page of Classes of current prof");
-        Page<Classe> page;
-        if (eagerload) {
-            page = classeService.findByProfIsCurrentUserWithEagerRelationships(pageable);
-        } else {
-            page = classeService.findByProfIsCurrentUser(pageable);
-        }
+        Page<Classe> page = classeService.findByProfIsCurrentUser(pageable, eagerload);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
