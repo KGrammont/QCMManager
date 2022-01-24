@@ -5,14 +5,14 @@ import { Observable } from 'rxjs';
 import { isPresent } from 'app/core/util/operators';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { createRequestOption } from 'app/core/request/request-util';
-import { IClasse, getClasseIdentifier } from '../classe.model';
+import { IClasse, getClasseIdentifier } from '../../../entities/classe/classe.model';
 
 export type EntityResponseType = HttpResponse<IClasse>;
 export type EntityArrayResponseType = HttpResponse<IClasse[]>;
 
 @Injectable({ providedIn: 'root' })
 export class ClasseService {
-  public resourceUrl = this.applicationConfigService.getEndpointFor('api/classes');
+  public resourceUrl = this.applicationConfigService.getEndpointFor('api/custom/classes');
 
   constructor(protected http: HttpClient, private applicationConfigService: ApplicationConfigService) {}
 
@@ -24,17 +24,9 @@ export class ClasseService {
     return this.http.put<IClasse>(`${this.resourceUrl}/${getClasseIdentifier(classe) as number}`, classe, { observe: 'response' });
   }
 
-  partialUpdate(classe: IClasse): Observable<EntityResponseType> {
-    return this.http.patch<IClasse>(`${this.resourceUrl}/${getClasseIdentifier(classe) as number}`, classe, { observe: 'response' });
-  }
-
-  find(id: number): Observable<EntityResponseType> {
-    return this.http.get<IClasse>(`${this.resourceUrl}/${id}`, { observe: 'response' });
-  }
-
-  query(req?: any): Observable<EntityArrayResponseType> {
+  queryForProf(req?: any): Observable<EntityArrayResponseType> {
     const options = createRequestOption(req);
-    return this.http.get<IClasse[]>(this.resourceUrl, { params: options, observe: 'response' });
+    return this.http.get<IClasse[]>(`${this.resourceUrl}/of-current-prof`, { params: options, observe: 'response' });
   }
 
   delete(id: number): Observable<HttpResponse<{}>> {

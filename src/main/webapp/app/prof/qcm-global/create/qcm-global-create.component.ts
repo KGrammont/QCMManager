@@ -8,7 +8,7 @@ import * as dayjs from 'dayjs';
 import { ICompleteQcmGroup, CompleteQcmGroup } from '../qcm-group.model';
 import { QcmGlobalService } from '../service/qcm-global.service';
 import { IClasse } from 'app/entities/classe/classe.model';
-import { ClasseService } from 'app/entities/classe/service/classe.service';
+import { ClasseService } from '../../classe/service/classe.service';
 import { DataUtils, FileLoadError } from 'app/core/util/data-util.service';
 import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
 import { AlertError } from 'app/shared/alert/alert-error.model';

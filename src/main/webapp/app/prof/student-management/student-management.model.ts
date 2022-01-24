@@ -51,3 +51,7 @@ export interface IUserPlusFeedback {
 export class UserPlusFeedback implements IUserPlusFeedback {
   constructor(public user: User, public hasBeenCreated?: boolean, public reason?: string) {}
 }
+
+export class SelectableUser implements IUser {
+  constructor(public isSelected: boolean, public id?: number, public login?: string, public firstName?: string, public lastName?: string) {}
+}

@@ -4,11 +4,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { IClasse } from '../classe.model';
+import { IClasse } from '../../../entities/classe/classe.model';
 
 import { ITEMS_PER_PAGE } from 'app/config/pagination.constants';
 import { ClasseService } from '../service/classe.service';
 import { ClasseDeleteDialogComponent } from '../delete/classe-delete-dialog.component';
+import { IUser } from 'app/admin/user-management/user-management.model';
 
 @Component({
   selector: 'jhi-classe',
@@ -36,10 +37,11 @@ export class ClasseComponent implements OnInit {
     const pageToLoad: number = page ?? this.page ?? 1;
 
     this.classeService
-      .query({
+      .queryForProf({
         page: pageToLoad - 1,
         size: this.itemsPerPage,
         sort: this.sort(),
+        eagerload: true,
       })
       .subscribe(
         (res: HttpResponse<IClasse[]>) => {
@@ -99,7 +101,7 @@ export class ClasseComponent implements OnInit {
     this.totalItems = Number(headers.get('X-Total-Count'));
     this.page = page;
     if (navigate) {
-      this.router.navigate(['/classe'], {
+      this.router.navigate(['/prof/classe'], {
         queryParams: {
           page: this.page,
           size: this.itemsPerPage,
@@ -108,6 +110,9 @@ export class ClasseComponent implements OnInit {
       });
     }
     this.classes = data ?? [];
+    this.classes.forEach((classe: IClasse) => {
+      classe.students?.sort((a: IUser, b: IUser) => (a.lastName! > b.lastName! ? 1 : -1));
+    });
     this.ngbPaginationPage = this.page;
   }
 

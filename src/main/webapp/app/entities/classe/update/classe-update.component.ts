@@ -1,34 +1,23 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpHeaders, HttpResponse } from '@angular/common/http';
+import { HttpResponse } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { finalize, map } from 'rxjs/operators';
 
-import { IClasse, Classe, SelectableUser } from '../classe.model';
+import { IClasse, Classe } from '../classe.model';
 import { ClasseService } from '../service/classe.service';
 import { IUser } from 'app/entities/user/user.model';
 import { UserService } from 'app/entities/user/user.service';
-import { AccountService } from 'app/core/auth/account.service';
-import { Authority } from 'app/config/authority.constants';
-import { ITEMS_PER_PAGE } from 'app/config/pagination.constants';
 
 @Component({
   selector: 'jhi-classe-update',
   templateUrl: './classe-update.component.html',
 })
 export class ClasseUpdateComponent implements OnInit {
-  isLoading = false;
   isSaving = false;
-  totalItems = 0;
-  itemsPerPage = ITEMS_PER_PAGE;
-  page!: number;
-  predicate!: string;
-  ascending!: boolean;
 
-  profsSharedCollection: IUser[] = [];
-  selectedStudents: IUser[] = [];
-  studentsSharedCollection: SelectableUser[] | null = null;
+  usersSharedCollection: IUser[] = [];
 
   editForm = this.fb.group({
     id: [],
@@ -41,16 +30,14 @@ export class ClasseUpdateComponent implements OnInit {
     protected classeService: ClasseService,
     protected userService: UserService,
     protected activatedRoute: ActivatedRoute,
-    protected fb: FormBuilder,
-    private accountService: AccountService
+    protected fb: FormBuilder
   ) {}
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ classe }) => {
       this.updateForm(classe);
 
-      this.handleNavigation();
-      this.loadProfs();
+      this.loadRelationshipsOptions();
     });
   }
 
@@ -72,35 +59,15 @@ export class ClasseUpdateComponent implements OnInit {
     return item.id!;
   }
 
-  loadPageStudents(): void {
-    this.isLoading = true;
-    this.userService
-      .queryStudents({
-        page: this.page - 1,
-        size: this.itemsPerPage,
-        sort: [this.predicate + ',' + (this.ascending ? 'asc' : 'desc'), 'id'],
-      })
-      .subscribe(
-        (res: HttpResponse<IUser[]>) => {
-          this.isLoading = false;
-          this.onSuccess(res.body, res.headers);
-        },
-        () => (this.isLoading = false)
-      );
-  }
-
-  transition(): void {
-    this.loadPageStudents();
-  }
-
-  addStudent(student: SelectableUser): void {
-    student.isSelected = true;
-    this.selectedStudents.push(student);
-  }
-
-  removeStudent(student: SelectableUser): void {
-    student.isSelected = false;
-    this.selectedStudents = this.selectedStudents.filter((s: IUser) => s.id !== student.id);
+  getSelectedUser(option: IUser, selectedVals?: IUser[]): IUser {
+    if (selectedVals) {
+      for (const selectedVal of selectedVals) {
+        if (option.id === selectedVal.id) {
+          return selectedVal;
+        }
+      }
+    }
+    return option;
   }
 
   protected subscribeToSaveResponse(result: Observable<HttpResponse<IClasse>>): void {
@@ -108,36 +75,6 @@ export class ClasseUpdateComponent implements OnInit {
       () => this.onSaveSuccess(),
       () => this.onSaveError()
     );
-  }
-
-  protected loadProfs(): void {
-    if (this.accountService.hasAnyAuthority(Authority.ADMIN)) {
-      this.userService
-        .queryProfs()
-        .pipe(map((res: HttpResponse<IUser[]>) => res.body ?? []))
-        .subscribe((users: IUser[]) => (this.profsSharedCollection = users));
-    } else {
-      this.accountService.identity().subscribe(profAccount => this.editForm.get(['prof'])!.setValue(profAccount));
-    }
-  }
-
-  protected updateForm(classe: IClasse): void {
-    this.editForm.patchValue({
-      id: classe.id,
-      name: classe.name,
-      prof: classe.prof,
-    });
-    this.selectedStudents = classe.students ?? [];
-  }
-
-  protected createFromForm(): IClasse {
-    return {
-      ...new Classe(),
-      id: this.editForm.get(['id'])!.value,
-      name: this.editForm.get(['name'])!.value,
-      prof: this.editForm.get(['prof'])!.value,
-      students: this.selectedStudents !== [] ? this.selectedStudents : undefined,
-    };
   }
 
   protected onSaveSuccess(): void {
@@ -152,19 +89,44 @@ export class ClasseUpdateComponent implements OnInit {
     this.isSaving = false;
   }
 
-  private handleNavigation(): void {
-    this.page = 1;
-    this.predicate = 'login';
-    this.ascending = true;
-    this.loadPageStudents();
+  protected updateForm(classe: IClasse): void {
+    this.editForm.patchValue({
+      id: classe.id,
+      name: classe.name,
+      prof: classe.prof,
+      students: classe.students,
+    });
+
+    this.usersSharedCollection = this.userService.addUserToCollectionIfMissing(
+      this.usersSharedCollection,
+      classe.prof,
+      ...(classe.students ?? [])
+    );
   }
 
-  private onSuccess(users: IUser[] | null, headers: HttpHeaders): void {
-    this.totalItems = Number(headers.get('X-Total-Count'));
-    this.studentsSharedCollection =
-      users?.map((user: IUser) => {
-        const isSelected = this.selectedStudents.find((student: IUser) => student.id === user.id) !== undefined;
-        return new SelectableUser(isSelected, user.id, user.login, user.firstName, user.lastName);
-      }) ?? null;
+  protected loadRelationshipsOptions(): void {
+    this.userService
+      .query()
+      .pipe(map((res: HttpResponse<IUser[]>) => res.body ?? []))
+      .pipe(
+        map((users: IUser[]) =>
+          this.userService.addUserToCollectionIfMissing(
+            users,
+            this.editForm.get('prof')!.value,
+            ...(this.editForm.get('students')!.value ?? [])
+          )
+        )
+      )
+      .subscribe((users: IUser[]) => (this.usersSharedCollection = users));
+  }
+
+  protected createFromForm(): IClasse {
+    return {
+      ...new Classe(),
+      id: this.editForm.get(['id'])!.value,
+      name: this.editForm.get(['name'])!.value,
+      prof: this.editForm.get(['prof'])!.value,
+      students: this.editForm.get(['students'])!.value,
+    };
   }
 }
