@@ -1,105 +1,56 @@
 <div class="row justify-content-center">
   <div class="col-8">
     <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
-      <h2 id="jhi-classe-heading" data-cy="ClasseCreateUpdateHeading">Créer ou modifier la classe</h2>
+      <h2 id="jhi-classe-heading" data-cy="ClasseCreateUpdateHeading">Create or edit a Classe</h2>
 
       <div>
         <jhi-alert-error></jhi-alert-error>
 
-        <div class="form-group" [hidden]="editForm.get('id')!.value == null" *jhiHasAnyAuthority="'ROLE_ADMIN'">
+        <div class="form-group" [hidden]="editForm.get('id')!.value == null">
           <label class="form-control-label" for="field_id">ID</label>
           <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
         </div>
 
         <div class="form-group">
-          <label class="form-control-label" for="field_name">Nom</label>
+          <label class="form-control-label" for="field_name">Name</label>
           <input type="text" class="form-control" name="name" id="field_name" data-cy="name" formControlName="name" />
           <div *ngIf="editForm.get('name')!.invalid && (editForm.get('name')!.dirty || editForm.get('name')!.touched)">
-            <small class="form-text text-danger" *ngIf="editForm.get('name')?.errors?.required"> Ce champs est requis. </small>
+            <small class="form-text text-danger" *ngIf="editForm.get('name')?.errors?.required"> This field is required. </small>
           </div>
         </div>
 
-        <div class="form-group" *jhiHasAnyAuthority="'ROLE_ADMIN'">
+        <div class="form-group">
           <label class="form-control-label" for="field_prof">Prof</label>
           <select class="form-control" id="field_prof" data-cy="prof" name="prof" formControlName="prof">
             <option *ngIf="!editForm.get('prof')!.value" [ngValue]="null" selected></option>
             <option
-              [ngValue]="prof.id === editForm.get('prof')!.value?.id ? editForm.get('prof')!.value : prof"
-              *ngFor="let prof of profsSharedCollection; trackBy: trackUserById"
+              [ngValue]="userOption.id === editForm.get('prof')!.value?.id ? editForm.get('prof')!.value : userOption"
+              *ngFor="let userOption of usersSharedCollection; trackBy: trackUserById"
             >
-              {{ prof.firstName }} {{ prof.lastName }}
+              {{ userOption.login }}
             </option>
           </select>
         </div>
         <div *ngIf="editForm.get(['prof'])!.invalid && (editForm.get(['prof'])!.dirty || editForm.get(['prof'])!.touched)">
-          <small class="form-text text-danger" *ngIf="editForm.get(['prof'])?.errors?.required"> Ce champs est requis. </small>
+          <small class="form-text text-danger" *ngIf="editForm.get(['prof'])?.errors?.required"> This field is required. </small>
         </div>
 
-        <div>
-          <div class="table-responsive" *ngIf="studentsSharedCollection">
-            <table class="table table-striped" aria-describedby="user-management-page-heading">
-              <thead>
-                <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" [callback]="transition.bind(this)">
-                  <th scope="col" jhiSortBy="login">
-                    <span>Login</span>
-                    <fa-icon icon="sort"></fa-icon>
-                  </th>
-                  <th scope="col" jhiSortBy="lastName">
-                    <span>Nom</span>
-                    <fa-icon icon="sort"></fa-icon>
-                  </th>
-                  <th scope="col" jhiSortBy="firstName">
-                    <span>Prénom</span>
-                    <fa-icon icon="sort"></fa-icon>
-                  </th>
-                  <th scope="col"></th>
-                </tr>
-              </thead>
-              <tbody *ngIf="studentsSharedCollection">
-                <tr *ngFor="let student of studentsSharedCollection; trackBy: trackUserById">
-                  <td>{{ student.login }}</td>
-                  <td>{{ student.lastName }}</td>
-                  <td>{{ student.firstName }}</td>
-                  <td class="text-right">
-                    <div class="btn-group">
-                      <button *ngIf="!student.isSelected" type="button" (click)="addStudent(student)" class="btn btn-primary btn-sm">
-                        <fa-icon icon="plus"></fa-icon>
-                        <span class="d-none d-md-inline">Ajouter</span>
-                      </button>
-                      <button *ngIf="student.isSelected" type="button" (click)="removeStudent(student)" class="btn btn-danger btn-sm">
-                        <fa-icon icon="times"></fa-icon>
-                        <span class="d-none d-md-inline">Retirer</span>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div *ngIf="studentsSharedCollection">
-            <div class="row justify-content-center">
-              <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"> </jhi-item-count>
-            </div>
-
-            <div class="row justify-content-center">
-              <ngb-pagination
-                [collectionSize]="totalItems"
-                [(page)]="page"
-                [pageSize]="itemsPerPage"
-                [maxSize]="5"
-                [rotate]="true"
-                [boundaryLinks]="true"
-                (pageChange)="transition()"
-              ></ngb-pagination>
-            </div>
-          </div>
+        <div class="form-group">
+          <label for="field_students">Student</label>
+          <select class="form-control" id="field_students" data-cy="student" multiple name="students" formControlName="students">
+            <option
+              [ngValue]="getSelectedUser(userOption, editForm.get('students')!.value)"
+              *ngFor="let userOption of usersSharedCollection; trackBy: trackUserById"
+            >
+              {{ userOption.login }}
+            </option>
+          </select>
         </div>
       </div>
 
       <div>
         <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
-          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Annuler</span>
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
         </button>
 
         <button
@@ -109,7 +60,7 @@
           [disabled]="editForm.invalid || isSaving"
           class="btn btn-primary"
         >
-          <fa-icon icon="save"></fa-icon>&nbsp;<span>Enregistrer</span>
+          <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
         </button>
       </div>
     </form>

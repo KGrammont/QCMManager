@@ -14,11 +14,3 @@ export class Classe implements IClasse {
 export function getClasseIdentifier(classe: IClasse): number | undefined {
   return classe.id;
 }
-
-export interface ISelectable {
-  isSelected?: boolean;
-}
-
-export class SelectableUser implements ISelectable, IUser {
-  constructor(public isSelected: boolean, public id?: number, public login?: string, public firstName?: string, public lastName?: string) {}
-}

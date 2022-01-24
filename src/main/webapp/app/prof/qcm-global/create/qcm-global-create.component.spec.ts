@@ -9,7 +9,7 @@ import { of, Subject } from 'rxjs';
 
 import { QcmGlobalService } from '../service/qcm-global.service';
 import { IClasse } from 'app/entities/classe/classe.model';
-import { ClasseService } from 'app/entities/classe/service/classe.service';
+import { ClasseService } from '../../classe/service/classe.service';
 
 import { QcmGlobalCreateComponent } from './qcm-global-create.component';
 import * as dayjs from 'dayjs';

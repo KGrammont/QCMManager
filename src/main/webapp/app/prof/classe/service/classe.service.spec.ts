@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
-import { IClasse, Classe } from '../classe.model';
+import { IClasse, Classe } from '../../../entities/classe/classe.model';
 
 import { ClasseService } from './classe.service';
 
@@ -27,16 +27,6 @@ describe('Service Tests', () => {
     });
 
     describe('Service methods', () => {
-      it('should find an element', () => {
-        const returnedFromService = Object.assign({}, elemDefault);
-
-        service.find(123).subscribe(resp => (expectedResult = resp.body));
-
-        const req = httpMock.expectOne({ method: 'GET' });
-        req.flush(returnedFromService);
-        expect(expectedResult).toMatchObject(elemDefault);
-      });
-
       it('should create a Classe', () => {
         const returnedFromService = Object.assign(
           {
@@ -72,21 +62,7 @@ describe('Service Tests', () => {
         expect(expectedResult).toMatchObject(expected);
       });
 
-      it('should partial update a Classe', () => {
-        const patchObject = Object.assign({}, new Classe());
-
-        const returnedFromService = Object.assign(patchObject, elemDefault);
-
-        const expected = Object.assign({}, returnedFromService);
-
-        service.partialUpdate(patchObject).subscribe(resp => (expectedResult = resp.body));
-
-        const req = httpMock.expectOne({ method: 'PATCH' });
-        req.flush(returnedFromService);
-        expect(expectedResult).toMatchObject(expected);
-      });
-
-      it('should return a list of Classe', () => {
+      it('should return a list of Classe of current prof', () => {
         const returnedFromService = Object.assign(
           {
             id: 1,
@@ -97,9 +73,10 @@ describe('Service Tests', () => {
 
         const expected = Object.assign({}, returnedFromService);
 
-        service.query().subscribe(resp => (expectedResult = resp.body));
+        service.queryForProf().subscribe(resp => (expectedResult = resp.body));
 
         const req = httpMock.expectOne({ method: 'GET' });
+        expect(req.request.url).toEqual('api/custom/classes/of-current-prof');
         req.flush([returnedFromService]);
         httpMock.verify();
         expect(expectedResult).toContainEqual(expected);

@@ -6,10 +6,18 @@ import { Authority } from 'app/config/authority.constants';
   imports: [
     RouterModule.forChild([
       {
+        path: 'classe',
+        data: {
+          pageTitle: 'Classe',
+          authorities: [Authority.PROF],
+        },
+        loadChildren: () => import('./classe/classe.module').then(m => m.ClasseModule),
+      },
+      {
         path: 'user-management',
         data: {
           pageTitle: 'Elèves',
-          authorities: [Authority.ADMIN, Authority.PROF],
+          authorities: [Authority.PROF],
         },
         loadChildren: () => import('./student-management/student-management.module').then(m => m.StudentManagementModule),
       },
@@ -17,7 +25,7 @@ import { Authority } from 'app/config/authority.constants';
         path: 'qcm-global',
         data: {
           pageTitle: 'Qcm: vue globale',
-          authorities: [Authority.ADMIN, Authority.PROF],
+          authorities: [Authority.PROF],
         },
         loadChildren: () => import('./qcm-global/qcm-global.module').then(m => m.QcmGlobalModule),
       },
@@ -25,7 +33,7 @@ import { Authority } from 'app/config/authority.constants';
         path: 'qcm-detail',
         data: {
           pageTitle: 'Qcm: vue détaillée',
-          authorities: [Authority.ADMIN, Authority.PROF],
+          authorities: [Authority.PROF],
         },
         loadChildren: () => import('./qcm-detail/qcm-detail.module').then(m => m.QcmDetailModule),
       },

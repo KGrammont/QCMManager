@@ -1,4 +1,4 @@
-package com.qcmmanager.web.rest;
+package com.qcmmanager.web.controller;
 
 import com.qcmmanager.domain.Classe;
 import com.qcmmanager.repository.ClasseRepository;
@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -25,14 +24,11 @@ import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.ResponseUtil;
 
-/**
- * REST controller for managing {@link com.qcmmanager.domain.Classe}.
- */
 @RestController
-@RequestMapping("/api")
-public class ClasseResource {
+@RequestMapping("/api/custom")
+public class ClasseController {
 
-    private final Logger log = LoggerFactory.getLogger(ClasseResource.class);
+    private final Logger log = LoggerFactory.getLogger(ClasseController.class);
 
     private static final String ENTITY_NAME = "classe";
 
@@ -43,7 +39,7 @@ public class ClasseResource {
 
     private final ClasseRepository classeRepository;
 
-    public ClasseResource(ClasseService classeService, ClasseRepository classeRepository) {
+    public ClasseController(ClasseService classeService, ClasseRepository classeRepository) {
         this.classeService = classeService;
         this.classeRepository = classeRepository;
     }
@@ -64,7 +60,7 @@ public class ClasseResource {
         Classe result = classeService.save(classe);
         return ResponseEntity
             .created(new URI("/api/classes/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
+            .headers(HeaderUtil.createAlert(applicationName, "La classe " + result.getName() + " a bien été créée.", result.getName()))
             .body(result);
     }
 
@@ -98,80 +94,31 @@ public class ClasseResource {
         Classe result = classeService.save(classe);
         return ResponseEntity
             .ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, classe.getId().toString()))
+            .headers(HeaderUtil.createAlert(applicationName, "La classe " + result.getName() + " a bien été modifiée.", result.getName()))
             .body(result);
     }
 
     /**
-     * {@code PATCH  /classes/:id} : Partial updates given fields of an existing classe, field will ignore if it is null
-     *
-     * @param id the id of the classe to save.
-     * @param classe the classe to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated classe,
-     * or with status {@code 400 (Bad Request)} if the classe is not valid,
-     * or with status {@code 404 (Not Found)} if the classe is not found,
-     * or with status {@code 500 (Internal Server Error)} if the classe couldn't be updated.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
-     */
-    @PatchMapping(value = "/classes/{id}", consumes = "application/merge-patch+json")
-    public ResponseEntity<Classe> partialUpdateClasse(
-        @PathVariable(value = "id", required = false) final Long id,
-        @NotNull @RequestBody Classe classe
-    ) throws URISyntaxException {
-        log.debug("REST request to partial update Classe partially : {}, {}", id, classe);
-        if (classe.getId() == null) {
-            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
-        }
-        if (!Objects.equals(id, classe.getId())) {
-            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
-        }
-
-        if (!classeRepository.existsById(id)) {
-            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
-        }
-
-        Optional<Classe> result = classeService.partialUpdate(classe);
-
-        return ResponseUtil.wrapOrNotFound(
-            result,
-            HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, classe.getId().toString())
-        );
-    }
-
-    /**
-     * {@code GET  /classes} : get all the classes.
+     * {@code GET  /classes/of-current-prof} : get all the classes of current prof.
      *
      * @param pageable the pagination information.
      * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of classes in body.
      */
-    @GetMapping("/classes")
-    public ResponseEntity<List<Classe>> getAllClasses(
+    @GetMapping("/classes/of-current-prof")
+    public ResponseEntity<List<Classe>> getClassesOfProf(
         Pageable pageable,
         @RequestParam(required = false, defaultValue = "false") boolean eagerload
     ) {
-        log.debug("REST request to get a page of Classes");
+        log.debug("REST request to get a page of Classes of current prof");
         Page<Classe> page;
         if (eagerload) {
-            page = classeService.findAllWithEagerRelationships(pageable);
+            page = classeService.findByProfIsCurrentUserWithEagerRelationships(pageable);
         } else {
-            page = classeService.findAll(pageable);
+            page = classeService.findByProfIsCurrentUser(pageable);
         }
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
-    }
-
-    /**
-     * {@code GET  /classes/:id} : get the "id" classe.
-     *
-     * @param id the id of the classe to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the classe, or with status {@code 404 (Not Found)}.
-     */
-    @GetMapping("/classes/{id}")
-    public ResponseEntity<Classe> getClasse(@PathVariable Long id) {
-        log.debug("REST request to get Classe : {}", id);
-        Optional<Classe> classe = classeService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(classe);
     }
 
     /**
@@ -186,7 +133,7 @@ public class ClasseResource {
         classeService.delete(id);
         return ResponseEntity
             .noContent()
-            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString()))
+            .headers(HeaderUtil.createAlert(applicationName, "La classe a bien été supprimée.", id.toString()))
             .build();
     }
 }
