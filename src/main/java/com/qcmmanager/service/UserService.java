@@ -8,7 +8,6 @@ import com.qcmmanager.repository.UserRepository;
 import com.qcmmanager.security.AuthoritiesConstants;
 import com.qcmmanager.security.SecurityUtils;
 import com.qcmmanager.service.dto.AdminUserDTO;
-import com.qcmmanager.service.dto.AdminUserWithPassDTO;
 import com.qcmmanager.service.dto.UserDTO;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -79,7 +78,6 @@ public class UserService {
         return userRepository
             .findOneByEmailIgnoreCase(mail)
             .filter(User::isActivated)
-            .filter(user -> user.getAuthorities().stream().noneMatch(authority -> AuthoritiesConstants.STUDENT.equals(authority.getName())))
             .map(
                 user -> {
                     user.setResetKey(RandomUtil.generateResetKey());
@@ -172,33 +170,6 @@ public class UserService {
                 .collect(Collectors.toSet());
             user.setAuthorities(authorities);
         }
-        userRepository.save(user);
-        log.debug("Created Information for User: {}", user);
-        return user;
-    }
-
-    public User createStudentWithPass(AdminUserWithPassDTO userDTO) {
-        User user = new User();
-        user.setLogin(userDTO.getLogin().toLowerCase());
-        user.setFirstName(userDTO.getFirstName());
-        user.setLastName(userDTO.getLastName());
-        if (userDTO.getEmail() != null) {
-            user.setEmail(userDTO.getEmail().toLowerCase());
-        }
-        user.setImageUrl(userDTO.getImageUrl());
-        if (userDTO.getLangKey() == null) {
-            user.setLangKey(Constants.DEFAULT_LANGUAGE); // default language
-        } else {
-            user.setLangKey(userDTO.getLangKey());
-        }
-        String encryptedPassword = passwordEncoder.encode(userDTO.getPass());
-        user.setPassword(encryptedPassword);
-        user.setResetKey(RandomUtil.generateResetKey());
-        user.setResetDate(Instant.now());
-        user.setActivated(true);
-        Authority authority = new Authority();
-        authority.setName(AuthoritiesConstants.STUDENT);
-        user.setAuthorities(Set.of(authority));
         userRepository.save(user);
         log.debug("Created Information for User: {}", user);
         return user;
@@ -301,20 +272,6 @@ public class UserService {
     @Transactional(readOnly = true)
     public Page<AdminUserDTO> getAllManagedUsers(Pageable pageable) {
         return userRepository.findAll(pageable).map(AdminUserDTO::new);
-    }
-
-    @Transactional(readOnly = true)
-    public Page<AdminUserDTO> getAllManagedStudents(Pageable pageable) {
-        Authority studentAuthority = new Authority();
-        studentAuthority.setName(AuthoritiesConstants.STUDENT);
-        return userRepository.findAllByAuthorities(studentAuthority, pageable).map(AdminUserDTO::new);
-    }
-
-    @Transactional(readOnly = true)
-    public Page<AdminUserDTO> getAllManagedProfs(Pageable pageable) {
-        Authority profAuthority = new Authority();
-        profAuthority.setName(AuthoritiesConstants.PROF);
-        return userRepository.findAllByAuthorities(profAuthority, pageable).map(AdminUserDTO::new);
     }
 
     @Transactional(readOnly = true)

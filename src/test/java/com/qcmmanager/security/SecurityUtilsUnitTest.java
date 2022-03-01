@@ -35,7 +35,7 @@ class SecurityUtilsUnitTest {
     }
 
     @Test
-    void testgetCurrentUserJWT() {
+    void testGetCurrentUserJWT() {
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
         securityContext.setAuthentication(new UsernamePasswordAuthenticationToken("admin", "token"));
         SecurityContextHolder.setContext(securityContext);
@@ -72,6 +72,7 @@ class SecurityUtilsUnitTest {
         SecurityContextHolder.setContext(securityContext);
 
         assertThat(SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.PROF)).isTrue();
+        assertThat(SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.STUDENT)).isFalse();
         assertThat(SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.ADMIN)).isFalse();
     }
 }

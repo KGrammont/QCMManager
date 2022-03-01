@@ -1,6 +1,5 @@
 package com.qcmmanager.repository;
 
-import com.qcmmanager.domain.Authority;
 import com.qcmmanager.domain.User;
 import java.time.Instant;
 import java.util.List;
@@ -33,6 +32,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findOneWithAuthoritiesByEmailIgnoreCase(String email);
 
     Page<User> findAllByIdNotNullAndActivatedIsTrue(Pageable pageable);
-
-    Page<User> findAllByAuthorities(Authority authority, Pageable pageable);
 }
