@@ -1,4 +1,4 @@
-<div class="row justify-content-center">
+<div class="d-flex justify-content-center">
   <div class="col-8">
     <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
       <h2 id="jhi-qcm-group-heading" data-cy="QcmGroupCreateUpdateHeading">Create or edit a Qcm Group</h2>
@@ -6,21 +6,21 @@
       <div>
         <jhi-alert-error></jhi-alert-error>
 
-        <div class="form-group" [hidden]="editForm.get('id')!.value == null">
-          <label class="form-control-label" for="field_id">ID</label>
+        <div class="row mb-3" [hidden]="editForm.get('id')!.value == null">
+          <label class="form-label" for="field_id">ID</label>
           <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
         </div>
 
-        <div class="form-group">
-          <label class="form-control-label" for="field_name">Name</label>
+        <div class="row mb-3">
+          <label class="form-label" for="field_name">Name</label>
           <input type="text" class="form-control" name="name" id="field_name" data-cy="name" formControlName="name" />
           <div *ngIf="editForm.get('name')!.invalid && (editForm.get('name')!.dirty || editForm.get('name')!.touched)">
             <small class="form-text text-danger" *ngIf="editForm.get('name')?.errors?.required"> This field is required. </small>
           </div>
         </div>
 
-        <div class="form-group">
-          <label class="form-control-label" for="field_created_at">Created At</label>
+        <div class="row mb-3">
+          <label class="form-label" for="field_created_at">Created At</label>
           <div class="d-flex">
             <input
               id="field_created_at"
@@ -40,8 +40,8 @@
           </div>
         </div>
 
-        <div class="form-group">
-          <label class="form-control-label" for="field_classe">Classe</label>
+        <div class="row mb-3">
+          <label class="form-label" for="field_classe">Classe</label>
           <select class="form-control" id="field_classe" data-cy="classe" name="classe" formControlName="classe">
             <option *ngIf="!editForm.get('classe')!.value" [ngValue]="null" selected></option>
             <option
@@ -58,7 +58,7 @@
       </div>
 
       <div>
-        <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
           <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
         </button>
 

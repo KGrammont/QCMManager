@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import * as dayjs from 'dayjs';
+import dayjs from 'dayjs/esm';
 
 import { isPresent } from 'app/core/util/operators';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
@@ -14,9 +14,9 @@ export type EntityArrayResponseType = HttpResponse<IQcm[]>;
 
 @Injectable({ providedIn: 'root' })
 export class QcmService {
-  public resourceUrl = this.applicationConfigService.getEndpointFor('api/qcms');
+  protected resourceUrl = this.applicationConfigService.getEndpointFor('api/qcms');
 
-  constructor(protected http: HttpClient, private applicationConfigService: ApplicationConfigService) {}
+  constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {}
 
   create(qcm: IQcm): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(qcm);
@@ -75,13 +75,13 @@ export class QcmService {
 
   protected convertDateFromClient(qcm: IQcm): IQcm {
     return Object.assign({}, qcm, {
-      created_at: qcm.createdAt?.isValid() ? qcm.createdAt.toJSON() : undefined,
+      created_at: qcm.created_at?.isValid() ? qcm.created_at.toJSON() : undefined,
     });
   }
 
   protected convertDateFromServer(res: EntityResponseType): EntityResponseType {
     if (res.body) {
-      res.body.createdAt = res.body.createdAt ? dayjs(res.body.createdAt) : undefined;
+      res.body.created_at = res.body.created_at ? dayjs(res.body.created_at) : undefined;
     }
     return res;
   }
@@ -89,7 +89,7 @@ export class QcmService {
   protected convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
     if (res.body) {
       res.body.forEach((qcm: IQcm) => {
-        qcm.createdAt = qcm.createdAt ? dayjs(qcm.createdAt) : undefined;
+        qcm.created_at = qcm.created_at ? dayjs(qcm.created_at) : undefined;
       });
     }
     return res;

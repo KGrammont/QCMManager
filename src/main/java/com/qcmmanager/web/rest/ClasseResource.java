@@ -113,7 +113,7 @@ public class ClasseResource {
      * or with status {@code 500 (Internal Server Error)} if the classe couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PatchMapping(value = "/classes/{id}", consumes = "application/merge-patch+json")
+    @PatchMapping(value = "/classes/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<Classe> partialUpdateClasse(
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody Classe classe
@@ -147,8 +147,8 @@ public class ClasseResource {
      */
     @GetMapping("/classes")
     public ResponseEntity<List<Classe>> getAllClasses(
-        Pageable pageable,
-        @RequestParam(required = false, defaultValue = "false") boolean eagerload
+        @org.springdoc.api.annotations.ParameterObject Pageable pageable,
+        @RequestParam(required = false, defaultValue = "true") boolean eagerload
     ) {
         log.debug("REST request to get a page of Classes");
         Page<Classe> page;

@@ -17,12 +17,14 @@ public class Qcm implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     @Lob
     @Column(name = "question", nullable = false)
     private byte[] question;
 
+    @NotNull
     @Column(name = "question_content_type", nullable = false)
     private String questionContentType;
 
@@ -49,7 +51,7 @@ public class Qcm implements Serializable {
 
     @NotNull
     @Column(name = "created_at", nullable = false)
-    private Instant createdAt;
+    private Instant created_at;
 
     @ManyToOne(optional = false)
     @NotNull
@@ -61,17 +63,18 @@ public class Qcm implements Serializable {
     private User student;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
+
     public Long getId() {
-        return id;
+        return this.id;
+    }
+
+    public Qcm id(Long id) {
+        this.setId(id);
+        return this;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Qcm id(Long id) {
-        this.id = id;
-        return this;
     }
 
     public byte[] getQuestion() {
@@ -79,7 +82,7 @@ public class Qcm implements Serializable {
     }
 
     public Qcm question(byte[] question) {
-        this.question = question;
+        this.setQuestion(question);
         return this;
     }
 
@@ -105,7 +108,7 @@ public class Qcm implements Serializable {
     }
 
     public Qcm answer(byte[] answer) {
-        this.answer = answer;
+        this.setAnswer(answer);
         return this;
     }
 
@@ -131,7 +134,7 @@ public class Qcm implements Serializable {
     }
 
     public Qcm completeAnswer(byte[] completeAnswer) {
-        this.completeAnswer = completeAnswer;
+        this.setCompleteAnswer(completeAnswer);
         return this;
     }
 
@@ -157,7 +160,7 @@ public class Qcm implements Serializable {
     }
 
     public Qcm correction(byte[] correction) {
-        this.correction = correction;
+        this.setCorrection(correction);
         return this;
     }
 
@@ -178,21 +181,25 @@ public class Qcm implements Serializable {
         this.correctionContentType = correctionContentType;
     }
 
-    public Instant getCreatedAt() {
-        return this.createdAt;
+    public Instant getCreated_at() {
+        return this.created_at;
     }
 
-    public Qcm createdAt(Instant createdAt) {
-        this.createdAt = createdAt;
+    public Qcm created_at(Instant created_at) {
+        this.setCreated_at(created_at);
         return this;
     }
 
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
+    public void setCreated_at(Instant created_at) {
+        this.created_at = created_at;
     }
 
     public QcmGroup getQcmGroup() {
         return this.qcmGroup;
+    }
+
+    public void setQcmGroup(QcmGroup qcmGroup) {
+        this.qcmGroup = qcmGroup;
     }
 
     public Qcm qcmGroup(QcmGroup qcmGroup) {
@@ -200,21 +207,17 @@ public class Qcm implements Serializable {
         return this;
     }
 
-    public void setQcmGroup(QcmGroup qcmGroup) {
-        this.qcmGroup = qcmGroup;
-    }
-
     public User getStudent() {
         return this.student;
+    }
+
+    public void setStudent(User user) {
+        this.student = user;
     }
 
     public Qcm student(User user) {
         this.setStudent(user);
         return this;
-    }
-
-    public void setStudent(User user) {
-        this.student = user;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
@@ -249,7 +252,7 @@ public class Qcm implements Serializable {
             ", completeAnswerContentType='" + getCompleteAnswerContentType() + "'" +
             ", correction='" + getCorrection() + "'" +
             ", correctionContentType='" + getCorrectionContentType() + "'" +
-            ", created_at='" + getCreatedAt() + "'" +
+            ", created_at='" + getCreated_at() + "'" +
             "}";
     }
 }

@@ -7,16 +7,16 @@ public class QcmGroupDTO {
 
     private Long id;
     private String name;
-    private Instant createdAt;
+    private Instant created_at;
     private Classe classe;
     private byte[] qcms;
 
     public QcmGroupDTO() {}
 
-    public QcmGroupDTO(Long id, String name, Instant createdAt, Classe classe, byte[] qcms) {
+    public QcmGroupDTO(Long id, String name, Instant created_at, Classe classe, byte[] qcms) {
         this.id = id;
         this.name = name;
-        this.createdAt = createdAt;
+        this.created_at = created_at;
         this.classe = classe;
         this.qcms = qcms;
     }
@@ -37,12 +37,12 @@ public class QcmGroupDTO {
         this.name = name;
     }
 
-    public Instant getCreatedAt() {
-        return createdAt;
+    public Instant getCreated_at() {
+        return created_at;
     }
 
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
+    public void setCreated_at(Instant created_at) {
+        this.created_at = created_at;
     }
 
     public Classe getClasse() {

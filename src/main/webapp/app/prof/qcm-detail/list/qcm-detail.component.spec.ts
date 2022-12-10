@@ -34,7 +34,7 @@ describe('Component Tests', () => {
                 jest.requireActual('@angular/router').convertToParamMap({
                   page: '1',
                   size: '1',
-                  sort: ['createdAt,desc', 'id'],
+                  sort: ['created_at,desc', 'id'],
                 })
               ),
             },
@@ -78,7 +78,7 @@ describe('Component Tests', () => {
 
       // THEN
       expect(globalService.query).toHaveBeenCalled();
-      expect(service.query).toHaveBeenCalledWith(qcmGroup.id, expect.objectContaining({ sort: ['createdAt,desc', 'id'] }));
+      expect(service.query).toHaveBeenCalledWith(qcmGroup.id, expect.objectContaining({ sort: ['created_at,desc', 'id'] }));
       expect(comp.qcms).toEqual(jasmine.arrayContaining([{ id: 123 }]));
       expect(comp.allQcmGroups).toEqual(jasmine.arrayContaining([{ id: 1234 }, { id: 456 }]));
       expect(comp.selectedQcmGroup).toEqual(qcmGroup);
@@ -94,7 +94,7 @@ describe('Component Tests', () => {
 
       // THEN
       expect(globalService.query).toHaveBeenCalled();
-      expect(service.query).toHaveBeenCalledWith(expectedQcmGroup.id, expect.objectContaining({ sort: ['createdAt,desc', 'id'] }));
+      expect(service.query).toHaveBeenCalledWith(expectedQcmGroup.id, expect.objectContaining({ sort: ['created_at,desc', 'id'] }));
       expect(comp.qcms).toEqual(jasmine.arrayContaining([{ id: 123 }]));
       expect(comp.allQcmGroups).toEqual(jasmine.arrayContaining([{ id: 1234 }, { id: 456 }]));
       expect(comp.selectedQcmGroup).toEqual(expectedQcmGroup);

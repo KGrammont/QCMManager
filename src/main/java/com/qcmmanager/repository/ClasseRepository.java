@@ -13,19 +13,31 @@ import org.springframework.stereotype.Repository;
  * Spring Data SQL repository for the Classe entity.
  */
 @Repository
-public interface ClasseRepository extends JpaRepository<Classe, Long> {
+public interface ClasseRepository extends ClasseRepositoryWithBagRelationships, JpaRepository<Classe, Long> {
     @Query("select classe from Classe classe where classe.prof.login = ?#{principal.username}")
     List<Classe> findByProfIsCurrentUser();
 
+    default Optional<Classe> findOneWithEagerRelationships(Long id) {
+        return this.fetchBagRelationships(this.findOneWithToOneRelationships(id));
+    }
+
+    default List<Classe> findAllWithEagerRelationships() {
+        return this.fetchBagRelationships(this.findAllWithToOneRelationships());
+    }
+
+    default Page<Classe> findAllWithEagerRelationships(Pageable pageable) {
+        return this.fetchBagRelationships(this.findAllWithToOneRelationships(pageable));
+    }
+
     @Query(
-        value = "select distinct classe from Classe classe left join fetch classe.students",
+        value = "select distinct classe from Classe classe left join fetch classe.prof",
         countQuery = "select count(distinct classe) from Classe classe"
     )
-    Page<Classe> findAllWithEagerRelationships(Pageable pageable);
+    Page<Classe> findAllWithToOneRelationships(Pageable pageable);
 
-    @Query("select distinct classe from Classe classe left join fetch classe.students")
-    List<Classe> findAllWithEagerRelationships();
+    @Query("select distinct classe from Classe classe left join fetch classe.prof")
+    List<Classe> findAllWithToOneRelationships();
 
-    @Query("select classe from Classe classe left join fetch classe.students where classe.id =:id")
-    Optional<Classe> findOneWithEagerRelationships(@Param("id") Long id);
+    @Query("select classe from Classe classe left join fetch classe.prof where classe.id =:id")
+    Optional<Classe> findOneWithToOneRelationships(@Param("id") Long id);
 }

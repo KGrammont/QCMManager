@@ -6,7 +6,6 @@ import { QcmComponent } from '../list/qcm.component';
 import { QcmDetailComponent } from '../detail/qcm-detail.component';
 import { QcmUpdateComponent } from '../update/qcm-update.component';
 import { QcmRoutingResolveService } from './qcm-routing-resolve.service';
-import { Authority } from 'app/config/authority.constants';
 
 const qcmRoute: Routes = [
   {
@@ -20,9 +19,6 @@ const qcmRoute: Routes = [
   {
     path: ':id/view',
     component: QcmDetailComponent,
-    data: {
-      authorities: [Authority.ADMIN, Authority.PROF],
-    },
     resolve: {
       qcm: QcmRoutingResolveService,
     },
@@ -31,9 +27,6 @@ const qcmRoute: Routes = [
   {
     path: 'new',
     component: QcmUpdateComponent,
-    data: {
-      authorities: [Authority.ADMIN, Authority.PROF],
-    },
     resolve: {
       qcm: QcmRoutingResolveService,
     },
@@ -42,9 +35,6 @@ const qcmRoute: Routes = [
   {
     path: ':id/edit',
     component: QcmUpdateComponent,
-    data: {
-      authorities: [Authority.ADMIN, Authority.PROF],
-    },
     resolve: {
       qcm: QcmRoutingResolveService,
     },

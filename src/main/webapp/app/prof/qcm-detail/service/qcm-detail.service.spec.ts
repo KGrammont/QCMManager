@@ -34,7 +34,7 @@ describe('Service Tests', () => {
         completeAnswer: 'AAAAAAA',
         correctionContentType: 'image/png',
         correction: 'AAAAAAA',
-        createdAt: currentDate,
+        created_at: currentDate,
       };
     });
 

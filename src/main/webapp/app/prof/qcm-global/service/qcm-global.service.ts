@@ -51,13 +51,13 @@ export class QcmGlobalService {
 
   protected convertDateFromClient(qcmGroup: ICompleteQcmGroup): ICompleteQcmGroup {
     return Object.assign({}, qcmGroup, {
-      created_at: qcmGroup.createdAt?.isValid() ? qcmGroup.createdAt.toJSON() : undefined,
+      created_at: qcmGroup.created_at?.isValid() ? qcmGroup.created_at.toJSON() : undefined,
     });
   }
 
   protected convertDateFromServer(res: EntityResponseType): EntityResponseType {
     if (res.body) {
-      res.body.createdAt = res.body.createdAt ? dayjs(res.body.createdAt) : undefined;
+      res.body.created_at = res.body.created_at ? dayjs(res.body.created_at) : undefined;
     }
     return res;
   }
@@ -65,7 +65,7 @@ export class QcmGlobalService {
   protected convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
     if (res.body) {
       res.body.forEach((qcmGroup: IQcmGroup) => {
-        qcmGroup.createdAt = qcmGroup.createdAt ? dayjs(qcmGroup.createdAt) : undefined;
+        qcmGroup.created_at = qcmGroup.created_at ? dayjs(qcmGroup.created_at) : undefined;
       });
     }
     return res;

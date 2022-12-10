@@ -55,38 +55,19 @@ class ClasseControllerIT {
 
     private Classe classe;
 
-    /**
-     * Create an entity for this test.
-     *
-     * This is a static method, as tests for other entities might also need it,
-     * if they test an entity which requires the current entity.
-     */
-    private Classe createEntity() {
+    public static Classe createEntity(EntityManager em) {
         Classe classe = new Classe().name(DEFAULT_NAME);
         // Add required entity
-        User user = createUser();
+        User user = UserControllerIT.createEntity();
         em.persist(user);
         em.flush();
         classe.setProf(user);
         return classe;
     }
 
-    private User createUser() {
-        User user = new User();
-        user.setLogin("johndoe" + RandomStringUtils.randomAlphabetic(5));
-        user.setPassword(RandomStringUtils.random(60));
-        user.setActivated(true);
-        user.setEmail(RandomStringUtils.randomAlphabetic(5) + "johndoe@localhost");
-        user.setFirstName("john");
-        user.setLastName("doe");
-        user.setImageUrl("http://placehold.it/50x50");
-        user.setLangKey("fr");
-        return user;
-    }
-
     @BeforeEach
     public void initTest() {
-        classe = createEntity();
+        classe = createEntity(em);
     }
 
     @Test

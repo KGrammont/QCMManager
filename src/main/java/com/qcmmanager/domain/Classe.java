@@ -17,6 +17,7 @@ public class Classe implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     @NotNull
@@ -36,17 +37,18 @@ public class Classe implements Serializable {
     private Set<User> students = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
+
     public Long getId() {
-        return id;
+        return this.id;
+    }
+
+    public Classe id(Long id) {
+        this.setId(id);
+        return this;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Classe id(Long id) {
-        this.id = id;
-        return this;
     }
 
     public String getName() {
@@ -54,7 +56,7 @@ public class Classe implements Serializable {
     }
 
     public Classe name(String name) {
-        this.name = name;
+        this.setName(name);
         return this;
     }
 
@@ -66,17 +68,21 @@ public class Classe implements Serializable {
         return this.prof;
     }
 
+    public void setProf(User user) {
+        this.prof = user;
+    }
+
     public Classe prof(User user) {
         this.setProf(user);
         return this;
     }
 
-    public void setProf(User user) {
-        this.prof = user;
-    }
-
     public Set<User> getStudents() {
         return this.students;
+    }
+
+    public void setStudents(Set<User> users) {
+        this.students = users;
     }
 
     public Classe students(Set<User> users) {
@@ -92,10 +98,6 @@ public class Classe implements Serializable {
     public Classe removeStudent(User user) {
         this.students.remove(user);
         return this;
-    }
-
-    public void setStudents(Set<User> users) {
-        this.students = users;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

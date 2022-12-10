@@ -1,4 +1,4 @@
-<div class="row justify-content-center">
+<div class="d-flex justify-content-center">
   <div class="col-8">
     <div *ngIf="qcmGroup">
       <h2 data-cy="qcmGroupDetailsHeading"><span>Qcm Group</span></h2>
@@ -20,7 +20,7 @@
         </dd>
         <dt><span>Created At</span></dt>
         <dd>
-          <span>{{ qcmGroup.createdAt | formatMediumDatetime }}</span>
+          <span>{{ qcmGroup.created_at | formatMediumDatetime }}</span>
         </dd>
         <dt><span>Classe</span></dt>
         <dd>

@@ -1,4 +1,4 @@
-<div class="row justify-content-center">
+<div class="d-flex justify-content-center">
   <div class="col-8">
     <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
       <h2 id="jhi-qcm-heading" data-cy="QcmCreateUpdateHeading">Create or edit a Qcm</h2>
@@ -6,24 +6,24 @@
       <div>
         <jhi-alert-error></jhi-alert-error>
 
-        <div class="form-group" [hidden]="editForm.get('id')!.value == null">
-          <label class="form-control-label" for="field_id">ID</label>
+        <div class="row mb-3" [hidden]="editForm.get('id')!.value == null">
+          <label class="form-label" for="field_id">ID</label>
           <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
         </div>
 
-        <div class="form-group">
-          <label class="form-control-label" for="field_question">Question</label>
+        <div class="row mb-3">
+          <label class="form-label" for="field_question">Question</label>
           <div>
             <div *ngIf="editForm.get('question')!.value" class="form-text text-danger clearfix">
-              <a class="pull-left" (click)="openFile(editForm.get('question')!.value, editForm.get('questionContentType')!.value)">open</a
+              <a class="pull-start" (click)="openFile(editForm.get('question')!.value, editForm.get('questionContentType')!.value)">open</a
               ><br />
-              <span class="pull-left"
+              <span class="pull-start"
                 >{{ editForm.get('questionContentType')!.value }}, {{ byteSize(editForm.get('question')!.value) }}</span
               >
               <button
                 type="button"
                 (click)="editForm.patchValue({ question: null }); editForm.patchValue({ questionContentType: null })"
-                class="btn btn-secondary btn-xs pull-right"
+                class="btn btn-secondary btn-xs pull-end"
               >
                 <fa-icon icon="times"></fa-icon>
               </button>
@@ -43,17 +43,17 @@
           </div>
         </div>
 
-        <div class="form-group">
-          <label class="form-control-label" for="field_answer">Answer</label>
+        <div class="row mb-3">
+          <label class="form-label" for="field_answer">Answer</label>
           <div>
             <div *ngIf="editForm.get('answer')!.value" class="form-text text-danger clearfix">
-              <a class="pull-left" (click)="openFile(editForm.get('answer')!.value, editForm.get('answerContentType')!.value)">open</a
+              <a class="pull-start" (click)="openFile(editForm.get('answer')!.value, editForm.get('answerContentType')!.value)">open</a
               ><br />
-              <span class="pull-left">{{ editForm.get('answerContentType')!.value }}, {{ byteSize(editForm.get('answer')!.value) }}</span>
+              <span class="pull-start">{{ editForm.get('answerContentType')!.value }}, {{ byteSize(editForm.get('answer')!.value) }}</span>
               <button
                 type="button"
                 (click)="editForm.patchValue({ answer: null }); editForm.patchValue({ answerContentType: null })"
-                class="btn btn-secondary btn-xs pull-right"
+                class="btn btn-secondary btn-xs pull-end"
               >
                 <fa-icon icon="times"></fa-icon>
               </button>
@@ -70,22 +70,22 @@
           />
         </div>
 
-        <div class="form-group">
-          <label class="form-control-label" for="field_completeAnswer">Complete Answer</label>
+        <div class="row mb-3">
+          <label class="form-label" for="field_completeAnswer">Complete Answer</label>
           <div>
             <div *ngIf="editForm.get('completeAnswer')!.value" class="form-text text-danger clearfix">
               <a
-                class="pull-left"
+                class="pull-start"
                 (click)="openFile(editForm.get('completeAnswer')!.value, editForm.get('completeAnswerContentType')!.value)"
                 >open</a
               ><br />
-              <span class="pull-left"
+              <span class="pull-start"
                 >{{ editForm.get('completeAnswerContentType')!.value }}, {{ byteSize(editForm.get('completeAnswer')!.value) }}</span
               >
               <button
                 type="button"
                 (click)="editForm.patchValue({ completeAnswer: null }); editForm.patchValue({ completeAnswerContentType: null })"
-                class="btn btn-secondary btn-xs pull-right"
+                class="btn btn-secondary btn-xs pull-end"
               >
                 <fa-icon icon="times"></fa-icon>
               </button>
@@ -109,20 +109,20 @@
           />
         </div>
 
-        <div class="form-group">
-          <label class="form-control-label" for="field_correction">Correction</label>
+        <div class="row mb-3">
+          <label class="form-label" for="field_correction">Correction</label>
           <div>
             <div *ngIf="editForm.get('correction')!.value" class="form-text text-danger clearfix">
-              <a class="pull-left" (click)="openFile(editForm.get('correction')!.value, editForm.get('correctionContentType')!.value)"
+              <a class="pull-start" (click)="openFile(editForm.get('correction')!.value, editForm.get('correctionContentType')!.value)"
                 >open</a
               ><br />
-              <span class="pull-left"
+              <span class="pull-start"
                 >{{ editForm.get('correctionContentType')!.value }}, {{ byteSize(editForm.get('correction')!.value) }}</span
               >
               <button
                 type="button"
                 (click)="editForm.patchValue({ correction: null }); editForm.patchValue({ correctionContentType: null })"
-                class="btn btn-secondary btn-xs pull-right"
+                class="btn btn-secondary btn-xs pull-end"
               >
                 <fa-icon icon="times"></fa-icon>
               </button>
@@ -146,8 +146,8 @@
           />
         </div>
 
-        <div class="form-group">
-          <label class="form-control-label" for="field_created_at">Created At</label>
+        <div class="row mb-3">
+          <label class="form-label" for="field_created_at">Created At</label>
           <div class="d-flex">
             <input
               id="field_created_at"
@@ -167,8 +167,8 @@
           </div>
         </div>
 
-        <div class="form-group">
-          <label class="form-control-label" for="field_qcmGroup">Qcm Group</label>
+        <div class="row mb-3">
+          <label class="form-label" for="field_qcmGroup">Qcm Group</label>
           <select class="form-control" id="field_qcmGroup" data-cy="qcmGroup" name="qcmGroup" formControlName="qcmGroup">
             <option *ngIf="!editForm.get('qcmGroup')!.value" [ngValue]="null" selected></option>
             <option
@@ -183,8 +183,8 @@
           <small class="form-text text-danger" *ngIf="editForm.get(['qcmGroup'])?.errors?.required"> This field is required. </small>
         </div>
 
-        <div class="form-group">
-          <label class="form-control-label" for="field_student">Student</label>
+        <div class="row mb-3">
+          <label class="form-label" for="field_student">Student</label>
           <select class="form-control" id="field_student" data-cy="student" name="student" formControlName="student">
             <option *ngIf="!editForm.get('student')!.value" [ngValue]="null" selected></option>
             <option
@@ -201,7 +201,7 @@
       </div>
 
       <div>
-        <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
           <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
         </button>
 

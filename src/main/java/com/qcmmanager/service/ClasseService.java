@@ -47,15 +47,13 @@ public class ClasseService {
 
         return classeRepository
             .findById(classe.getId())
-            .map(
-                existingClasse -> {
-                    if (classe.getName() != null) {
-                        existingClasse.setName(classe.getName());
-                    }
-
-                    return existingClasse;
+            .map(existingClasse -> {
+                if (classe.getName() != null) {
+                    existingClasse.setName(classe.getName());
                 }
-            )
+
+                return existingClasse;
+            })
             .map(classeRepository::save);
     }
 

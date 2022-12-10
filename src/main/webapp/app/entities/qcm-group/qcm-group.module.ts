@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-
 import { SharedModule } from 'app/shared/shared.module';
 import { QcmGroupComponent } from './list/qcm-group.component';
 import { QcmGroupDetailComponent } from './detail/qcm-group-detail.component';

@@ -10,7 +10,7 @@ import { QcmService } from '../service/qcm.service';
 export class QcmDeleteDialogComponent {
   qcm?: IQcm;
 
-  constructor(protected qcmService: QcmService, public activeModal: NgbActiveModal) {}
+  constructor(protected qcmService: QcmService, protected activeModal: NgbActiveModal) {}
 
   cancel(): void {
     this.activeModal.dismiss();

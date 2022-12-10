@@ -17,6 +17,7 @@ public class QcmGroup implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     @NotNull
@@ -25,7 +26,7 @@ public class QcmGroup implements Serializable {
 
     @NotNull
     @Column(name = "created_at", nullable = false)
-    private Instant createdAt;
+    private Instant created_at;
 
     @ManyToOne(optional = false)
     @NotNull
@@ -33,17 +34,18 @@ public class QcmGroup implements Serializable {
     private Classe classe;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
+
     public Long getId() {
-        return id;
+        return this.id;
+    }
+
+    public QcmGroup id(Long id) {
+        this.setId(id);
+        return this;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public QcmGroup id(Long id) {
-        this.id = id;
-        return this;
     }
 
     public String getName() {
@@ -51,7 +53,7 @@ public class QcmGroup implements Serializable {
     }
 
     public QcmGroup name(String name) {
-        this.name = name;
+        this.setName(name);
         return this;
     }
 
@@ -59,30 +61,30 @@ public class QcmGroup implements Serializable {
         this.name = name;
     }
 
-    public Instant getCreatedAt() {
-        return this.createdAt;
+    public Instant getCreated_at() {
+        return this.created_at;
     }
 
-    public QcmGroup createdAt(Instant createdAt) {
-        this.createdAt = createdAt;
+    public QcmGroup created_at(Instant created_at) {
+        this.setCreated_at(created_at);
         return this;
     }
 
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
+    public void setCreated_at(Instant created_at) {
+        this.created_at = created_at;
     }
 
     public Classe getClasse() {
         return this.classe;
     }
 
+    public void setClasse(Classe classe) {
+        this.classe = classe;
+    }
+
     public QcmGroup classe(Classe classe) {
         this.setClasse(classe);
         return this;
-    }
-
-    public void setClasse(Classe classe) {
-        this.classe = classe;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
@@ -110,7 +112,7 @@ public class QcmGroup implements Serializable {
         return "QcmGroup{" +
             "id=" + getId() +
             ", name='" + getName() + "'" +
-            ", createdAt='" + getCreatedAt() + "'" +
+            ", created_at='" + getCreated_at() + "'" +
             "}";
     }
 }

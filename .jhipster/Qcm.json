@@ -1,4 +1,6 @@
 {
+  "changelogDate": "20210725220956",
+  "dto": "no",
   "fields": [
     {
       "fieldName": "question",
@@ -27,29 +29,27 @@
       "fieldValidateRules": ["required"]
     }
   ],
+  "jpaMetamodelFiltering": false,
+  "name": "Qcm",
+  "pagination": "pagination",
+  "readOnly": false,
   "relationships": [
     {
-      "relationshipName": "qcmGroup",
+      "otherEntityField": "name",
       "otherEntityName": "qcmGroup",
+      "relationshipName": "qcmGroup",
       "relationshipType": "many-to-one",
-      "relationshipValidateRules": ["required"],
-      "otherEntityField": "name"
+      "relationshipValidateRules": ["required"]
     },
     {
-      "relationshipName": "student",
-      "otherEntityName": "user",
-      "relationshipType": "many-to-one",
-      "relationshipValidateRules": ["required"],
       "otherEntityField": "login",
+      "otherEntityName": "user",
+      "otherEntityRelationshipName": "qcm",
       "ownerSide": true,
-      "otherEntityRelationshipName": "qcm"
+      "relationshipName": "student",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": ["required"]
     }
   ],
-  "service": "serviceClass",
-  "dto": "no",
-  "jpaMetamodelFiltering": false,
-  "readOnly": false,
-  "pagination": "pagination",
-  "name": "Qcm",
-  "changelogDate": "20210725220956"
+  "service": "serviceClass"
 }

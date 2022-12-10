@@ -1,14 +1,8 @@
 package com.qcmmanager.service;
 
-import com.qcmmanager.domain.Qcm;
 import com.qcmmanager.domain.QcmGroup;
-import com.qcmmanager.domain.User;
 import com.qcmmanager.repository.QcmGroupRepository;
-import com.qcmmanager.service.custom.ClasseCService;
-import com.qcmmanager.service.dto.QcmGroupDTO;
-import com.qcmmanager.service.mapper.QcmGroupMapper;
-import com.qcmmanager.service.pdf.PdfUtils;
-import java.util.*;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -24,23 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class QcmGroupService {
 
     private final Logger log = LoggerFactory.getLogger(QcmGroupService.class);
-    private final ClasseCService classeService;
-    private final QcmService qcmService;
-    private final PdfUtils pdfUtils;
-    private final QcmGroupMapper qcmGroupMapper;
+
     private final QcmGroupRepository qcmGroupRepository;
 
-    public QcmGroupService(
-        ClasseCService classeService,
-        QcmService qcmService,
-        PdfUtils pdfUtils,
-        QcmGroupMapper qcmGroupMapper,
-        QcmGroupRepository qcmGroupRepository
-    ) {
-        this.classeService = classeService;
-        this.qcmService = qcmService;
-        this.pdfUtils = pdfUtils;
-        this.qcmGroupMapper = qcmGroupMapper;
+    public QcmGroupService(QcmGroupRepository qcmGroupRepository) {
         this.qcmGroupRepository = qcmGroupRepository;
     }
 
@@ -56,38 +37,6 @@ public class QcmGroupService {
     }
 
     /**
-     * Call save and distribute qcms.
-     *
-     * @param qcmGroupDTO the entity to save.
-     */
-    public void saveAndDistributeQcms(QcmGroupDTO qcmGroupDTO) {
-        QcmGroup qcmGroup = qcmGroupMapper.qcmGroupDTOToQcmGroup(qcmGroupDTO);
-        QcmGroup savedQcmGroup = qcmGroupRepository.save(qcmGroup);
-        List<byte[]> splitEditableQcms = pdfUtils.getSplitEditableQcms(qcmGroupDTO.getQcms());
-        Set<User> students = qcmGroupDTO.getClasse().getStudents();
-        List<Qcm> qcms = distribute(students, splitEditableQcms, savedQcmGroup);
-        qcmService.saveAll(qcms);
-    }
-
-    private List<Qcm> distribute(Set<User> students, List<byte[]> splitEditableQcms, QcmGroup qcmGroup) {
-        int qcmNumber = splitEditableQcms.size();
-        List<Qcm> qcms = new ArrayList<>();
-        int index = -1;
-        for (User student : students) {
-            index++;
-            qcms.add(
-                new Qcm()
-                    .qcmGroup(qcmGroup)
-                    .student(student)
-                    .createdAt(qcmGroup.getCreatedAt())
-                    .questionContentType("application/pdf")
-                    .question(splitEditableQcms.get(index % qcmNumber))
-            );
-        }
-        return qcms;
-    }
-
-    /**
      * Partially update a qcmGroup.
      *
      * @param qcmGroup the entity to update partially.
@@ -98,18 +47,16 @@ public class QcmGroupService {
 
         return qcmGroupRepository
             .findById(qcmGroup.getId())
-            .map(
-                existingQcmGroup -> {
-                    if (qcmGroup.getName() != null) {
-                        existingQcmGroup.setName(qcmGroup.getName());
-                    }
-                    if (qcmGroup.getCreatedAt() != null) {
-                        existingQcmGroup.setCreatedAt(qcmGroup.getCreatedAt());
-                    }
-
-                    return existingQcmGroup;
+            .map(existingQcmGroup -> {
+                if (qcmGroup.getName() != null) {
+                    existingQcmGroup.setName(qcmGroup.getName());
                 }
-            )
+                if (qcmGroup.getCreated_at() != null) {
+                    existingQcmGroup.setCreated_at(qcmGroup.getCreated_at());
+                }
+
+                return existingQcmGroup;
+            })
             .map(qcmGroupRepository::save);
     }
 
@@ -126,15 +73,12 @@ public class QcmGroupService {
     }
 
     /**
-     * Get all the qcmGroups of current prof.
+     * Get all the qcmGroups with eager load of many-to-many relationships.
      *
      * @return the list of entities.
      */
-    @Transactional(readOnly = true)
-    public Page<QcmGroup> findAllOfCurrentProf(Pageable pageable) {
-        List<Long> classeIds = classeService.findIdsByProfIsCurrentUser();
-        log.debug("Request to get all QcmGroups of classes");
-        return qcmGroupRepository.findAllByClasseIdIn(classeIds, pageable);
+    public Page<QcmGroup> findAllWithEagerRelationships(Pageable pageable) {
+        return qcmGroupRepository.findAllWithEagerRelationships(pageable);
     }
 
     /**
@@ -146,7 +90,7 @@ public class QcmGroupService {
     @Transactional(readOnly = true)
     public Optional<QcmGroup> findOne(Long id) {
         log.debug("Request to get QcmGroup : {}", id);
-        return qcmGroupRepository.findById(id);
+        return qcmGroupRepository.findOneWithEagerRelationships(id);
     }
 
     /**
@@ -156,7 +100,6 @@ public class QcmGroupService {
      */
     public void delete(Long id) {
         log.debug("Request to delete QcmGroup : {}", id);
-        qcmService.deleteByQcmGroupId(id);
         qcmGroupRepository.deleteById(id);
     }
 }

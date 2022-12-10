@@ -3,7 +3,7 @@
     xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
     xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd
                         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
     <!--
@@ -52,18 +52,12 @@
         <loadData
                   file="config/liquibase/fake-data/classe.csv"
                   separator=";"
-                  tableName="classe">
+                  tableName="classe"
+                  usePreparedStatements="true">
             <column name="id" type="numeric"/>
             <column name="name" type="string"/>
             <column name="prof_id" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
-        </loadData>
-        <loadData
-                  file="config/liquibase/fake-data/rel_classe_student.csv"
-                  separator=";"
-                  tableName="rel_classe__student">
-            <column name="student_id" type="numeric"/>
-            <column name="classe_id" type="numeric"/>
         </loadData>
     </changeSet>
 </databaseChangeLog>

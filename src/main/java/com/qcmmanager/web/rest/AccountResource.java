@@ -7,7 +7,6 @@ import com.qcmmanager.service.MailService;
 import com.qcmmanager.service.UserService;
 import com.qcmmanager.service.dto.AdminUserDTO;
 import com.qcmmanager.service.dto.PasswordChangeDTO;
-import com.qcmmanager.service.dto.UserDTO;
 import com.qcmmanager.web.rest.errors.*;
 import com.qcmmanager.web.rest.vm.KeyAndPasswordVM;
 import com.qcmmanager.web.rest.vm.ManagedUserVM;

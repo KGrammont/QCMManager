@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-
 import { SharedModule } from 'app/shared/shared.module';
 import { QcmComponent } from './list/qcm.component';
 import { QcmDetailComponent } from './detail/qcm-detail.component';

@@ -35,7 +35,7 @@ export class QcmDetailComponent implements OnInit {
       .query({
         page: 0,
         size: this.itemsPerPage,
-        sort: ['createdAt,desc', 'id'],
+        sort: ['created_at,desc', 'id'],
       })
       .subscribe((res: HttpResponse<IQcmGroup[]>) => {
         this.allQcmGroups = res.body ?? [];
@@ -54,7 +54,7 @@ export class QcmDetailComponent implements OnInit {
         .query(this.selectedQcmGroup.id!, {
           page: pageToLoad - 1,
           size: this.itemsPerPage,
-          sort: ['createdAt,desc', 'id'],
+          sort: ['created_at,desc', 'id'],
         })
         .subscribe(
           (res: HttpResponse<IQcm[]>) => {
@@ -105,7 +105,7 @@ export class QcmDetailComponent implements OnInit {
         queryParams: {
           page: this.page,
           size: this.itemsPerPage,
-          sort: ['createdAt,desc', 'id'],
+          sort: ['created_at,desc', 'id'],
         },
       });
     }

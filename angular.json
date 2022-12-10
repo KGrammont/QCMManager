@@ -4,9 +4,18 @@
   "newProjectRoot": "projects",
   "projects": {
     "qcm-manager": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        },
+        "@schematics/angular:application": {
+          "strict": true
+        }
+      },
       "root": "",
       "sourceRoot": "src/main/webapp",
-      "projectType": "application",
+      "prefix": "jhi",
       "architect": {
         "build": {
           "builder": "@angular-builders/custom-webpack:browser",
@@ -19,10 +28,10 @@
             "main": "src/main/webapp/main.ts",
             "polyfills": "src/main/webapp/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
-            "aot": true,
+            "inlineStyleLanguage": "scss",
             "assets": [
               "src/main/webapp/content",
-              "src/main/webapp/logo.png",
+              "src/main/webapp/favicon.ico",
               "src/main/webapp/manifest.webapp",
               "src/main/webapp/robots.txt",
               {
@@ -51,29 +60,42 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "6kb",
-                  "maximumError": "10kb"
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
                 }
               ]
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
             }
-          }
+          },
+          "defaultConfiguration": "production"
         },
         "serve": {
           "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
-            "browserTarget": "qcm-manager:build",
-            "proxyConfig": "./webpack/proxy.conf.js"
+            "browserTarget": "qcm-manager:build:development",
+            "port": 4200
           },
           "configurations": {
             "production": {
               "browserTarget": "qcm-manager:build:production"
+            },
+            "development": {
+              "browserTarget": "qcm-manager:build:development"
             }
-          }
+          },
+          "defaultConfiguration": "development"
         },
         "test": {
           "builder": "@angular-builders/jest:run",
@@ -81,20 +103,16 @@
             "configPath": "jest.conf.js"
           }
         }
-      },
-      "schematics": {
-        "@schematics/angular:component": {
-          "style": "scss"
-        },
-        "@schematics/angular:application": {
-          "strict": true
-        }
-      },
-      "prefix": "jhi"
+      }
     }
   },
   "defaultProject": "qcm-manager",
   "cli": {
+    "cache": {
+      "enabled": true,
+      "path": "./build/angular/",
+      "environment": "all"
+    },
     "packageManager": "npm"
   }
 }

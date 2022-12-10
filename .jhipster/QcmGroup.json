@@ -1,4 +1,6 @@
 {
+  "changelogDate": "20210710225256",
+  "dto": "no",
   "fields": [
     {
       "fieldName": "name",
@@ -11,20 +13,18 @@
       "fieldValidateRules": ["required"]
     }
   ],
+  "jpaMetamodelFiltering": false,
+  "name": "QcmGroup",
+  "pagination": "pagination",
+  "readOnly": false,
   "relationships": [
     {
-      "relationshipName": "classe",
+      "otherEntityField": "name",
       "otherEntityName": "classe",
+      "relationshipName": "classe",
       "relationshipType": "many-to-one",
-      "relationshipValidateRules": ["required"],
-      "otherEntityField": "name"
+      "relationshipValidateRules": ["required"]
     }
   ],
-  "service": "serviceClass",
-  "dto": "no",
-  "jpaMetamodelFiltering": false,
-  "readOnly": false,
-  "pagination": "pagination",
-  "name": "QcmGroup",
-  "changelogDate": "20210710225256"
+  "service": "serviceClass"
 }

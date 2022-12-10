@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { finalize, map } from 'rxjs/operators';
 
-import * as dayjs from 'dayjs';
+import dayjs from 'dayjs/esm';
 import { DATE_TIME_FORMAT } from 'app/config/input.constants';
 
 import { IQcmGroup, QcmGroup } from '../qcm-group.model';
@@ -40,7 +40,7 @@ export class QcmGroupUpdateComponent implements OnInit {
     this.activatedRoute.data.subscribe(({ qcmGroup }) => {
       if (qcmGroup.id === undefined) {
         const today = dayjs().startOf('day');
-        qcmGroup.createdAt = today;
+        qcmGroup.created_at = today;
       }
 
       this.updateForm(qcmGroup);
@@ -68,10 +68,10 @@ export class QcmGroupUpdateComponent implements OnInit {
   }
 
   protected subscribeToSaveResponse(result: Observable<HttpResponse<IQcmGroup>>): void {
-    result.pipe(finalize(() => this.onSaveFinalize())).subscribe(
-      () => this.onSaveSuccess(),
-      () => this.onSaveError()
-    );
+    result.pipe(finalize(() => this.onSaveFinalize())).subscribe({
+      next: () => this.onSaveSuccess(),
+      error: () => this.onSaveError(),
+    });
   }
 
   protected onSaveSuccess(): void {
@@ -90,7 +90,7 @@ export class QcmGroupUpdateComponent implements OnInit {
     this.editForm.patchValue({
       id: qcmGroup.id,
       name: qcmGroup.name,
-      created_at: qcmGroup.createdAt ? qcmGroup.createdAt.format(DATE_TIME_FORMAT) : null,
+      created_at: qcmGroup.created_at ? qcmGroup.created_at.format(DATE_TIME_FORMAT) : null,
       classe: qcmGroup.classe,
     });
 
@@ -110,7 +110,7 @@ export class QcmGroupUpdateComponent implements OnInit {
       ...new QcmGroup(),
       id: this.editForm.get(['id'])!.value,
       name: this.editForm.get(['name'])!.value,
-      createdAt: this.editForm.get(['created_at'])!.value ? dayjs(this.editForm.get(['created_at'])!.value, DATE_TIME_FORMAT) : undefined,
+      created_at: this.editForm.get(['created_at'])!.value ? dayjs(this.editForm.get(['created_at'])!.value, DATE_TIME_FORMAT) : undefined,
       classe: this.editForm.get(['classe'])!.value,
     };
   }

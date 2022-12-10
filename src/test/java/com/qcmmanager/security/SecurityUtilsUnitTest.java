@@ -35,7 +35,7 @@ class SecurityUtilsUnitTest {
     }
 
     @Test
-    void testgetCurrentUserJWT() {
+    void testGetCurrentUserJWT() {
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
         securityContext.setAuthentication(new UsernamePasswordAuthenticationToken("admin", "token"));
         SecurityContextHolder.setContext(securityContext);
@@ -72,6 +72,31 @@ class SecurityUtilsUnitTest {
         SecurityContextHolder.setContext(securityContext);
 
         assertThat(SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.PROF)).isTrue();
+        assertThat(SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.STUDENT)).isFalse();
         assertThat(SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.ADMIN)).isFalse();
+    }
+
+    @Test
+    void testHasCurrentUserAnyOfAuthorities() {
+        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(AuthoritiesConstants.PROF));
+        securityContext.setAuthentication(new UsernamePasswordAuthenticationToken("user", "user", authorities));
+        SecurityContextHolder.setContext(securityContext);
+
+        assertThat(SecurityUtils.hasCurrentUserAnyOfAuthorities(AuthoritiesConstants.PROF, AuthoritiesConstants.STUDENT)).isTrue();
+        assertThat(SecurityUtils.hasCurrentUserAnyOfAuthorities(AuthoritiesConstants.ANONYMOUS, AuthoritiesConstants.ADMIN)).isFalse();
+    }
+
+    @Test
+    void testHasCurrentUserNoneOfAuthorities() {
+        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(AuthoritiesConstants.PROF));
+        securityContext.setAuthentication(new UsernamePasswordAuthenticationToken("user", "user", authorities));
+        SecurityContextHolder.setContext(securityContext);
+
+        assertThat(SecurityUtils.hasCurrentUserNoneOfAuthorities(AuthoritiesConstants.PROF, AuthoritiesConstants.ADMIN)).isFalse();
+        assertThat(SecurityUtils.hasCurrentUserNoneOfAuthorities(AuthoritiesConstants.ANONYMOUS, AuthoritiesConstants.STUDENT)).isTrue();
     }
 }

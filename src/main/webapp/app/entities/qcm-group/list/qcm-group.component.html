@@ -3,7 +3,7 @@
     <span>Qcm Groups</span>
 
     <div class="d-flex justify-content-end">
-      <button class="btn btn-info mr-2" (click)="loadPage()" [disabled]="isLoading">
+      <button class="btn btn-info me-2" (click)="loadPage()" [disabled]="isLoading">
         <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
         <span>Refresh List</span>
       </button>
@@ -31,10 +31,10 @@
   <div class="table-responsive" id="entities" *ngIf="qcmGroups && qcmGroups.length > 0">
     <table class="table table-striped" aria-describedby="page-heading">
       <thead>
-        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" [callback]="loadPage.bind(this)">
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="loadPage()">
           <th scope="col" jhiSortBy="id"><span>ID</span> <fa-icon icon="sort"></fa-icon></th>
           <th scope="col" jhiSortBy="name"><span>Name</span> <fa-icon icon="sort"></fa-icon></th>
-          <th scope="col" jhiSortBy="createdAt"><span>Created At</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="created_at"><span>Created At</span> <fa-icon icon="sort"></fa-icon></th>
           <th scope="col" jhiSortBy="classe.name"><span>Classe</span> <fa-icon icon="sort"></fa-icon></th>
           <th scope="col"></th>
         </tr>
@@ -45,13 +45,13 @@
             <a [routerLink]="['/qcm-group', qcmGroup.id, 'view']">{{ qcmGroup.id }}</a>
           </td>
           <td>{{ qcmGroup.name }}</td>
-          <td>{{ qcmGroup.createdAt | formatMediumDatetime }}</td>
+          <td>{{ qcmGroup.created_at | formatMediumDatetime }}</td>
           <td>
             <div *ngIf="qcmGroup.classe">
               <a [routerLink]="['/classe', qcmGroup.classe?.id, 'view']">{{ qcmGroup.classe?.name }}</a>
             </div>
           </td>
-          <td class="text-right">
+          <td class="text-end">
             <div class="btn-group">
               <button
                 type="submit"
@@ -85,11 +85,11 @@
   </div>
 
   <div *ngIf="qcmGroups && qcmGroups.length > 0">
-    <div class="row justify-content-center">
+    <div class="d-flex justify-content-center">
       <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>
     </div>
 
-    <div class="row justify-content-center">
+    <div class="d-flex justify-content-center">
       <ngb-pagination
         [collectionSize]="totalItems"
         [(page)]="ngbPaginationPage"

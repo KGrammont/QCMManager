@@ -8,7 +8,7 @@
 
     <p class="lead">Voici la page d'accueil</p>
 
-    <div [ngSwitch]="isAuthenticated()">
+    <div [ngSwitch]="account !== null">
       <div class="alert alert-success" *ngSwitchCase="true">
         <span id="home-logged-message" *ngIf="account"
           >Vous êtes connecté en tant que "{{ account.firstName }} {{ account.lastName }}".</span

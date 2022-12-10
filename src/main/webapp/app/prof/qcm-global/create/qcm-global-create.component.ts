@@ -101,7 +101,7 @@ export class QcmGlobalCreateComponent implements OnInit {
     return {
       ...new CompleteQcmGroup(),
       name: this.editForm.get(['name'])!.value ?? undefined,
-      createdAt: today,
+      created_at: today,
       classe: this.editForm.get(['classe'])!.value ?? undefined,
       qcms: this.editForm.get(['qcms'])!.value ?? undefined,
     };

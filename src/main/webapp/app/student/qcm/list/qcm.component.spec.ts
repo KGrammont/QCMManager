@@ -29,7 +29,7 @@ describe('Component Tests', () => {
                 jest.requireActual('@angular/router').convertToParamMap({
                   page: '1',
                   size: '1',
-                  sort: ['createdAt,desc', 'id'],
+                  sort: ['created_at,desc', 'id'],
                 })
               ),
             },
@@ -72,12 +72,12 @@ describe('Component Tests', () => {
       expect(comp.qcms?.[0]).toEqual(jasmine.objectContaining({ id: 123 }));
     });
 
-    it('should sort by createdAt', () => {
+    it('should sort by created_at', () => {
       // WHEN
       comp.ngOnInit();
 
       // THEN
-      expect(service.query).toHaveBeenCalledWith(expect.objectContaining({ sort: ['createdAt,desc', 'id'] }));
+      expect(service.query).toHaveBeenCalledWith(expect.objectContaining({ sort: ['created_at,desc', 'id'] }));
     });
   });
 });

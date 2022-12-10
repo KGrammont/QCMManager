@@ -37,7 +37,7 @@ export class QcmComponent implements OnInit {
       .query({
         page: pageToLoad - 1,
         size: this.itemsPerPage,
-        sort: ['createdAt,desc', 'id'],
+        sort: ['created_at,desc', 'id'],
       })
       .subscribe(
         (res: HttpResponse<IQcm[]>) => {
@@ -77,7 +77,7 @@ export class QcmComponent implements OnInit {
         queryParams: {
           page: this.page,
           size: this.itemsPerPage,
-          sort: ['createdAt,desc', 'id'],
+          sort: ['created_at,desc', 'id'],
         },
       });
     }

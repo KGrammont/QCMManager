@@ -7,16 +7,14 @@ import com.qcmmanager.security.AuthoritiesConstants;
 import com.qcmmanager.service.MailService;
 import com.qcmmanager.service.UserService;
 import com.qcmmanager.service.dto.AdminUserDTO;
-import com.qcmmanager.service.dto.AdminUserWithPassDTO;
 import com.qcmmanager.web.rest.errors.BadRequestAlertException;
 import com.qcmmanager.web.rest.errors.EmailAlreadyUsedException;
 import com.qcmmanager.web.rest.errors.LoginAlreadyUsedException;
-import com.qcmmanager.web.rest.vm.UserCreationFeedback;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
 import java.util.Collections;
-import javax.validation.*;
+import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,7 +61,19 @@ import tech.jhipster.web.util.ResponseUtil;
 public class UserResource {
 
     private static final List<String> ALLOWED_ORDERED_PROPERTIES = Collections.unmodifiableList(
-        Arrays.asList("id", "login", "firstName", "lastName", "email", "activated", "langKey")
+        Arrays.asList(
+            "id",
+            "login",
+            "firstName",
+            "lastName",
+            "email",
+            "activated",
+            "langKey",
+            "createdBy",
+            "createdDate",
+            "lastModifiedBy",
+            "lastModifiedDate"
+        )
     );
 
     private final Logger log = LoggerFactory.getLogger(UserResource.class);
@@ -113,95 +123,10 @@ public class UserResource {
             return ResponseEntity
                 .created(new URI("/api/admin/users/" + newUser.getLogin()))
                 .headers(
-                    HeaderUtil.createAlert(
-                        applicationName,
-                        "L'utilisateur " + newUser.getFirstName() + " " + newUser.getLastName() + " a bien été créé.",
-                        newUser.getLogin()
-                    )
+                    HeaderUtil.createAlert(applicationName, "A user is created with identifier " + newUser.getLogin(), newUser.getLogin())
                 )
                 .body(newUser);
         }
-    }
-
-    /**
-     * {@code POST  /admin/students}  : Creates a new user with student authority.
-     * <p>
-     * Creates a new user if the login and email are not already used, account is activated and password set, no email sent.
-     *
-     * @param userDTO the user to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new user, or with status {@code 400 (Bad Request)} if the login or email is already in use.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
-     * @throws BadRequestAlertException {@code 400 (Bad Request)} if the login or email is already in use.
-     */
-    @PostMapping("/students")
-    @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.ADMIN + "\", \"" + AuthoritiesConstants.PROF + "\")")
-    public ResponseEntity<User> createStudent(@Valid @RequestBody AdminUserWithPassDTO userDTO) throws URISyntaxException {
-        log.debug("REST request to save User : {}", userDTO);
-
-        if (userDTO.getId() != null) {
-            throw new BadRequestAlertException("A new user cannot already have an ID", "userManagement", "idexists");
-            // Lowercase the user login before comparing with database
-        } else if (userRepository.findOneByLogin(userDTO.getLogin().toLowerCase()).isPresent()) {
-            throw new LoginAlreadyUsedException();
-        } else if (userRepository.findOneByEmailIgnoreCase(userDTO.getEmail()).isPresent()) {
-            throw new EmailAlreadyUsedException();
-        } else {
-            User newUser = userService.createStudentWithPass(userDTO);
-            return ResponseEntity
-                .created(new URI("/api/admin/users/" + newUser.getLogin()))
-                .headers(
-                    HeaderUtil.createAlert(
-                        applicationName,
-                        "L'élève " + newUser.getFirstName() + " " + newUser.getLastName() + " a bien été créé.",
-                        newUser.getLogin()
-                    )
-                )
-                .body(newUser);
-        }
-    }
-
-    /**
-     * {@code POST  /admin/students/multiple}  : Creates a set of users with student authority.
-     * <p>
-     * Creates a set of users if the login and email are not already used, account is activated and password set, no email sent.
-     *
-     * @param users the user to create.
-     * @return the {@link ResponseEntity} with status {@code 200 (Ok)} and with body the description of the creation.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
-     */
-    @PostMapping("/students/multiple")
-    @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.ADMIN + "\", \"" + AuthoritiesConstants.PROF + "\")")
-    public ResponseEntity<List<UserCreationFeedback>> createStudents(@Valid @RequestBody List<AdminUserWithPassDTO> users)
-        throws URISyntaxException {
-        log.debug("REST request to save Users : {}", users);
-        List<UserCreationFeedback> feedbacks = new ArrayList<>();
-
-        users.forEach(
-            userDTO -> {
-                ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-                Validator validator = factory.getValidator();
-                Set<ConstraintViolation<AdminUserWithPassDTO>> validationErrors = validator.validate(userDTO);
-                if (!validationErrors.isEmpty()) {
-                    StringJoiner errors = new StringJoiner("/n");
-                    validationErrors.forEach(
-                        constraint -> {
-                            errors.add(String.format("Contrainte sur '%s' : %s.", constraint.getPropertyPath(), constraint.getMessage()));
-                        }
-                    );
-                    feedbacks.add(new UserCreationFeedback(userDTO.getEmail(), false, errors.toString()));
-                } else if (userDTO.getId() != null) {
-                    throw new BadRequestAlertException("A new user cannot already have an ID", "userManagement", "idexists");
-                } else if (userRepository.findOneByLogin(userDTO.getLogin().toLowerCase()).isPresent()) {
-                    feedbacks.add(new UserCreationFeedback(userDTO.getEmail(), false, "Le login est déjà utilisé."));
-                } else if (userRepository.findOneByEmailIgnoreCase(userDTO.getEmail()).isPresent()) {
-                    feedbacks.add(new UserCreationFeedback(userDTO.getEmail(), false, "L'email est déjà utilisé."));
-                } else {
-                    userService.createStudentWithPass(userDTO);
-                    feedbacks.add(new UserCreationFeedback(userDTO.getEmail(), true, "Créé"));
-                }
-            }
-        );
-        return ResponseEntity.ok(feedbacks);
     }
 
     /**
@@ -213,7 +138,7 @@ public class UserResource {
      * @throws LoginAlreadyUsedException {@code 400 (Bad Request)} if the login is already in use.
      */
     @PutMapping("/users")
-    @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.ADMIN + "\", \"" + AuthoritiesConstants.PROF + "\")")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<AdminUserDTO> updateUser(@Valid @RequestBody AdminUserDTO userDTO) {
         log.debug("REST request to update User : {}", userDTO);
         Optional<User> existingUser = userRepository.findOneByEmailIgnoreCase(userDTO.getEmail());
@@ -228,11 +153,7 @@ public class UserResource {
 
         return ResponseUtil.wrapOrNotFound(
             updatedUser,
-            HeaderUtil.createAlert(
-                applicationName,
-                "L'utilisateur " + userDTO.getFirstName() + " " + userDTO.getLastName() + " a bien été mis à jour.",
-                userDTO.getLogin()
-            )
+            HeaderUtil.createAlert(applicationName, "A user is updated with identifier " + userDTO.getLogin(), userDTO.getLogin())
         );
     }
 
@@ -244,7 +165,7 @@ public class UserResource {
      */
     @GetMapping("/users")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
-    public ResponseEntity<List<AdminUserDTO>> getAllUsers(Pageable pageable) {
+    public ResponseEntity<List<AdminUserDTO>> getAllUsers(@org.springdoc.api.annotations.ParameterObject Pageable pageable) {
         log.debug("REST request to get all User for an admin");
         if (!onlyContainsAllowedProperties(pageable)) {
             return ResponseEntity.badRequest().build();
@@ -266,7 +187,7 @@ public class UserResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the "login" user, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/users/{login}")
-    @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.ADMIN + "\", \"" + AuthoritiesConstants.PROF + "\")")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<AdminUserDTO> getUser(@PathVariable @Pattern(regexp = Constants.LOGIN_REGEX) String login) {
         log.debug("REST request to get User : {}", login);
         return ResponseUtil.wrapOrNotFound(userService.getUserWithAuthoritiesByLogin(login).map(AdminUserDTO::new));
@@ -279,13 +200,13 @@ public class UserResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/users/{login}")
-    @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.ADMIN + "\", \"" + AuthoritiesConstants.PROF + "\")")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Void> deleteUser(@PathVariable @Pattern(regexp = Constants.LOGIN_REGEX) String login) {
         log.debug("REST request to delete User: {}", login);
         userService.deleteUser(login);
         return ResponseEntity
             .noContent()
-            .headers(HeaderUtil.createAlert(applicationName, "L'utilisateur " + login + " a bien été supprimé.", login))
+            .headers(HeaderUtil.createAlert(applicationName, "A user is deleted with identifier " + login, login))
             .build();
     }
 }

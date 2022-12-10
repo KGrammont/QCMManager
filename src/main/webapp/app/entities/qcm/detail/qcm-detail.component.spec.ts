@@ -6,66 +6,70 @@ import { DataUtils } from 'app/core/util/data-util.service';
 
 import { QcmDetailComponent } from './qcm-detail.component';
 
-describe('Component Tests', () => {
-  describe('Qcm Management Detail Component', () => {
-    let comp: QcmDetailComponent;
-    let fixture: ComponentFixture<QcmDetailComponent>;
-    let dataUtils: DataUtils;
+describe('Qcm Management Detail Component', () => {
+  let comp: QcmDetailComponent;
+  let fixture: ComponentFixture<QcmDetailComponent>;
+  let dataUtils: DataUtils;
 
-    beforeEach(() => {
-      TestBed.configureTestingModule({
-        declarations: [QcmDetailComponent],
-        providers: [
-          {
-            provide: ActivatedRoute,
-            useValue: { data: of({ qcm: { id: 123 } }) },
-          },
-        ],
-      })
-        .overrideTemplate(QcmDetailComponent, '')
-        .compileComponents();
-      fixture = TestBed.createComponent(QcmDetailComponent);
-      comp = fixture.componentInstance;
-      dataUtils = TestBed.inject(DataUtils);
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [QcmDetailComponent],
+      providers: [
+        {
+          provide: ActivatedRoute,
+          useValue: { data: of({ qcm: { id: 123 } }) },
+        },
+      ],
+    })
+      .overrideTemplate(QcmDetailComponent, '')
+      .compileComponents();
+    fixture = TestBed.createComponent(QcmDetailComponent);
+    comp = fixture.componentInstance;
+    dataUtils = TestBed.inject(DataUtils);
+    jest.spyOn(window, 'open').mockImplementation(() => null);
+  });
+
+  describe('OnInit', () => {
+    it('Should load qcm on init', () => {
+      // WHEN
+      comp.ngOnInit();
+
+      // THEN
+      expect(comp.qcm).toEqual(expect.objectContaining({ id: 123 }));
     });
+  });
 
-    describe('OnInit', () => {
-      it('Should load qcm on init', () => {
-        // WHEN
-        comp.ngOnInit();
+  describe('byteSize', () => {
+    it('Should call byteSize from DataUtils', () => {
+      // GIVEN
+      jest.spyOn(dataUtils, 'byteSize');
+      const fakeBase64 = 'fake base64';
 
-        // THEN
-        expect(comp.qcm).toEqual(jasmine.objectContaining({ id: 123 }));
-      });
+      // WHEN
+      comp.byteSize(fakeBase64);
+
+      // THEN
+      expect(dataUtils.byteSize).toBeCalledWith(fakeBase64);
     });
+  });
 
-    describe('byteSize', () => {
-      it('Should call byteSize from DataUtils', () => {
-        // GIVEN
-        spyOn(dataUtils, 'byteSize');
-        const fakeBase64 = 'fake base64';
+  describe('openFile', () => {
+    it('Should call openFile from DataUtils', () => {
+      const newWindow = { ...window };
+      newWindow.document.write = jest.fn();
+      window.open = jest.fn(() => newWindow);
+      window.onload = jest.fn(() => newWindow);
+      window.URL.createObjectURL = jest.fn();
+      // GIVEN
+      jest.spyOn(dataUtils, 'openFile');
+      const fakeContentType = 'fake content type';
+      const fakeBase64 = 'fake base64';
 
-        // WHEN
-        comp.byteSize(fakeBase64);
+      // WHEN
+      comp.openFile(fakeBase64, fakeContentType);
 
-        // THEN
-        expect(dataUtils.byteSize).toBeCalledWith(fakeBase64);
-      });
-    });
-
-    describe('openFile', () => {
-      it('Should call openFile from DataUtils', () => {
-        // GIVEN
-        spyOn(dataUtils, 'openFile');
-        const fakeContentType = 'fake content type';
-        const fakeBase64 = 'fake base64';
-
-        // WHEN
-        comp.openFile(fakeBase64, fakeContentType);
-
-        // THEN
-        expect(dataUtils.openFile).toBeCalledWith(fakeBase64, fakeContentType);
-      });
+      // THEN
+      expect(dataUtils.openFile).toBeCalledWith(fakeBase64, fakeContentType);
     });
   });
 });

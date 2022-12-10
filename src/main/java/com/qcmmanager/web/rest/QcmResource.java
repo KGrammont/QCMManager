@@ -2,10 +2,7 @@ package com.qcmmanager.web.rest;
 
 import com.qcmmanager.domain.Qcm;
 import com.qcmmanager.repository.QcmRepository;
-import com.qcmmanager.security.AuthoritiesConstants;
 import com.qcmmanager.service.QcmService;
-import com.qcmmanager.service.dto.CompleteQcmDTO;
-import com.qcmmanager.service.dto.CompleteQcmPatch;
 import com.qcmmanager.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -22,7 +19,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
@@ -115,7 +111,7 @@ public class QcmResource {
      * or with status {@code 500 (Internal Server Error)} if the qcm couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PatchMapping(value = "/qcms/{id}", consumes = "application/merge-patch+json")
+    @PatchMapping(value = "/qcms/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<Qcm> partialUpdateQcm(@PathVariable(value = "id", required = false) final Long id, @NotNull @RequestBody Qcm qcm)
         throws URISyntaxException {
         log.debug("REST request to partial update Qcm partially : {}, {}", id, qcm);
@@ -139,84 +135,26 @@ public class QcmResource {
     }
 
     /**
-     * {@code PATCH  /qcms/:id/complete} : Partial updates given name of the pdf to change and new values of the checkboxes
-     *
-     * @param id the id of the qcm to save.
-     * @param completeQcmPatch with the name of the pdf to update and the new values of the checkoxes.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated qcm,
-     * or with status {@code 404 (Not Found)} if the qcm is not found,
-     * or with status {@code 500 (Internal Server Error)} if the qcm couldn't be updated.
-     */
-    @PatchMapping(value = "/qcms/{id}/complete")
-    public ResponseEntity<Qcm> completeQcm(
-        @PathVariable(value = "id", required = false) final long id,
-        @Valid @RequestBody CompleteQcmPatch completeQcmPatch
-    ) {
-        log.debug("REST request to fill {} of the Qcm {}", completeQcmPatch.getName(), id);
-        if (!qcmRepository.existsById(id)) {
-            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
-        }
-
-        Optional<Qcm> result = qcmService.completeQcmWithCheckboxes(id, completeQcmPatch);
-
-        return ResponseUtil.wrapOrNotFound(
-            result,
-            HeaderUtil.createAlert(applicationName, "Le qcm a bien été complété.", String.valueOf(id))
-        );
-    }
-
-    /**
      * {@code GET  /qcms} : get all the qcms.
      *
      * @param pageable the pagination information.
+     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of qcms in body.
      */
     @GetMapping("/qcms")
-    public ResponseEntity<List<Qcm>> getAllQcms(Pageable pageable) {
+    public ResponseEntity<List<Qcm>> getAllQcms(
+        @org.springdoc.api.annotations.ParameterObject Pageable pageable,
+        @RequestParam(required = false, defaultValue = "true") boolean eagerload
+    ) {
         log.debug("REST request to get a page of Qcms");
-        Page<Qcm> page = qcmService.findAll(pageable);
+        Page<Qcm> page;
+        if (eagerload) {
+            page = qcmService.findAllWithEagerRelationships(pageable);
+        } else {
+            page = qcmService.findAll(pageable);
+        }
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
-    }
-
-    /**
-     * {@code GET  /qcms/of-group/{id}} : get all qcms of group.
-     *
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of qcms in body.
-     */
-    @GetMapping("/qcms/of-group/{id}")
-    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.PROF + "\")")
-    public ResponseEntity<List<Qcm>> getAllQcmsOfQcmGroupForCurrentProf(@PathVariable Long id, Pageable pageable) {
-        log.debug("REST request to get all Qcms of qcmGroup {}", id);
-        Page<Qcm> page = qcmService.findAllOfQcmGroup(id, pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return ResponseEntity.ok().headers(headers).body(page.getContent());
-    }
-
-    /**
-     * {@code GET  /qcms/student} : get all qcms of current student.
-     *
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of qcms in body.
-     */
-    @GetMapping("/qcms/student")
-    public ResponseEntity<List<Qcm>> getAllQcmsOfCurrentStudent(Pageable pageable) {
-        log.debug("REST request to get all Qcms of current student");
-        Page<Qcm> page = qcmService.findAllOfCurrentStudent(pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return ResponseEntity.ok().headers(headers).body(page.getContent());
-    }
-
-    /**
-     * {@code GET  /qcms/of-group/:id/to-download} : get all completed qcms of qcmGroup.
-     *
-     * @param id the id of the qcmGroup to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the qcms to download, or with status {@code 404 (Not Found)}.
-     */
-    @GetMapping("/qcms/of-group/{id}/to-download")
-    public ResponseEntity<List<CompleteQcmDTO>> getQcmsOfQcmGroup(@PathVariable Long id) {
-        log.debug("REST request to get all qcms of QcmGroup : {}", id);
-        List<CompleteQcmDTO> qcms = qcmService.getAllCompletedQcmOfGroup(id);
-        return ResponseEntity.ok(qcms);
     }
 
     /**

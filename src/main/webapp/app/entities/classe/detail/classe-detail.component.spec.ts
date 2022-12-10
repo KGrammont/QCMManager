@@ -4,35 +4,33 @@ import { of } from 'rxjs';
 
 import { ClasseDetailComponent } from './classe-detail.component';
 
-describe('Component Tests', () => {
-  describe('Classe Management Detail Component', () => {
-    let comp: ClasseDetailComponent;
-    let fixture: ComponentFixture<ClasseDetailComponent>;
+describe('Classe Management Detail Component', () => {
+  let comp: ClasseDetailComponent;
+  let fixture: ComponentFixture<ClasseDetailComponent>;
 
-    beforeEach(() => {
-      TestBed.configureTestingModule({
-        declarations: [ClasseDetailComponent],
-        providers: [
-          {
-            provide: ActivatedRoute,
-            useValue: { data: of({ classe: { id: 123 } }) },
-          },
-        ],
-      })
-        .overrideTemplate(ClasseDetailComponent, '')
-        .compileComponents();
-      fixture = TestBed.createComponent(ClasseDetailComponent);
-      comp = fixture.componentInstance;
-    });
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [ClasseDetailComponent],
+      providers: [
+        {
+          provide: ActivatedRoute,
+          useValue: { data: of({ classe: { id: 123 } }) },
+        },
+      ],
+    })
+      .overrideTemplate(ClasseDetailComponent, '')
+      .compileComponents();
+    fixture = TestBed.createComponent(ClasseDetailComponent);
+    comp = fixture.componentInstance;
+  });
 
-    describe('OnInit', () => {
-      it('Should load classe on init', () => {
-        // WHEN
-        comp.ngOnInit();
+  describe('OnInit', () => {
+    it('Should load classe on init', () => {
+      // WHEN
+      comp.ngOnInit();
 
-        // THEN
-        expect(comp.classe).toEqual(jasmine.objectContaining({ id: 123 }));
-      });
+      // THEN
+      expect(comp.classe).toEqual(expect.objectContaining({ id: 123 }));
     });
   });
 });

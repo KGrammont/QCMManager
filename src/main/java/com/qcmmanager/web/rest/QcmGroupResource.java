@@ -2,9 +2,7 @@ package com.qcmmanager.web.rest;
 
 import com.qcmmanager.domain.QcmGroup;
 import com.qcmmanager.repository.QcmGroupRepository;
-import com.qcmmanager.security.AuthoritiesConstants;
 import com.qcmmanager.service.QcmGroupService;
-import com.qcmmanager.service.dto.QcmGroupDTO;
 import com.qcmmanager.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -19,8 +17,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
@@ -71,37 +69,6 @@ public class QcmGroupResource {
     }
 
     /**
-     * {@code POST  /qcm-groups/distribute} : Create a new qcmGroup and distribute qcms to students.
-     *
-     * @param qcmGroupDTO the qcmGroup to create with qcms attached.
-     * @return the {@link ResponseEntity} with status {@code 200 (Ok)}, or with status {@code 400 (Bad Request)} if the qcmGroup has already an ID.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
-     */
-    @PostMapping("/qcm-groups/distribute")
-    @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.ADMIN + "\", \"" + AuthoritiesConstants.PROF + "\")")
-    public ResponseEntity<Void> createQcmGroupAndDistribute(@Valid @RequestBody QcmGroupDTO qcmGroupDTO) throws URISyntaxException {
-        log.debug("REST request to save adn distribute QcmGroup : {}", qcmGroupDTO);
-        if (qcmGroupDTO.getId() != null) {
-            throw new BadRequestAlertException("A new qcmGroup cannot already have an ID", ENTITY_NAME, "idexists");
-        }
-        qcmGroupService.saveAndDistributeQcms(qcmGroupDTO);
-        return ResponseEntity
-            .ok()
-            .headers(
-                HeaderUtil.createAlert(
-                    applicationName,
-                    "Le groupe de Qcm " +
-                    qcmGroupDTO.getName() +
-                    " a bien été créé et les qcms ont été distribués à la classe " +
-                    qcmGroupDTO.getClasse().getName() +
-                    ".",
-                    qcmGroupDTO.getName()
-                )
-            )
-            .build();
-    }
-
-    /**
      * {@code PUT  /qcm-groups/:id} : Updates an existing qcmGroup.
      *
      * @param id the id of the qcmGroup to save.
@@ -146,7 +113,7 @@ public class QcmGroupResource {
      * or with status {@code 500 (Internal Server Error)} if the qcmGroup couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PatchMapping(value = "/qcm-groups/{id}", consumes = "application/merge-patch+json")
+    @PatchMapping(value = "/qcm-groups/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<QcmGroup> partialUpdateQcmGroup(
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody QcmGroup qcmGroup
@@ -175,26 +142,21 @@ public class QcmGroupResource {
      * {@code GET  /qcm-groups} : get all the qcmGroups.
      *
      * @param pageable the pagination information.
+     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of qcmGroups in body.
      */
     @GetMapping("/qcm-groups")
-    public ResponseEntity<List<QcmGroup>> getAllQcmGroups(Pageable pageable) {
+    public ResponseEntity<List<QcmGroup>> getAllQcmGroups(
+        @org.springdoc.api.annotations.ParameterObject Pageable pageable,
+        @RequestParam(required = false, defaultValue = "true") boolean eagerload
+    ) {
         log.debug("REST request to get a page of QcmGroups");
-        Page<QcmGroup> page = qcmGroupService.findAll(pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return ResponseEntity.ok().headers(headers).body(page.getContent());
-    }
-
-    /**
-     * {@code GET  /qcm-groups/of-current-prof} : get all the qcmGroups of current prof.
-     *
-     * @param pageable the pagination information.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of qcmGroups in body.
-     */
-    @GetMapping("/qcm-groups/of-current-prof")
-    public ResponseEntity<List<QcmGroup>> getAllQcmGroupsOfCurrentProf(Pageable pageable) {
-        log.debug("REST request to get all QcmGroups of current prof");
-        Page<QcmGroup> page = qcmGroupService.findAllOfCurrentProf(pageable);
+        Page<QcmGroup> page;
+        if (eagerload) {
+            page = qcmGroupService.findAllWithEagerRelationships(pageable);
+        } else {
+            page = qcmGroupService.findAll(pageable);
+        }
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }

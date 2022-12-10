@@ -10,7 +10,7 @@ import { QcmGroupService } from '../service/qcm-group.service';
 export class QcmGroupDeleteDialogComponent {
   qcmGroup?: IQcmGroup;
 
-  constructor(protected qcmGroupService: QcmGroupService, public activeModal: NgbActiveModal) {}
+  constructor(protected qcmGroupService: QcmGroupService, protected activeModal: NgbActiveModal) {}
 
   cancel(): void {
     this.activeModal.dismiss();
