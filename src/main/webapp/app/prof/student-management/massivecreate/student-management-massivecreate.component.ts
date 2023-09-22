@@ -30,8 +30,8 @@ export class StudentManagementMassiveCreateComponent {
     const blob = new Blob([csv!], { type: 'text/csv' });
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (window.navigator?.msSaveOrOpenBlob) {
-      window.navigator.msSaveOrOpenBlob(blob, 'mots de passe.csv');
+    if ((window.navigator as any).msSaveOrOpenBlob) {
+      (window.navigator as any).msSaveOrOpenBlob(blob, 'mots de passe.csv');
       return;
     }
 

@@ -64,9 +64,9 @@ export class QcmGlobalComponent implements OnInit {
 
       files?.forEach((file: IFileToDownload) => {
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        if (window.navigator?.msSaveOrOpenBlob) {
+        if ((window.navigator as any).msSaveOrOpenBlob) {
           const blob = new Blob([file.pdf!], { type: 'image/jpg' });
-          window.navigator.msSaveOrOpenBlob(blob, `${file.name!}.jpg`);
+          (window.navigator as any).msSaveOrOpenBlob(blob, `${file.name!}.jpg`);
           return;
         }
 

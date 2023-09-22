@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { IQcm } from '../../../entities/qcm/qcm.model';
 import { QcmDetailService } from '../service/qcm-detail.service';
 import { IPDFViewerApplication } from 'ngx-extended-pdf-viewer';
-import { PDFDocumentProxy, PDFPageProxy } from 'pdfjs-dist/types/display/api';
+import { PDFDocumentProxy, PDFPageProxy } from 'pdfjs-dist';
 import { Checkbox, CompleteQcmPatch } from 'app/shared/pdf/pdf.model';
 
 @Component({

@@ -30,7 +30,7 @@ export class DataUtils {
   openFile(data: string, contentType: string | null | undefined): void {
     contentType = contentType ?? '';
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (window.navigator.msSaveOrOpenBlob) {
+    if ((window.navigator as any).msSaveOrOpenBlob) {
       // To support IE
       const byteCharacters = atob(data);
       const byteNumbers = new Array(byteCharacters.length);
@@ -41,7 +41,7 @@ export class DataUtils {
       const blob = new Blob([byteArray], {
         type: contentType,
       });
-      window.navigator.msSaveOrOpenBlob(blob);
+      (window.navigator as any).msSaveOrOpenBlob(blob);
     } else {
       // Other browsers
       const fileURL = `data:${contentType};base64,${data}`;
