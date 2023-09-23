@@ -8,8 +8,7 @@ import { QcmGroupDeleteDialogComponent } from './delete/qcm-group-delete-dialog.
 import { QcmGroupRoutingModule } from './route/qcm-group-routing.module';
 
 @NgModule({
-  imports: [SharedModule, QcmGroupRoutingModule],
-  declarations: [QcmGroupComponent, QcmGroupDetailComponent, QcmGroupUpdateComponent, QcmGroupDeleteDialogComponent],
-  entryComponents: [QcmGroupDeleteDialogComponent],
+    imports: [SharedModule, QcmGroupRoutingModule],
+    declarations: [QcmGroupComponent, QcmGroupDetailComponent, QcmGroupUpdateComponent, QcmGroupDeleteDialogComponent]
 })
 export class QcmGroupModule {}

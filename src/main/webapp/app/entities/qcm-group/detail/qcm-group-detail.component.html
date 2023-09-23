@@ -25,7 +25,7 @@
         <dt><span>Classe</span></dt>
         <dd>
           <div *ngIf="qcmGroup.classe">
-            <a [routerLink]="['/classe', qcmGroup.classe?.id, 'view']">{{ qcmGroup.classe?.name }}</a>
+            <a [routerLink]="['/classe', qcmGroup.classe.id, 'view']">{{ qcmGroup.classe.name }}</a>
           </div>
         </dd>
       </dl>

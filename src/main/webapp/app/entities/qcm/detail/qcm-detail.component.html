@@ -49,7 +49,7 @@
         <dt><span>Qcm Group</span></dt>
         <dd>
           <div *ngIf="qcm.qcmGroup">
-            <a [routerLink]="['/qcm-group', qcm.qcmGroup?.id, 'view']">{{ qcm.qcmGroup?.name }}</a>
+            <a [routerLink]="['/qcm-group', qcm.qcmGroup.id, 'view']">{{ qcm.qcmGroup.name }}</a>
           </div>
         </dd>
         <dt><span>Student</span></dt>

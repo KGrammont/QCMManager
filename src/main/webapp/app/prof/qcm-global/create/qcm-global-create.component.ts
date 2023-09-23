@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
-import { FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { map } from 'rxjs/operators';
 
 import * as dayjs from 'dayjs';
@@ -34,7 +34,7 @@ export class QcmGlobalCreateComponent implements OnInit {
     protected eventManager: EventManager,
     protected qcmGroupService: QcmGlobalService,
     protected classeService: ClasseService,
-    protected fb: FormBuilder
+    protected fb: UntypedFormBuilder
   ) {}
 
   ngOnInit(): void {

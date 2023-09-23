@@ -9,13 +9,12 @@ import { StudentManagementDeleteDialogComponent } from './delete/student-managem
 import { userManagementRoute } from './student-management.route';
 
 @NgModule({
-  imports: [SharedModule, RouterModule.forChild(userManagementRoute)],
-  declarations: [
-    StudentManagementComponent,
-    StudentManagementUpdateComponent,
-    StudentManagementDeleteDialogComponent,
-    StudentManagementMassiveCreateComponent,
-  ],
-  entryComponents: [StudentManagementDeleteDialogComponent],
+    imports: [SharedModule, RouterModule.forChild(userManagementRoute)],
+    declarations: [
+        StudentManagementComponent,
+        StudentManagementUpdateComponent,
+        StudentManagementDeleteDialogComponent,
+        StudentManagementMassiveCreateComponent,
+    ]
 })
 export class StudentManagementModule {}

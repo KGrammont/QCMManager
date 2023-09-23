@@ -8,8 +8,7 @@ import { QcmDeleteDialogComponent } from './delete/qcm-delete-dialog.component';
 import { QcmRoutingModule } from './route/qcm-routing.module';
 
 @NgModule({
-  imports: [SharedModule, QcmRoutingModule],
-  declarations: [QcmComponent, QcmDetailComponent, QcmUpdateComponent, QcmDeleteDialogComponent],
-  entryComponents: [QcmDeleteDialogComponent],
+    imports: [SharedModule, QcmRoutingModule],
+    declarations: [QcmComponent, QcmDetailComponent, QcmUpdateComponent, QcmDeleteDialogComponent]
 })
 export class QcmModule {}

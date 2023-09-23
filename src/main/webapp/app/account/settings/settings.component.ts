@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormBuilder, Validators } from '@angular/forms';
 
 import { AccountService } from 'app/core/auth/account.service';
 import { Account } from 'app/core/auth/account.model';
@@ -17,7 +17,7 @@ export class SettingsComponent implements OnInit {
     email: [undefined, [Validators.required, Validators.minLength(5), Validators.maxLength(254), Validators.email]],
   });
 
-  constructor(private accountService: AccountService, private fb: FormBuilder) {}
+  constructor(private accountService: AccountService, private fb: UntypedFormBuilder) {}
 
   ngOnInit(): void {
     this.accountService.identity().subscribe(account => {

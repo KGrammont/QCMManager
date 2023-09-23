@@ -30,7 +30,7 @@
         <tr *ngFor="let qcm of qcms; trackBy: trackId" data-cy="entityTable">
           <td>
             <div *ngIf="qcm.qcmGroup">
-              {{ qcm.qcmGroup?.name }}
+              {{ qcm.qcmGroup.name }}
             </div>
           </td>
           <td>

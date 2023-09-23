@@ -67,7 +67,7 @@
           <td>{{ qcm.createdAt | formatMediumDatetime }}</td>
           <td>
             <div *ngIf="qcm.qcmGroup">
-              <a [routerLink]="['/qcm-group', qcm.qcmGroup?.id, 'view']">{{ qcm.qcmGroup?.name }}</a>
+              <a [routerLink]="['/qcm-group', qcm.qcmGroup.id, 'view']">{{ qcm.qcmGroup.name }}</a>
             </div>
           </td>
           <td>

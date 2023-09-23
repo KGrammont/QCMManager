@@ -8,8 +8,7 @@ import { qcmGlobalRoute } from './qcm-global.route';
 import { RouterModule } from '@angular/router';
 
 @NgModule({
-  imports: [SharedModule, RouterModule.forChild(qcmGlobalRoute)],
-  declarations: [QcmGlobalComponent, QcmGlobalCreateComponent, QcmGroupDeleteDialogComponent],
-  entryComponents: [QcmGroupDeleteDialogComponent],
+    imports: [SharedModule, RouterModule.forChild(qcmGlobalRoute)],
+    declarations: [QcmGlobalComponent, QcmGlobalCreateComponent, QcmGroupDeleteDialogComponent]
 })
 export class QcmGlobalModule {}

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { User } from '../student-management.model';
@@ -29,7 +29,7 @@ export class StudentManagementUpdateComponent implements OnInit {
     pass: ['', []],
   });
 
-  constructor(private userService: StudentManagementService, private route: ActivatedRoute, private fb: FormBuilder) {}
+  constructor(private userService: StudentManagementService, private route: ActivatedRoute, private fb: UntypedFormBuilder) {}
 
   ngOnInit(): void {
     this.route.data.subscribe(({ user }) => {

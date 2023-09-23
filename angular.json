@@ -93,7 +93,6 @@
       "prefix": "jhi"
     }
   },
-  "defaultProject": "qcm-manager",
   "cli": {
     "packageManager": "npm"
   }

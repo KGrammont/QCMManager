@@ -8,8 +8,7 @@ import { ClasseDeleteDialogComponent } from './delete/classe-delete-dialog.compo
 import { ClasseRoutingModule } from './route/classe-routing.module';
 
 @NgModule({
-  imports: [SharedModule, ClasseRoutingModule],
-  declarations: [ClasseComponent, ClasseDetailComponent, ClasseUpdateComponent, ClasseDeleteDialogComponent],
-  entryComponents: [ClasseDeleteDialogComponent],
+    imports: [SharedModule, ClasseRoutingModule],
+    declarations: [ClasseComponent, ClasseDetailComponent, ClasseUpdateComponent, ClasseDeleteDialogComponent]
 })
 export class ClasseModule {}
