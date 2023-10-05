@@ -14,9 +14,11 @@ export type EntityArrayResponseType = HttpResponse<IQcmGroup[]>;
 
 @Injectable({ providedIn: 'root' })
 export class QcmGroupService {
-  public resourceUrl = this.applicationConfigService.getEndpointFor('api/qcm-groups');
+  public resourceUrl: string;
 
-  constructor(protected http: HttpClient, private applicationConfigService: ApplicationConfigService) {}
+  constructor(protected http: HttpClient, private applicationConfigService: ApplicationConfigService) {
+    this.resourceUrl = this.applicationConfigService.getEndpointFor('api/qcm-groups');
+  }
 
   create(qcmGroup: IQcmGroup): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(qcmGroup);

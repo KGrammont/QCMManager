@@ -13,23 +13,25 @@ export class StudentManagementUpdateComponent implements OnInit {
   user!: User;
   isSaving = false;
 
-  editForm = this.fb.group({
-    lastName: ['', [Validators.maxLength(50)]],
-    firstName: ['', [Validators.maxLength(50)]],
-    email: ['', [Validators.minLength(5), Validators.maxLength(254), Validators.email]],
-    login: [
-      '',
-      [
-        Validators.required,
-        Validators.minLength(1),
-        Validators.maxLength(50),
-        Validators.pattern('^[a-zA-Z0-9!$&*+=?^_`{|}~.-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$|^[_.@A-Za-z0-9-]+$'),
-      ],
-    ],
-    pass: ['', []],
-  });
+  editForm;
 
-  constructor(private userService: StudentManagementService, private route: ActivatedRoute, private fb: UntypedFormBuilder) {}
+  constructor(private userService: StudentManagementService, private route: ActivatedRoute, private fb: UntypedFormBuilder) {
+    this.editForm = this.fb.group({
+      lastName: ['', [Validators.maxLength(50)]],
+      firstName: ['', [Validators.maxLength(50)]],
+      email: ['', [Validators.minLength(5), Validators.maxLength(254), Validators.email]],
+      login: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(1),
+          Validators.maxLength(50),
+          Validators.pattern('^[a-zA-Z0-9!$&*+=?^_`{|}~.-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$|^[_.@A-Za-z0-9-]+$'),
+        ],
+      ],
+      pass: ['', []],
+    });
+  }
 
   ngOnInit(): void {
     this.route.data.subscribe(({ user }) => {

@@ -15,7 +15,7 @@
     "commonjs": true
   },
   "parserOptions": {
-    "ecmaVersion": 2018,
+    "ecmaVersion": 2018, // todo bump
     "sourceType": "module",
     "project": "./tsconfig.json"
   },

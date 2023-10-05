@@ -28,20 +28,7 @@ export class QcmUpdateComponent implements OnInit {
   qcmGroupsSharedCollection: IQcmGroup[] = [];
   usersSharedCollection: IUser[] = [];
 
-  editForm = this.fb.group({
-    id: [],
-    question: [null, [Validators.required]],
-    questionContentType: [],
-    answer: [],
-    answerContentType: [],
-    completeAnswer: [],
-    completeAnswerContentType: [],
-    correction: [],
-    correctionContentType: [],
-    created_at: [null, [Validators.required]],
-    qcmGroup: [null, Validators.required],
-    student: [null, Validators.required],
-  });
+  editForm;
 
   constructor(
     protected dataUtils: DataUtils,
@@ -51,7 +38,22 @@ export class QcmUpdateComponent implements OnInit {
     protected userService: UserService,
     protected activatedRoute: ActivatedRoute,
     protected fb: UntypedFormBuilder
-  ) {}
+  ) {
+    this.editForm = this.fb.group({
+      id: [],
+      question: [null, [Validators.required]],
+      questionContentType: [],
+      answer: [],
+      answerContentType: [],
+      completeAnswer: [],
+      completeAnswerContentType: [],
+      correction: [],
+      correctionContentType: [],
+      created_at: [null, [Validators.required]],
+      qcmGroup: [null, Validators.required],
+      student: [null, Validators.required],
+    });
+  }
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ qcm }) => {

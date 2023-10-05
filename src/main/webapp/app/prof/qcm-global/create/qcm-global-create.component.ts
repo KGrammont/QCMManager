@@ -22,12 +22,7 @@ export class QcmGlobalCreateComponent implements OnInit {
 
   classesSharedCollection: IClasse[] = [];
 
-  editForm = this.fb.group({
-    name: [null, Validators.required],
-    classe: [null, Validators.required],
-    qcms: [null, [Validators.required]],
-    qcmsContentType: [],
-  });
+  editForm;
 
   constructor(
     protected dataUtils: DataUtils,
@@ -35,7 +30,14 @@ export class QcmGlobalCreateComponent implements OnInit {
     protected qcmGroupService: QcmGlobalService,
     protected classeService: ClasseService,
     protected fb: UntypedFormBuilder
-  ) {}
+  ) {
+    this.editForm = this.fb.group({
+      name: [null, Validators.required],
+      classe: [null, Validators.required],
+      qcms: [null, [Validators.required]],
+      qcmsContentType: [],
+    });
+  }
 
   ngOnInit(): void {
     this.loadRelationshipsOptions();

@@ -9,9 +9,11 @@ import { IUser } from '../user-management.model';
 
 @Injectable({ providedIn: 'root' })
 export class UserManagementService {
-  public resourceUrl = this.applicationConfigService.getEndpointFor('api/admin/users');
+  public resourceUrl: string;
 
-  constructor(private http: HttpClient, private applicationConfigService: ApplicationConfigService) {}
+  constructor(private http: HttpClient, private applicationConfigService: ApplicationConfigService) {
+    this.resourceUrl = this.applicationConfigService.getEndpointFor('api/admin/users');
+  }
 
   create(user: IUser): Observable<IUser> {
     return this.http.post<IUser>(this.resourceUrl, user);

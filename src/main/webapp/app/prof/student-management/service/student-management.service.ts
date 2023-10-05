@@ -9,15 +9,20 @@ import { IUser, IUserCreationFeedback } from '../student-management.model';
 
 @Injectable({ providedIn: 'root' })
 export class StudentManagementService {
-  public adminResourceUrl = this.applicationConfigService.getEndpointFor('api/admin/users');
-  public studentCreationResourceUrl = this.applicationConfigService.getEndpointFor('api/admin/students');
-  public studentMassiveCreationResourceUrl = this.applicationConfigService.getEndpointFor('api/admin/students/multiple');
-  public studentsResourceUrl = this.applicationConfigService.getEndpointFor('api/students');
+  public adminResourceUrl: string;
+  public studentCreationResourceUrl: string;
+  public studentMassiveCreationResourceUrl: string;
+  public studentsResourceUrl: string;
 
   private characters = 'ABCDEFGHIJKLMNPQRSTUVWXYZabcdefghijklmnpqrstuvwxyz0123456789';
   private charactersLength = this.characters.length;
 
-  constructor(private http: HttpClient, private applicationConfigService: ApplicationConfigService) {}
+  constructor(private http: HttpClient, private applicationConfigService: ApplicationConfigService) {
+    this.adminResourceUrl = this.applicationConfigService.getEndpointFor('api/admin/users');
+    this.studentCreationResourceUrl = this.applicationConfigService.getEndpointFor('api/admin/students');
+    this.studentMassiveCreationResourceUrl = this.applicationConfigService.getEndpointFor('api/admin/students/multiple');
+    this.studentsResourceUrl = this.applicationConfigService.getEndpointFor('api/students');
+  }
 
   create(user: IUser): Observable<IUser> {
     return this.http.post<IUser>(this.studentCreationResourceUrl, user);

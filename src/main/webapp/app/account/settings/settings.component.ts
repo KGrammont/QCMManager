@@ -11,13 +11,15 @@ import { Account } from 'app/core/auth/account.model';
 export class SettingsComponent implements OnInit {
   account!: Account;
   success = false;
-  settingsForm = this.fb.group({
-    firstName: [undefined, [Validators.required, Validators.minLength(1), Validators.maxLength(50)]],
-    lastName: [undefined, [Validators.required, Validators.minLength(1), Validators.maxLength(50)]],
-    email: [undefined, [Validators.required, Validators.minLength(5), Validators.maxLength(254), Validators.email]],
-  });
+  settingsForm;
 
-  constructor(private accountService: AccountService, private fb: UntypedFormBuilder) {}
+  constructor(private accountService: AccountService, private fb: UntypedFormBuilder) {
+    this.settingsForm = this.fb.group({
+      firstName: [undefined, [Validators.required, Validators.minLength(1), Validators.maxLength(50)]],
+      lastName: [undefined, [Validators.required, Validators.minLength(1), Validators.maxLength(50)]],
+      email: [undefined, [Validators.required, Validators.minLength(5), Validators.maxLength(254), Validators.email]],
+    });
+  }
 
   ngOnInit(): void {
     this.accountService.identity().subscribe(account => {

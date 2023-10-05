@@ -30,12 +30,7 @@ export class ClasseUpdateComponent implements OnInit {
   selectedStudents: IUser[] = [];
   studentsSharedCollection: SelectableUser[] | null = null;
 
-  editForm = this.fb.group({
-    id: [],
-    name: [null, [Validators.required]],
-    prof: [null, Validators.required],
-    students: [],
-  });
+  editForm;
 
   constructor(
     protected classeService: ClasseService,
@@ -43,7 +38,14 @@ export class ClasseUpdateComponent implements OnInit {
     protected activatedRoute: ActivatedRoute,
     protected fb: UntypedFormBuilder,
     private accountService: AccountService
-  ) {}
+  ) {
+    this.editForm = this.fb.group({
+      id: [],
+      name: [null, [Validators.required]],
+      prof: [null, Validators.required],
+      students: [],
+    });
+  }
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ classe }) => {
@@ -136,7 +138,7 @@ export class ClasseUpdateComponent implements OnInit {
       id: this.editForm.get(['id'])!.value,
       name: this.editForm.get(['name'])!.value,
       prof: this.editForm.get(['prof'])!.value,
-      students: this.selectedStudents !== [] ? this.selectedStudents : undefined,
+      students: this.selectedStudents.length !== 0 ? this.selectedStudents : undefined,
     };
   }
 

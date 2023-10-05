@@ -15,13 +15,15 @@ export class PasswordComponent implements OnInit {
   error = false;
   success = false;
   account$?: Observable<Account | null>;
-  passwordForm = this.fb.group({
-    currentPassword: ['', [Validators.required]],
-    newPassword: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(50)]],
-    confirmPassword: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(50)]],
-  });
+  passwordForm;
 
-  constructor(private passwordService: PasswordService, private accountService: AccountService, private fb: UntypedFormBuilder) {}
+  constructor(private passwordService: PasswordService, private accountService: AccountService, private fb: UntypedFormBuilder) {
+    this.passwordForm = this.fb.group({
+      currentPassword: ['', [Validators.required]],
+      newPassword: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(50)]],
+      confirmPassword: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(50)]],
+    });
+  }
 
   ngOnInit(): void {
     this.account$ = this.accountService.identity();

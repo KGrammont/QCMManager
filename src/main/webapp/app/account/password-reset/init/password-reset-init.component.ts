@@ -12,11 +12,13 @@ export class PasswordResetInitComponent implements AfterViewInit {
   email?: ElementRef;
 
   success = false;
-  resetRequestForm = this.fb.group({
-    email: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(254), Validators.email]],
-  });
+  resetRequestForm;
 
-  constructor(private passwordResetInitService: PasswordResetInitService, private fb: UntypedFormBuilder) {}
+  constructor(private passwordResetInitService: PasswordResetInitService, private fb: UntypedFormBuilder) {
+    this.resetRequestForm = this.fb.group({
+      email: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(254), Validators.email]],
+    });
+  }
 
   ngAfterViewInit(): void {
     if (this.email) {

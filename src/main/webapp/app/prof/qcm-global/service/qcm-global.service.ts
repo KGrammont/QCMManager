@@ -14,12 +14,17 @@ export type EntityArrayResponseType = HttpResponse<ICompleteQcmGroup[]>;
 
 @Injectable({ providedIn: 'root' })
 export class QcmGlobalService {
-  public resourceUrl = this.applicationConfigService.getEndpointFor('api/qcm-groups');
-  public distributeResourceUrl = this.applicationConfigService.getEndpointFor('api/qcm-groups/distribute');
-  public currentProfResourceUrl = this.applicationConfigService.getEndpointFor('api/qcm-groups/of-current-prof');
-  public downloadResourceUrl = this.applicationConfigService.getEndpointFor('api/qcms/of-group');
+  public resourceUrl: string;
+  public distributeResourceUrl: string;
+  public currentProfResourceUrl: string;
+  public downloadResourceUrl: string;
 
-  constructor(protected http: HttpClient, private applicationConfigService: ApplicationConfigService) {}
+  constructor(protected http: HttpClient, private applicationConfigService: ApplicationConfigService) {
+    this.resourceUrl = this.applicationConfigService.getEndpointFor('api/qcm-groups');
+    this.distributeResourceUrl = this.applicationConfigService.getEndpointFor('api/qcm-groups/distribute');
+    this.currentProfResourceUrl = this.applicationConfigService.getEndpointFor('api/qcm-groups/of-current-prof');
+    this.downloadResourceUrl = this.applicationConfigService.getEndpointFor('api/qcms/of-group');
+  }
 
   create(qcmGroup: ICompleteQcmGroup): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(qcmGroup);

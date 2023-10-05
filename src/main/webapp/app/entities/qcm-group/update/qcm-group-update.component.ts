@@ -22,19 +22,21 @@ export class QcmGroupUpdateComponent implements OnInit {
 
   classesSharedCollection: IClasse[] = [];
 
-  editForm = this.fb.group({
-    id: [],
-    name: [null, [Validators.required]],
-    created_at: [null, [Validators.required]],
-    classe: [null, Validators.required],
-  });
+  editForm;
 
   constructor(
     protected qcmGroupService: QcmGroupService,
     protected classeService: ClasseService,
     protected activatedRoute: ActivatedRoute,
     protected fb: UntypedFormBuilder
-  ) {}
+  ) {
+    this.editForm = this.fb.group({
+      id: [],
+      name: [null, [Validators.required]],
+      created_at: [null, [Validators.required]],
+      classe: [null, Validators.required],
+    });
+  }
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ qcmGroup }) => {

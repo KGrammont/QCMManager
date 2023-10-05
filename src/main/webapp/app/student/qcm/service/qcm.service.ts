@@ -15,10 +15,13 @@ export type EntityArrayResponseType = HttpResponse<IQcm[]>;
 
 @Injectable({ providedIn: 'root' })
 export class QcmService {
-  public resourceUrl = this.applicationConfigService.getEndpointFor('api/qcms');
-  public studentResourceUrl = this.applicationConfigService.getEndpointFor('api/qcms/student');
+  public resourceUrl: string;
+  public studentResourceUrl: string;
 
-  constructor(protected http: HttpClient, private applicationConfigService: ApplicationConfigService) {}
+  constructor(protected http: HttpClient, private applicationConfigService: ApplicationConfigService) {
+    this.resourceUrl = this.applicationConfigService.getEndpointFor('api/qcms');
+    this.studentResourceUrl = this.applicationConfigService.getEndpointFor('api/qcms/student');
+  }
 
   create(qcm: IQcm): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(qcm);
