@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, Routes } from '@angular/router';
+import { ActivatedRouteSnapshot, Routes } from '@angular/router';
 import { Observable, of } from 'rxjs';
 
 import { User, IUser } from './student-management.model';
@@ -9,7 +9,7 @@ import { StudentManagementUpdateComponent } from './update/student-management-up
 import { StudentManagementMassiveCreateComponent } from './massivecreate/student-management-massivecreate.component';
 
 @Injectable({ providedIn: 'root' })
-export class UserManagementResolve implements Resolve<IUser> {
+export class UserManagementResolve  {
   constructor(private service: StudentManagementService) {}
 
   resolve(route: ActivatedRouteSnapshot): Observable<IUser> {

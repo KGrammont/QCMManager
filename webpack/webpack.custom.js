@@ -44,6 +44,7 @@ module.exports = (config, options, targetOptions) => {
             proxyOptions: {
               changeOrigin: false, //pass the Host header to the backend unchanged  https://github.com/Browsersync/browser-sync/issues/430
             },
+            ws: true
           },
           socket: {
             clients: {

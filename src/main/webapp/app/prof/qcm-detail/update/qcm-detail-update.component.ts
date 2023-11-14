@@ -3,8 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { IQcm } from '../../../entities/qcm/qcm.model';
 import { QcmDetailService } from '../service/qcm-detail.service';
-import { IPDFViewerApplication } from 'ngx-extended-pdf-viewer';
-import { PDFDocumentProxy, PDFPageProxy } from 'pdfjs-dist';
+import { IPDFViewerApplication, PDFDocumentProxy, PDFPageProxy } from 'ngx-extended-pdf-viewer';
 import { Checkbox, CompleteQcmPatch } from 'app/shared/pdf/pdf.model';
 
 @Component({
@@ -43,10 +42,10 @@ export class QcmDetailUpdateComponent implements OnInit {
       .then((currentPage: PDFPageProxy) => currentPage.getAnnotations())
       .then((annotations: any[]) => {
         annotations.forEach(annotation => {
-          const checkbox = new Checkbox(annotation.fieldName, annotation.fieldValue === 'Yes');
-          const newValue = pdf.annotationStorage._storage.get(annotation.id)?.value;
-          if (newValue !== undefined) {
-            checkbox.value = newValue;
+          const checkbox = new Checkbox(annotation.fieldName as string, annotation.fieldValue === 'Yes');
+          const newValue = pdf.annotationStorage.getValue(annotation.id as string, annotation.fieldName, 1);
+          if (newValue !== 1) {
+            checkbox.value = newValue as boolean;
           }
           checkboxes.push(checkbox);
         });
